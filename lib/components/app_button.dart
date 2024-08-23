@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:workhouse/utils/constant.dart';
 
 /**
@@ -18,7 +17,7 @@ class _AppButtonState extends State<AppButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 49,
-      width: Get.width,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: APP_BLACK_COLOR,
