@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workhouse/screens/signin+create_account/sign_in_screen.dart';
 import 'package:workhouse/utils/constant.dart';
 
@@ -9,13 +10,31 @@ import 'package:workhouse/utils/constant.dart';
  */
 
 class WalkFouthScreen extends StatefulWidget {
-  const WalkFouthScreen({ Key? key }) : super(key: key);
+  const WalkFouthScreen({Key? key}) : super(key: key);
 
   @override
   _WalkFouthScreenState createState() => _WalkFouthScreenState();
 }
 
 class _WalkFouthScreenState extends State<WalkFouthScreen> {
+  late SharedPreferences prefs;
+
+  void onNext() async {
+    prefs = await SharedPreferences.getInstance();
+    String userID = prefs.getString("userID") ?? "";
+    String username = prefs.getString("username") ?? "";
+    String businessName = prefs.getString("businessName") ?? "";
+    if (userID.isEmpty) {
+      Navigator.pushNamed(context, '/sign-in');
+    } else if (username.isEmpty) {
+      Navigator.pushNamed(context, '/create-account');
+    } else if (businessName.isEmpty) {
+      Navigator.pushNamed(context, '/add-directory');
+    } else {
+      Navigator.pushNamed(context, '/community');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double marginLeft1 = (MediaQuery.of(context).size.width - 221);
@@ -90,7 +109,7 @@ class _WalkFouthScreenState extends State<WalkFouthScreen> {
                               child: FittedBox(
                                 child: FloatingActionButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/sign-in');
+                                    onNext();
                                   },
                                   backgroundColor: APP_BLACK_COLOR,
                                   foregroundColor: APP_WHITE_COLOR,
