@@ -23,10 +23,11 @@ class _WalkFouthScreenState extends State<WalkFouthScreen> {
     prefs = await SharedPreferences.getInstance();
     String userID = prefs.getString("userID") ?? "";
     String username = prefs.getString("username") ?? "";
+    String fullname = prefs.getString("fullname") ?? "";
     String businessName = prefs.getString("businessName") ?? "";
     if (userID.isEmpty) {
       Navigator.pushNamed(context, '/sign-in');
-    } else if (username.isEmpty) {
+    } else if (fullname.isEmpty) {
       Navigator.pushNamed(context, '/create-account');
     } else if (businessName.isEmpty) {
       Navigator.pushNamed(context, '/add-directory');

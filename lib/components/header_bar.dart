@@ -19,6 +19,7 @@ class _HeaderBarState extends State<HeaderBar> {
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       alignment: Alignment.bottomLeft,
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border(
           bottom: BorderSide(
             color: Color(0xFFEAE6E6),

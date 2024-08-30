@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workhouse/screens/create_announcement/community_screen.dart';
+import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/launch_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_first_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_fouth_screen.dart';
@@ -33,6 +34,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => AddDirectory());
       case '/community':
         return MaterialPageRoute(builder: (_) => CommunityScreen());
+      case '/share-announcement':
+        return MaterialPageRoute(builder: (_) => ShareFirstScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
