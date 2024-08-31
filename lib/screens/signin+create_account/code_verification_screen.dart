@@ -58,8 +58,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
       } else if (businessName.isEmpty) {
         Navigator.pushReplacementNamed(context, "/add-directory");
       } else {
-        Navigator.pushReplacementNamed(context, "/add-directory");
-        // Navigator.pushReplacementNamed(context, "/community");
+        // Navigator.pushReplacementNamed(context, "/add-directory");
+        Navigator.pushReplacementNamed(context, "/community");
       }
     } catch (e) {
       CherryToast.error(

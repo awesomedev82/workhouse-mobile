@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/utils/constant.dart';
 import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
@@ -22,6 +24,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   final FocusNode _nodeText = FocusNode();
 
   List<Asset> images = <Asset>[];
+  List<File> imagefiles = <File>[];
   String _error = 'No Error Dectected';
   bool _permissionReady = false;
   AppLifecycleListener? _lifecycleListener;
@@ -44,10 +47,10 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   }
 
   Future<void> _loadAssets() async {
-    if (!_permissionReady) {
-      openAppSettings();
-      return;
-    }
+    // if (!_permissionReady) {
+    //   openAppSettings();
+    //   return;
+    // }
 
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -151,8 +154,28 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
 
     setState(() {
       images = resultList;
+      assetsToFiles();
       _error = error;
     });
+  }
+
+  void assetsToFiles() async {
+    List<File> tempFiles = [];
+    for (Asset asset in images) {
+      File file = await assetToFile(asset);
+      tempFiles.add(file);
+    }
+    setState(() {
+      imagefiles = tempFiles;
+    });
+  }
+
+  Future<File> assetToFile(Asset asset) async {
+    final byteData = await asset.getByteData();
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/${asset.name}');
+    await file.writeAsBytes(byteData.buffer.asUint8List());
+    return file;
   }
 
   @override
@@ -212,8 +235,8 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             (node) {
               return GestureDetector(
                 onTap: () {
-                  print("gallery");
-                  // _loadAssets();
+                  // print("gallery");
+                  _loadAssets();
                   // node.unfocus();
                 },
                 child: Container(
@@ -278,16 +301,16 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     return KeyboardActions(
       config: _buildConfig(context),
       child: Container(
-        // width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         color: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 TextField(
                   maxLines: 10,
                   minLines: 3,
@@ -308,14 +331,25 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                     focusedBorder: InputBorder.none,
                   ),
                 ),
-                Container(child: Text('Error: $_error')),
-                ElevatedButton(
-                  onPressed: _loadAssets,
-                  child: const Text("Pick images"),
-                ),
+
                 Container(
-                  child: _buildGridView(),
-                )
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: imagefiles.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 200,
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: Image.file(
+                          imagefiles[index],
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
               ],
             ),
           ),

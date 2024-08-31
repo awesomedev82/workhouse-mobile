@@ -51,6 +51,7 @@ dependencies:
   keyboard_actions: ^4.2.0
   multi_image_picker_plus: ^0.0.5
   permission_handler: ^11.3.1
+  path_provider: ^2.1.4
 
 dev_dependencies:
   flutter_test:
