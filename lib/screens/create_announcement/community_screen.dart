@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_card.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/header_bar.dart';
@@ -22,6 +26,35 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
+  late SharedPreferences prefs;
+  late SupabaseClient supabase;
+  String communityID = "";
+  List<dynamic> announcements = <dynamic>[];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+
+
+  void getData() async {
+    supabase = Supabase.instance.client;
+    prefs = await SharedPreferences.getInstance();
+    communityID = prefs.getString("communityID")!;
+    
+    final data = await supabase
+        .from("community_logs")
+        .select()
+        .eq("community_id", communityID);
+    //data[0]["images"]
+    setState(() {
+      announcements = data;
+    });
+    
+  }
+
   void _showAnnouncementInfoModal(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -80,14 +113,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       ),
                     ),
                     ImageCarousel(),
-                    AnnouncementCard(
-                      category: "main",
-                    ),
-                    AnnouncementCard(
-                      category: "other",
-                    ),
-                    AnnouncementCard(
-                      category: "other",
+                    ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: announcements.length,
+                      itemBuilder: (context, index) {
+                        return AnnouncementCard(
+                          id: announcements[index]["id"],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -106,7 +141,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            _showAnnouncementInfoModal(context);
+            getData();
+            // _showAnnouncementInfoModal(context);
           },
           backgroundColor: Color(0xFFAAD130),
           shape: RoundedRectangleBorder(

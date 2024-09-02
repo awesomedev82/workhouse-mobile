@@ -50,8 +50,10 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
           await supabase.from("members").select().eq("id", response.user!.id);
       String fullname = data[0]["full_name"];
       String businessName = data[0]["bio"];
+      String communityID = data[0]["community_id"];
       prefs.setString("fullname", fullname);
       prefs.setString("businessName", businessName);
+      prefs.setString("communityID", communityID);
       print("$fullname, $businessName");
       if (fullname.isEmpty) {
         Navigator.pushReplacementNamed(context, "/create-account");

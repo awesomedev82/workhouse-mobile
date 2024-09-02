@@ -1,10 +1,18 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_video_player.dart';
 import 'package:workhouse/utils/constant.dart';
 import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,36 +30,14 @@ class ShareFirstScreen extends StatefulWidget {
 
 class _ShareFirstScreenState extends State<ShareFirstScreen> {
   final FocusNode _nodeText = FocusNode();
+  late SharedPreferences prefs;
+  late SupabaseClient supabase;
+  String _description = "";
 
   List<Asset> images = <Asset>[];
   List<File> imagefiles = <File>[];
-  String _error = 'No Error Dectected';
-  bool _permissionReady = false;
-  AppLifecycleListener? _lifecycleListener;
-  static const List<Permission> _permissions = [
-    Permission.storage,
-    Permission.camera
-  ];
-
-  Future<void> _requestPermissions() async {
-    final Map<Permission, PermissionStatus> statues =
-        await _permissions.request();
-    if (statues.values.every((status) => status.isGranted)) {
-      _permissionReady = true;
-    }
-  }
-
-  Future<void> _checkPermissions() async {
-    _permissionReady = (await Future.wait(_permissions.map((e) => e.isGranted)))
-        .every((isGranted) => isGranted);
-  }
 
   Future<void> _loadAssets() async {
-    // if (!_permissionReady) {
-    //   openAppSettings();
-    //   return;
-    // }
-
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     List<Asset> resultList = <Asset>[];
@@ -87,7 +73,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     );
     const SelectionSetting selectionSetting = SelectionSetting(
       min: 0,
-      max: 3,
+      max: 20,
       unselectOnReachingMax: true,
     );
     const DismissSetting dismissSetting = DismissSetting(
@@ -124,7 +110,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        selectedAssets: images,
+        // selectedAssets: images,
         iosOptions: IOSOptions(
           doneButton:
               UIBarButtonItem(title: 'Confirm', tintColor: colorScheme.primary),
@@ -155,7 +141,6 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     setState(() {
       images = resultList;
       assetsToFiles();
-      _error = error;
     });
   }
 
@@ -180,31 +165,70 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
 
   @override
   void initState() {
-    _requestPermissions();
-    _lifecycleListener = AppLifecycleListener(
-      onResume: _checkPermissions,
-    );
     super.initState();
   }
 
   @override
   void dispose() {
-    _lifecycleListener?.dispose();
     super.dispose();
   }
 
-  Widget _buildGridView() {
-    return GridView.count(
-      crossAxisCount: 3,
-      children: List.generate(images.length, (index) {
-        Asset asset = images[index];
-        return AssetThumb(
-          asset: asset,
-          width: 300,
-          height: 300,
-        );
-      }),
-    );
+  void createAnnouncement() async {
+    // Navigator.of(context).pushNamed('/share-payment');
+    _showCustomModal(context);
+    prefs = await SharedPreferences.getInstance();
+    supabase = Supabase.instance.client;
+    String prefixURL =
+        "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/";
+
+    if (kDebugMode) {
+      print(prefs.getString("communityID"));
+      print(prefs.getString("userID"));
+      print(_description);
+    }
+    List<dynamic> data = <dynamic>[];
+    String uploadPath = "";
+    for (File media in imagefiles) {
+      uploadPath = await supabase.storage.from('community').upload(
+            "${DateTime.now().microsecondsSinceEpoch}",
+            media,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+          );
+      if (lookupMimeType(media.path).toString().startsWith("image")) {
+        //image
+        data.add({
+          "type": "image",
+          "url": prefixURL + uploadPath,
+        });
+      } else {
+        //video
+        data.add({
+          "type": "video",
+          "url": prefixURL + uploadPath,
+        });
+      }
+    }
+    try {
+      await supabase.from("community_logs").insert({
+        "sender": prefs.getString("userID"),
+        "images": data,
+        "community_id": prefs.getString("communityID"),
+        "description": _description,
+      });
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+      CherryToast.error(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Error occured, please try again!",
+          style: TextStyle(color: Colors.red[600]),
+        ),
+        // ignore: use_build_context_synchronously
+      ).show(context);
+    }
   }
 
   KeyboardActionsConfig _buildConfig(BuildContext context) {
@@ -268,7 +292,10 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             //button 3
             (node) {
               return GestureDetector(
-                onTap: () => node.unfocus(),
+                onTap: () {
+                  createAnnouncement();
+                  // node.unfocus();
+                },
                 child: Container(
                   margin: EdgeInsetsDirectional.symmetric(horizontal: 24),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -293,6 +320,50 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
           ],
         ),
       ],
+    );
+  }
+
+  void _showCustomModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
     );
   }
 
@@ -330,26 +401,77 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      _description = value;
+                    });
+                  },
                 ),
-
+                SizedBox(
+                  height: 12,
+                ),
                 Container(
+                  padding: EdgeInsets.zero,
+                  margin: EdgeInsets.zero,
                   child: ListView.builder(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: imagefiles.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        height: 200,
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        child: Image.file(
-                          imagefiles[index],
-                          fit: BoxFit.cover,
-                        ),
+                      return Stack(
+                        children: [
+                          lookupMimeType(imagefiles[index].path)
+                                  .toString()
+                                  .startsWith("image")
+                              ? Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.file(
+                                      imagefiles[index],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: AppVideoPlayer(
+                                        sourceFile: imagefiles[index]),
+                                  ),
+                                ),
+                          Positioned(
+                            left: 12,
+                            top: 12,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  imagefiles.removeAt(index);
+                                });
+                              },
+                              child: Container(
+                                width: 34,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF2D2D2D).withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(17),
+                                ),
+                                child: Icon(Ionicons.close,
+                                    color: Colors.white, size: 24),
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
                 ),
-
               ],
             ),
           ),

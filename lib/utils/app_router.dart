@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workhouse/screens/create_announcement/community_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
+import 'package:workhouse/screens/create_announcement/share_third_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/launch_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_first_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_fouth_screen.dart';
@@ -15,7 +16,7 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => LaunchScreen());
+        return MaterialPageRoute(builder: (_) => CommunityScreen());
       case '/walk-first':
         return MaterialPageRoute(builder: (_) => WalkFirstScreen());
       case '/walk-second':
@@ -36,6 +37,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => CommunityScreen());
       case '/share-announcement':
         return MaterialPageRoute(builder: (_) => ShareFirstScreen());
+      case '/share-payment':
+        return MaterialPageRoute(builder: (_) => ShareThirdScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

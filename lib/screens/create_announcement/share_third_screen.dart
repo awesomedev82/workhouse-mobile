@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
  */
 
 class ShareThirdScreen extends StatefulWidget {
-  const ShareThirdScreen({ Key? key }) : super(key: key);
+  const ShareThirdScreen({Key? key}) : super(key: key);
 
   @override
   _ShareThirdScreenState createState() => _ShareThirdScreenState();
@@ -14,8 +14,10 @@ class ShareThirdScreen extends StatefulWidget {
 class _ShareThirdScreenState extends State<ShareThirdScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      body: Container(
+        child: Text("Hello"),
+      ),
     );
   }
 }

@@ -123,7 +123,7 @@ class _AddDirectoryState extends State<AddDirectory> {
 
       try {
         final String fullPath = await supabase.storage.from('avatars').upload(
-              "${DateTime.now().microsecondsSinceEpoch}.jpg",
+              "${DateTime.now().microsecondsSinceEpoch}",
               _image!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
@@ -146,7 +146,8 @@ class _AddDirectoryState extends State<AddDirectory> {
         await supabase.from('members').update({
           "bio": businessName,
           "public_name": publicName,
-          "website": imgURL,
+          "avatar_url": imgURL,
+          "website": website,
           "industry": industry,
           "company_name": company,
         }).eq("id", uid);
