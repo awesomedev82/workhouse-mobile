@@ -149,7 +149,6 @@ class _AddDirectoryState extends State<AddDirectory> {
           "avatar_url": imgURL,
           "website": website,
           "industry": industry,
-          "company_name": company,
         }).eq("id", uid);
         Navigator.pushReplacementNamed(context, "/community");
       } catch (e) {
@@ -435,33 +434,33 @@ class _AddDirectoryState extends State<AddDirectory> {
                       height: 16,
                     ),
                     // MARK: Associated Co-Workspace
-                    Text(
-                      "Associated Co-Workspace",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppDropdown(
-                      items: [
-                        'Brown Bear Studios',
-                        'Decatur Street Studios',
-                        'One Eyed Studios',
-                        'None',
-                      ],
-                      initialValue: company,
-                      onItemSelected: _onCompanySelected,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    // Text(
+                    //   "Associated Co-Workspace",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppDropdown(
+                    //   items: [
+                    //     'Brown Bear Studios',
+                    //     'Decatur Street Studios',
+                    //     'One Eyed Studios',
+                    //     'None',
+                    //   ],
+                    //   initialValue: company,
+                    //   onItemSelected: _onCompanySelected,
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
                     AppButton(
                       text: "Create Account",
                       onTapped: () {

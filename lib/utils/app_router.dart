@@ -16,7 +16,7 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => CommunityScreen());
+        return MaterialPageRoute(builder: (_) => LaunchScreen());
       case '/walk-first':
         return MaterialPageRoute(builder: (_) => WalkFirstScreen());
       case '/walk-second':

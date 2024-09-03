@@ -65,7 +65,8 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                                 fit: BoxFit.cover,
                               )
                             : AppVideoPlayer(
-                                sourceURL: widget.data[i]["url"],
+                                type: "url",
+                                source: widget.data[i]["url"],
                               ),
                       ),
                     ),

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -41,132 +43,6 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   List<Asset> images = <Asset>[];
   List<File> imagefiles = <File>[];
 
-  Future<void> _loadAssets() async {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    List<Asset> resultList = <Asset>[];
-    String error = 'No Error Dectected';
-
-    const AlbumSetting albumSetting = AlbumSetting(
-      fetchResults: {
-        PHFetchResult(
-          type: PHAssetCollectionType.smartAlbum,
-          subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary,
-        ),
-        PHFetchResult(
-          type: PHAssetCollectionType.smartAlbum,
-          subtype: PHAssetCollectionSubtype.smartAlbumFavorites,
-        ),
-        PHFetchResult(
-          type: PHAssetCollectionType.album,
-          subtype: PHAssetCollectionSubtype.albumRegular,
-        ),
-        PHFetchResult(
-          type: PHAssetCollectionType.smartAlbum,
-          subtype: PHAssetCollectionSubtype.smartAlbumSelfPortraits,
-        ),
-        PHFetchResult(
-          type: PHAssetCollectionType.smartAlbum,
-          subtype: PHAssetCollectionSubtype.smartAlbumPanoramas,
-        ),
-        PHFetchResult(
-          type: PHAssetCollectionType.smartAlbum,
-          subtype: PHAssetCollectionSubtype.smartAlbumVideos,
-        ),
-      },
-    );
-    const SelectionSetting selectionSetting = SelectionSetting(
-      min: 0,
-      max: 20,
-      unselectOnReachingMax: true,
-    );
-    const DismissSetting dismissSetting = DismissSetting(
-      enabled: true,
-      allowSwipe: true,
-    );
-    final ThemeSetting themeSetting = ThemeSetting(
-      backgroundColor: colorScheme.background,
-      selectionFillColor: colorScheme.primary,
-      selectionStrokeColor: colorScheme.onPrimary,
-      previewSubtitleAttributes: const TitleAttribute(fontSize: 12.0),
-      previewTitleAttributes: TitleAttribute(
-        foregroundColor: colorScheme.primary,
-      ),
-      albumTitleAttributes: TitleAttribute(
-        foregroundColor: colorScheme.primary,
-      ),
-    );
-    const ListSetting listSetting = ListSetting(
-      spacing: 5.0,
-      cellsPerRow: 4,
-    );
-    const AssetsSetting assetsSetting = AssetsSetting(
-      // Set to allow pick videos.
-      supportedMediaTypes: {MediaTypes.video, MediaTypes.image},
-    );
-    final CupertinoSettings iosSettings = CupertinoSettings(
-      fetch: const FetchSetting(album: albumSetting, assets: assetsSetting),
-      theme: themeSetting,
-      selection: selectionSetting,
-      dismiss: dismissSetting,
-      list: listSetting,
-    );
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        // selectedAssets: images,
-        iosOptions: IOSOptions(
-          doneButton:
-              UIBarButtonItem(title: 'Confirm', tintColor: colorScheme.primary),
-          cancelButton:
-              UIBarButtonItem(title: 'Cancel', tintColor: colorScheme.primary),
-          albumButtonColor: colorScheme.primary,
-          settings: iosSettings,
-        ),
-        androidOptions: AndroidOptions(
-          actionBarColor: colorScheme.surface,
-          actionBarTitleColor: colorScheme.onSurface,
-          statusBarColor: colorScheme.surface,
-          actionBarTitle: "Select Photo",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: colorScheme.primary,
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-      assetsToFiles();
-    });
-  }
-
-  void assetsToFiles() async {
-    List<File> tempFiles = [];
-    for (Asset asset in images) {
-      File file = await assetToFile(asset);
-      tempFiles.add(file);
-    }
-    setState(() {
-      imagefiles = tempFiles;
-    });
-  }
-
-  Future<File> assetToFile(Asset asset) async {
-    final byteData = await asset.getByteData();
-    final tempDir = await getTemporaryDirectory();
-    final file = File('${tempDir.path}/${asset.name}');
-    await file.writeAsBytes(byteData.buffer.asUint8List());
-    return file;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -175,6 +51,67 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  // MARK: Load Gallery Media
+  void _loadMediaFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    // final video = await picker.pickVideo(source: ImageSource.gallery);
+    final medias = await picker.pickMultipleMedia();
+    List<File> resultFiles = imagefiles;
+    for (var media in medias) {
+      resultFiles.add(File(media.path));
+    }
+    setState(() {
+      imagefiles = resultFiles;
+    });
+  }
+
+  // MARK: Load Camera
+  void _loadMediaFromCamera() async {}
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Photo Library'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        final image = File(pickedFile.path);
+        imagefiles.add(image);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   // MARK: Continue
@@ -209,12 +146,12 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       }
     }
     try {
-      await supabase.from("community_logs").insert({
-        "sender": prefs.getString("userID"),
-        "images": data,
-        "community_id": prefs.getString("communityID"),
-        "description": _description,
-      });
+      // await supabase.from("community_logs").insert({
+      //   "sender": prefs.getString("userID"),
+      //   "images": data,
+      //   "community_id": prefs.getString("communityID"),
+      //   "description": _description,
+      // });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
       CherryToast.success(
@@ -255,7 +192,11 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             //button 1
             (node) {
               return GestureDetector(
-                onTap: () => node.unfocus(),
+                onTap: () {
+                  // print("gallery");
+                  _loadMediaFromCamera();
+                  // node.unfocus();
+                },
                 child: Container(
                   width: 32,
                   height: 32,
@@ -269,7 +210,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
               return GestureDetector(
                 onTap: () {
                   // print("gallery");
-                  _loadAssets();
+                  _loadMediaFromGallery();
                   // node.unfocus();
                 },
                 child: Container(
@@ -556,7 +497,8 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: AppVideoPlayer(
-                                      sourceFile: imagefiles[index],
+                                      type: "file",
+                                      source: imagefiles[index],
                                     ),
                                   ),
                                 ),

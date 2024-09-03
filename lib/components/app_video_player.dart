@@ -5,13 +5,13 @@ import 'package:video_player/video_player.dart';
 import 'package:workhouse/utils/constant.dart';
 
 class AppVideoPlayer extends StatefulWidget {
-  final dynamic sourceFile;
-  final dynamic sourceURL;
+  final dynamic type;
+  final dynamic source;
 
   const AppVideoPlayer({
     Key? key,
-    this.sourceFile,
-    this.sourceURL,
+    required this.type,
+    required this.source,
   }) : super(key: key);
 
   @override
@@ -24,13 +24,13 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
 
   @override
   void initState() {
-    if (widget.sourceURL.isNotEmpty) {
+    if (widget.type == "url") {
       _controller = VideoPlayerController.networkUrl(
         Uri.parse(
-          widget.sourceURL,
+          widget.source,
         ),
       );
-    } else {
+    } else if (widget.type == "file") {
       _controller = VideoPlayerController.networkUrl(
         Uri.parse(
           'https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/community/1724233507205',

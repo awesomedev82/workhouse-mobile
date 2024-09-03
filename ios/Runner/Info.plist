@@ -53,8 +53,19 @@
 		<string>To scan cards</string>
 		<key>NSAppTransportSecurity</key>
 		<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true />
+			<!-- Allows specific domains (example.com) to use HTTP -->
+			<key>NSExceptionDomains</key>
+			<dict>
+				<key>lgkqpwmgwwexlxfnvoyp.supabase.co</key>
+				<dict>
+					<key>NSIncludesSubdomains</key>
+					<true />
+					<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+					<true />
+					<key>NSTemporaryExceptionMinimumTLSVersion</key>
+					<string>TLSv1.2</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>App needs access to photo lib for profile images</string>
