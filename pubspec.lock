@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  cached_video_player_plus:
-    dependency: "direct main"
-    description:
-      name: cached_video_player_plus
-      sha256: "451ee48bdbd28fac3d49b4389929c44d259b1def5be6dab0c5bfd3ae1f05e8b5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.3"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -137,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -201,27 +185,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+2"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_cache_manager:
-    dependency: transitive
-    description:
-      name: flutter_cache_manager
-      sha256: "400b6592f16a4409a7f2bb929a9a7e38c72cceb8ffb99ee57bbf2cb2cecf8386"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.1"
   flutter_carousel_widget:
     dependency: "direct main"
     description:
@@ -254,14 +222,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.22"
-  flutter_reorderable_grid_view:
-    dependency: transitive
-    description:
-      name: flutter_reorderable_grid_view
-      sha256: ac92a49a8411adfda40f75eff44d0958ee879b0f9d6776bb6154c74aa166aaf1
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   flutter_stripe:
     dependency: "direct main"
     description:
@@ -312,14 +272,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.6"
-  get_storage:
-    dependency: transitive
-    description:
-      name: get_storage
-      sha256: "39db1fffe779d0c22b3a744376e86febe4ade43bf65e06eab5af707dc84185a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -544,14 +496,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.5"
-  multi_image_picker_view:
-    dependency: "direct main"
-    description:
-      name: multi_image_picker_view
-      sha256: cc96d5d4aa8c50ff433088fb9c7e7acef50a2aa5c31565b7ffce36a9e0aad191
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   otp_input_editor:
     dependency: "direct main"
     description:
@@ -797,30 +741,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  sprintf:
-    dependency: transitive
-    description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
-  sqflite:
-    dependency: transitive
-    description:
-      name: sqflite
-      sha256: a43e5a27235518c03ca238e7b4732cf35eabe863a369ceba6cbefa537a66f16d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.3+1"
-  sqflite_common:
-    dependency: transitive
-    description:
-      name: sqflite_common
-      sha256: "7b41b6c3507854a159e24ae90a8e3e9cc01eb26a477c118d6dca065b5f55453e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.4+2"
   stack_trace:
     dependency: transitive
     description:
@@ -893,14 +813,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      sha256: a824e842b8a054f91a728b783c177c1e4731f6b124f9192468457a8913371255
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.0"
   term_glyph:
     dependency: transitive
     description:
@@ -989,14 +901,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      sha256: f33d6bb662f0e4f79dcd7ada2e6170f3b3a2530c28fc41f49a411ddedd576a77
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.0"
   vector_graphics:
     dependency: transitive
     description:
