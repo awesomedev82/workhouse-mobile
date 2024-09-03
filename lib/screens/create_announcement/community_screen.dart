@@ -141,8 +141,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            getData();
-            // _showAnnouncementInfoModal(context);
+            _showAnnouncementInfoModal(context);
           },
           backgroundColor: Color(0xFFAAD130),
           shape: RoundedRectangleBorder(

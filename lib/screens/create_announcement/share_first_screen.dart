@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,8 @@ import 'package:workhouse/components/app_video_player.dart';
 import 'package:workhouse/utils/constant.dart';
 import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
 
 /**
  * MARK: Share First Screen UI Widget Class
@@ -32,6 +35,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   final FocusNode _nodeText = FocusNode();
   late SharedPreferences prefs;
   late SupabaseClient supabase;
+  Map<String, dynamic>? paymentIntent;
   String _description = "";
 
   List<Asset> images = <Asset>[];
@@ -173,19 +177,15 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     super.dispose();
   }
 
+  // MARK: Continue
   void createAnnouncement() async {
     // Navigator.of(context).pushNamed('/share-payment');
-    _showCustomModal(context);
+    _showProgressModal(context);
     prefs = await SharedPreferences.getInstance();
     supabase = Supabase.instance.client;
     String prefixURL =
         "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/";
 
-    if (kDebugMode) {
-      print(prefs.getString("communityID"));
-      print(prefs.getString("userID"));
-      print(_description);
-    }
     List<dynamic> data = <dynamic>[];
     String uploadPath = "";
     for (File media in imagefiles) {
@@ -217,6 +217,14 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
+      CherryToast.success(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Created successfully!",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
+      ).show(context);
+      Navigator.pushNamed(context, '/community');
     } catch (e) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
@@ -231,6 +239,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     }
   }
 
+  // MARK: Custom Keyboard
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
@@ -292,8 +301,10 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             //button 3
             (node) {
               return GestureDetector(
-                onTap: () {
-                  createAnnouncement();
+                onTap: () async {
+                  // Navigator.of(context).pushNamed('/share-payment');
+                  await makePayment();
+                  // createAnnouncement();
                   // node.unfocus();
                 },
                 child: Container(
@@ -323,7 +334,8 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     );
   }
 
-  void _showCustomModal(BuildContext context) {
+// MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -367,6 +379,105 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     );
   }
 
+  //MARK: Payment
+
+  Future<void> makePayment() async {
+    try {
+      // Create payment intent data
+      paymentIntent = await createPaymentIntent('2', 'USD');
+      // initialise the payment sheet setup
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          // Client secret key from payment data
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          // applePay: const PaymentSheetApplePay(
+          //   // Currency and country code is accourding to India
+          //   merchantCountryCode: "US",
+          // ),
+          // Merchant Name
+          merchantDisplayName: 'Flutterwings',
+          // return URl if you want to add
+          // returnURL: 'flutterstripe://redirect',
+        ),
+      );
+      // Display payment sheet
+      displayPaymentSheet();
+    } catch (e) {
+      print("exception $e");
+
+      if (e is StripeConfigException) {
+        print("Stripe exception ${e.message}");
+      } else {
+        print("exception $e");
+      }
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      // "Display payment sheet";
+      await Stripe.instance.presentPaymentSheet();
+      // Show when payment is done
+      // Displaying snackbar for it
+      createAnnouncement();
+      CherryToast.success(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Paid successfully!",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
+      ).show(context);
+      paymentIntent = null;
+    } on StripeException catch (e) {
+      // If any error comes during payment
+      // so payment will be cancelled
+      print('Error: $e');
+
+      CherryToast.error(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Payment cancelled",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
+      ).show(context);
+    } catch (e) {
+      print("Error in displaying");
+      print('$e');
+      CherryToast.error(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Error occured! Please try again.",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
+      ).show(context);
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': ((int.parse(amount)) * 100).toString(),
+        'currency': currency,
+        'payment_method_types[]': 'card',
+      };
+      var secretKey =
+          "sk_test_51PnWTm08Ulib0PHQqElIYnTFfpWUtayQVvNR0c69y1LX4E9pS4VKx9hWL0f5jWjXWpD0D5hgHUxJpD8dqlOKMrDf00DbAhp54q";
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer $secretKey',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      print('Payment Intent Body: ${response.body.toString()}');
+      return jsonDecode(response.body.toString());
+    } catch (err) {
+      print('Error charging user: ${err.toString()}');
+    }
+  }
+
+  //MARK: Screen
   @override
   Widget build(BuildContext context) {
     return KeyboardActions(
@@ -382,6 +493,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // MARK: screen-description
                 TextField(
                   maxLines: 10,
                   minLines: 3,
@@ -410,6 +522,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                 SizedBox(
                   height: 12,
                 ),
+                //MARK: screen-media
                 Container(
                   padding: EdgeInsets.zero,
                   margin: EdgeInsets.zero,
@@ -443,7 +556,8 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: AppVideoPlayer(
-                                        sourceFile: imagefiles[index]),
+                                      sourceFile: imagefiles[index],
+                                    ),
                                   ),
                                 ),
                           Positioned(
@@ -462,8 +576,11 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                                   color: Color(0xFF2D2D2D).withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(17),
                                 ),
-                                child: Icon(Ionicons.close,
-                                    color: Colors.white, size: 24),
+                                child: Icon(
+                                  Ionicons.close,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                             ),
                           ),

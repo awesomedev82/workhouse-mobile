@@ -60,7 +60,6 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
       userInfo = temp[0];
     }
     List<dynamic> mediasTemp = <dynamic>[];
-    print(json.decode(data["images"]));
     for (var media in json.decode(data["images"])) {
       mediasTemp.add({"type": media["type"], "url": media["url"]});
     }

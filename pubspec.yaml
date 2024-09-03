@@ -56,6 +56,8 @@ dependencies:
   multi_image_picker_view: ^1.0.3
   mime: ^1.0.6
   cached_video_player_plus: ^3.0.3
+  flutter_stripe: ^11.0.0
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
