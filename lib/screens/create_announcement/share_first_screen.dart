@@ -68,7 +68,9 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   }
 
   // MARK: Load Camera
-  void _loadMediaFromCamera() async {}
+  void _loadMediaFromCamera() {
+    _showPicker(context);
+  }
 
   void _showPicker(context) {
     showModalBottomSheet(
@@ -78,18 +80,18 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
           child: Wrap(
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Photo Library'),
+                leading: Icon(Icons.image),
+                title: Text('Image'),
                 onTap: () {
-                  _pickImage(ImageSource.gallery);
+                  _pickImage('image');
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_camera),
+                leading: Icon(Icons.video_camera_back),
                 title: Text('Camera'),
                 onTap: () {
-                  _pickImage(ImageSource.camera);
+                  _pickImage("video");
                   Navigator.of(context).pop();
                 },
               ),
@@ -100,9 +102,14 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     );
   }
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(String type) async {
     final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
+    late XFile? pickedFile;
+    if (type == "image") {
+      pickedFile = await picker.pickImage(source: ImageSource.camera);
+    } else {
+      pickedFile = await picker.pickImage(source: ImageSource.camera);
+    }
 
     setState(() {
       if (pickedFile != null) {
@@ -117,6 +124,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   // MARK: Continue
   void createAnnouncement() async {
     // Navigator.of(context).pushNamed('/share-payment');
+
     _showProgressModal(context);
     prefs = await SharedPreferences.getInstance();
     supabase = Supabase.instance.client;
@@ -146,12 +154,12 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       }
     }
     try {
-      // await supabase.from("community_logs").insert({
-      //   "sender": prefs.getString("userID"),
-      //   "images": data,
-      //   "community_id": prefs.getString("communityID"),
-      //   "description": _description,
-      // });
+      await supabase.from("community_logs").insert({
+        "sender": prefs.getString("userID"),
+        "images": data,
+        "community_id": prefs.getString("communityID"),
+        "description": _description,
+      });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
       CherryToast.success(
@@ -244,6 +252,16 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
               return GestureDetector(
                 onTap: () async {
                   // Navigator.of(context).pushNamed('/share-payment');
+                  if (_description.isEmpty) {
+                    CherryToast.error(
+                      animationDuration: Duration(milliseconds: 300),
+                      title: Text(
+                        "Please type description!",
+                        style: TextStyle(color: Colors.red[600]),
+                      ),
+                    ).show(context);
+                    return;
+                  }
                   await makePayment();
                   // createAnnouncement();
                   // node.unfocus();
@@ -323,6 +341,16 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   //MARK: Payment
 
   Future<void> makePayment() async {
+    if (_description.isEmpty) {
+      CherryToast.error(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Please type description!",
+          style: TextStyle(color: Colors.red[600]),
+        ),
+      ).show(context);
+      return;
+    }
     try {
       // Create payment intent data
       paymentIntent = await createPaymentIntent('2', 'USD');

@@ -30,8 +30,7 @@ class _AppDropdownState extends State<AppDropdown> {
     String _tempSelectedItem = _selectedItem ?? "";
     showModalBottomSheet(
       context: context,
-      scrollControlDisabledMaxHeightRatio:
-          (widget.items.length + 2) * 200 / 2220,
+      scrollControlDisabledMaxHeightRatio: 0.8,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -111,64 +110,56 @@ class _AppDropdownState extends State<AppDropdown> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...widget.items.map(
-                          (option) {
-                            bool isSelected = _tempSelectedItem == option;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _tempSelectedItem = option;
-                                  print(_tempSelectedItem);
-                                });
-                              },
-                              child: Container(
-                                height: 70,
-                                padding: EdgeInsets.symmetric(horizontal: 24),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? Color(0xFFAAD130).withOpacity(0.1)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color(0xFFF2F2F2),
-                                      width: 1,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ...widget.items.map(
+                            (option) {
+                              bool isSelected = _tempSelectedItem == option;
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _tempSelectedItem = option;
+                                    print(_tempSelectedItem);
+                                  });
+                                },
+                                child: Container(
+                                  height: 70,
+                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? Color(0xFFAAD130).withOpacity(0.1)
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Color(0xFFF2F2F2),
+                                        width: 1,
+                                      ),
                                     ),
                                   ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(option),
+                                      SizedBox(width: 16),
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: isSelected
+                                            ? Color(0xFF17181A)
+                                            : Colors.grey.withOpacity(0),
+                                        size: 24,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(option),
-                                    SizedBox(width: 16),
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: isSelected
-                                          ? Color(0xFF17181A)
-                                          : Colors.grey.withOpacity(0),
-                                      size: 24,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //     setState(() {
-                        //       _selectedItem = _tempSelectedItem;
-                        //       widget.onItemSelected(_selectedItem);
-                        //     });
-                        //   },
-                        //   child: Text('Done'),
-                        // ),
-                      ],
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -190,7 +181,8 @@ class _AppDropdownState extends State<AppDropdown> {
         height: 44,
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         decoration: BoxDecoration(
-          border: Border.all(color: Color.fromARGB(255, 114, 113, 113), width: 1),
+          border:
+              Border.all(color: Color.fromARGB(255, 114, 113, 113), width: 1),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Row(

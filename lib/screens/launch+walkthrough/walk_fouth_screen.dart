@@ -32,7 +32,7 @@ class _WalkFouthScreenState extends State<WalkFouthScreen> {
     } else if (businessName.isEmpty) {
       Navigator.pushNamed(context, '/add-directory');
     } else {
-      Navigator.pushNamed(context, '/add-directory');
+      Navigator.pushNamed(context, '/community');
     }
   }
 
