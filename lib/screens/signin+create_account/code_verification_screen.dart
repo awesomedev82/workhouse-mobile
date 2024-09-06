@@ -1,14 +1,17 @@
 import 'package:cherry_toast/cherry_toast.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_progress_indicator.dart';
 import 'package:workhouse/components/otp_input.dart';
 import 'package:workhouse/components/page_indicator.dart';
 import 'package:workhouse/utils/constant.dart';
+import 'package:workhouse/utils/profile_provider.dart';
 
 /**
  * MARK: Code Verification Screen UI Widget Class
@@ -33,11 +36,12 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
     });
   }
 
-  void verifyOTP() async {
-    // print(_otpcode);
+  //MARK: Verify OTP
+  void verifyOTP(ProfileProvider profileProvider) async {
+    print(_otpcode);
+    _showProgressModal(context);
     prefs = await SharedPreferences.getInstance();
-    _emailAddress = prefs.getString("email") ?? "";
-    print(_emailAddress);
+    _emailAddress = prefs.getString("email")!;
     try {
       final response = await Supabase.instance.client.auth.verifyOTP(
         email: _emailAddress,
@@ -46,36 +50,120 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
       );
       prefs.setString("userID", response.user?.id ?? "");
       supabase = Supabase.instance.client;
-      final data =
-          await supabase.from("members").select().eq("id", response.user!.id);
-      String fullname = data[0]["full_name"];
-      String businessName = data[0]["bio"];
-      String communityID = data[0]["community_id"];
+      final data = await supabase
+          .from("member_community_view")
+          .select()
+          .eq("id", response.user!.id);
+      print(data[0]);
+      String fullname = data[0]["full_name"] ?? "";
+      String businessName = data[0]["business_name"] ?? "";
+      String communityID = data[0]["community_id"] ?? "";
+      String avatar = data[0]["avatar_url"] ?? "";
+      print("$fullname, $businessName, $communityID");
       prefs.setString("fullname", fullname);
       prefs.setString("businessName", businessName);
       prefs.setString("communityID", communityID);
-      print("$fullname, $businessName");
+      prefs.setString("avatar", avatar);
+      profileProvider.avatar = avatar;
+
       if (fullname.isEmpty) {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, "/create-account");
       } else if (businessName.isEmpty) {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, "/add-directory");
       } else {
-        // Navigator.pushReplacementNamed(context, "/add-directory");
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, "/community");
       }
     } catch (e) {
+      Navigator.of(context).pop();
       CherryToast.error(
         animationDuration: Duration(milliseconds: 300),
         title: Text(
           "Code is incorrect or expired!",
           style: TextStyle(color: Colors.red[600]),
         ),
+        // ignore: use_build_context_synchronously
+      ).show(context);
+      print("Error:$e");
+    }
+  }
+
+  //MARK: Resend code
+  void _resendCode() async {
+    try {
+      prefs = await SharedPreferences.getInstance();
+      _emailAddress = prefs.getString("email") ?? "";
+      final response = await Supabase.instance.client.auth.signInWithOtp(
+        email: _emailAddress,
+      );
+      CherryToast.info(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "New code was sent!",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
+      ).show(context);
+    } catch (e) {
+      CherryToast.error(
+        animationDuration: Duration(milliseconds: 300),
+        title: Text(
+          "Error occured, please try again!",
+          style: TextStyle(color: Colors.blue[600]),
+        ),
       ).show(context);
     }
   }
 
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context);
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -161,20 +249,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              prefs = await SharedPreferences.getInstance();
-                              _emailAddress = prefs.getString("email") ?? "";
-                              final response = await Supabase
-                                  .instance.client.auth
-                                  .signInWithOtp(
-                                email: _emailAddress,
-                              );
-                              CherryToast.info(
-                                animationDuration: Duration(milliseconds: 300),
-                                title: Text(
-                                  "New code was sent!",
-                                  style: TextStyle(color: Colors.blue[600]),
-                                ),
-                              ).show(context);
+                              _resendCode();
                             },
                             child: Text(
                               "Resend Code",
@@ -197,7 +272,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                     AppButton(
                       text: "Login",
                       onTapped: () {
-                        verifyOTP();
+                        verifyOTP(profileProvider);
                       },
                     ),
                   ],

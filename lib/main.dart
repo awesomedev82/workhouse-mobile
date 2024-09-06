@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/utils/app_router.dart';
+import 'package:workhouse/utils/profile_provider.dart';
 
 /**
  * MARK: App Entry point
@@ -19,22 +21,24 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Workhouse',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF000000)),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => ProfileProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Workhouse',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF000000)),
+          useMaterial3: true,
+        ),
+        initialRoute: '/',
+        onGenerateRoute: AppRouter.generateRoute,
       ),
-      initialRoute: '/',
-      onGenerateRoute: AppRouter.generateRoute,
     );
   }
 }

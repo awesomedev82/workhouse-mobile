@@ -293,7 +293,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     );
   }
 
-// MARK: Loading Progress Animation
+  // MARK: Loading Progress Animation
   void _showProgressModal(BuildContext context) {
     showGeneralDialog(
       context: context,

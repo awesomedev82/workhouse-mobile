@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_card.dart';
@@ -37,22 +38,21 @@ class _CommunityScreenState extends State<CommunityScreen> {
     getData();
   }
 
-
-
+  // MARK: Init data
   void getData() async {
     supabase = Supabase.instance.client;
     prefs = await SharedPreferences.getInstance();
     communityID = prefs.getString("communityID")!;
-    
+
     final data = await supabase
-        .from("community_logs")
+        .from("community_logs_with_roles")
         .select()
-        .eq("community_id", communityID);
-    //data[0]["images"]
+        .eq("community_id", communityID)
+        .order('role', ascending: true)
+        .order("created_at", ascending: false);
     setState(() {
       announcements = data;
     });
-    
   }
 
   void _showAnnouncementInfoModal(BuildContext context) {
@@ -73,6 +73,51 @@ class _CommunityScreenState extends State<CommunityScreen> {
         return SlideTransition(
           position:
               Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
           child: child,
         );
       },

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workhouse/screens/signin+create_account/sign_in_screen.dart';
 import 'package:workhouse/utils/constant.dart';
+import 'package:workhouse/utils/profile_provider.dart';
 
 /**
  * MARK: Walk Fouth Screen UI Widget Class
@@ -19,7 +21,7 @@ class WalkFouthScreen extends StatefulWidget {
 class _WalkFouthScreenState extends State<WalkFouthScreen> {
   late SharedPreferences prefs;
 
-  void onNext() async {
+  void onNext(profileProvider) async {
     prefs = await SharedPreferences.getInstance();
     String userID = prefs.getString("userID") ?? "";
     String username = prefs.getString("username") ?? "";
@@ -38,6 +40,7 @@ class _WalkFouthScreenState extends State<WalkFouthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context);
     double marginLeft1 = (MediaQuery.of(context).size.width - 221);
     double marginLeft2 = (MediaQuery.of(context).size.width - 267);
     return Scaffold(
@@ -110,7 +113,7 @@ class _WalkFouthScreenState extends State<WalkFouthScreen> {
                               child: FittedBox(
                                 child: FloatingActionButton(
                                   onPressed: () {
-                                    onNext();
+                                    onNext(profileProvider);
                                   },
                                   backgroundColor: APP_BLACK_COLOR,
                                   foregroundColor: APP_WHITE_COLOR,

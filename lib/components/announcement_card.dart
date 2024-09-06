@@ -65,12 +65,18 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     }
 
     setState(() {
-      publicName =
-          role == "member" ? userInfo["public_name"] : userInfo["full_name"];
-      businessName = role == "member" ? userInfo["bio"] : "Manager";
-      description = data["description"];
-      createdAt = timeDifference(data["created_at"]);
-      medias = mediasTemp;
+      try {
+        print("USERINFO:$userInfo");
+        publicName =
+            role == "member" ? userInfo["public_name"] : userInfo["full_name"];
+        businessName = role == "member" ? userInfo["business_name"] : "Manager";
+        description = data["description"];
+        createdAt = timeDifference(data["created_at"]);
+        medias = mediasTemp;
+        medias = mediasTemp;
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
@@ -101,11 +107,12 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
-        color:
-            widget.id == 1 ? Color(0xFF349B6F).withOpacity(0.19) : Colors.white,
+        color: role == "manager"
+            ? Color(0xFF349B6F).withOpacity(0.19)
+            : Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: Color(0xFFFAF6F6),
+            color: Color(0xFFF5F0F0),
             width: 1,
           ),
         ),
@@ -124,7 +131,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       fit: BoxFit.cover,
                     )
                   : Container(
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
             ),
           ),
@@ -154,6 +161,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                 SizedBox(
                   height: 4,
                 ),
+                //MARK: Public name
                 Container(
                   child: Row(
                     children: [
@@ -170,25 +178,31 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       SizedBox(
                         width: 4,
                       ),
-                      Container(
-                        width: 2,
-                        height: 2,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1),
-                          color: Colors.black,
+                      if (publicName != "" && businessName != "")
+                        Container(
+                          width: 2,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(1),
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
                       SizedBox(
                         width: 4,
                       ),
-                      Text(
-                        businessName,
-                        style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF17181A),
-                            fontWeight: FontWeight.w300,
-                            height: 1.6,
+                      //MARK: Business name
+                      Expanded(
+                        child: Text(
+                          businessName,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF17181A),
+                              fontWeight: FontWeight.w300,
+                              height: 1.6,
+                            ),
                           ),
                         ),
                       ),

@@ -41,7 +41,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
       ).show(context);
       return false;
-    } else if (phonenumber.isEmpty || !RegExp(r'^\d+$').hasMatch(phonenumber)) {
+    } else if (phonenumber.isEmpty ||
+        !RegExp(r'^\d{3}\.\d{3}\.\d{4}$').hasMatch(phonenumber)) {
       validateText = "Input Correct Phonenumber";
       CherryToast.error(
         animationDuration: Duration(milliseconds: 300),
@@ -62,7 +63,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         _showCustomModal(context);
         try {
           await supabase.from('members').update(
-              {"full_name": fullname, "phone": phonenumber}).eq("id", uid);
+            {"full_name": fullname, "phone": phonenumber},
+          ).eq("id", uid);
           Navigator.of(context).pop();
           return true;
         } catch (e) {
@@ -215,7 +217,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       height: 4,
                     ),
                     AppInput(
-                      hintText: "",
+                      hintText: "Full Name",
                       validate: (val) {
                         setState(() {
                           fullname = val;
@@ -242,7 +244,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       height: 4,
                     ),
                     AppInput(
-                      hintText: "",
+                      hintText: "123.123.1234",
                       validate: (val) {
                         setState(() {
                           phonenumber = val;

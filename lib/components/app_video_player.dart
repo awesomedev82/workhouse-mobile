@@ -20,7 +20,6 @@ class AppVideoPlayer extends StatefulWidget {
 
 class _AppVideoPlayerState extends State<AppVideoPlayer> {
   late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
@@ -37,8 +36,6 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
         ),
       );
     }
-
-    _initializeVideoPlayerFuture = _controller.initialize();
 
     _controller.setLooping(true);
 
@@ -58,7 +55,7 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
       height: 200,
       decoration: BoxDecoration(
         color: Colors.black,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: _controller.value.isInitialized
           ? AspectRatio(

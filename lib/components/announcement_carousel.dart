@@ -13,15 +13,6 @@ class AnnouncementCarousel extends StatefulWidget {
 }
 
 class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
-  final List<String> imageSources = [
-    'assets/images/carousel-1.png',
-    'assets/images/carousel-2.png',
-    'assets/images/carousel-3.png',
-    'assets/images/carousel-1.png',
-    'assets/images/carousel-2.png',
-    'assets/images/carousel-3.png',
-  ];
-
   late List<int> indexList = <int>[];
 
   @override
@@ -60,9 +51,14 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: widget.data[i]["type"] == "image"
-                            ? Image.network(
-                                widget.data[i]["url"],
-                                fit: BoxFit.cover,
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: Image.network(
+                                  widget.data[i]["url"],
+                                  fit: BoxFit.cover,
+                                ),
                               )
                             : AppVideoPlayer(
                                 type: "url",

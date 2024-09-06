@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
@@ -14,6 +15,7 @@ import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/components/otp_input.dart';
 import 'package:workhouse/components/page_indicator.dart';
 import 'package:workhouse/utils/constant.dart';
+import 'package:workhouse/utils/profile_provider.dart';
 
 class AddDirectory extends StatefulWidget {
   const AddDirectory({Key? key}) : super(key: key);
@@ -87,7 +89,7 @@ class _AddDirectoryState extends State<AddDirectory> {
     });
   }
 
-  void onNext() async {
+  void onNext(ProfileProvider profileProvider) async {
     if (businessName.isEmpty) {
       CherryToast.error(
         animationDuration: Duration(milliseconds: 300),
@@ -142,14 +144,16 @@ class _AddDirectoryState extends State<AddDirectory> {
       }
       print("imgURL:$imgURL");
       prefs.setString("avatar", imgURL);
+      profileProvider.avatar = imgURL;
       try {
         await supabase.from('members').update({
-          "bio": businessName,
+          "business_name": businessName,
           "public_name": publicName,
           "avatar_url": imgURL,
           "website": website,
           "industry": industry,
         }).eq("id", uid);
+        prefs.setString("avatar", imgURL);
         Navigator.pushReplacementNamed(context, "/community");
       } catch (e) {
         Navigator.of(context).pop();
@@ -210,6 +214,7 @@ class _AddDirectoryState extends State<AddDirectory> {
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context);
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -348,33 +353,6 @@ class _AddDirectoryState extends State<AddDirectory> {
                     SizedBox(
                       height: 16,
                     ),
-                    // MARK: Website
-                    Text(
-                      "Website (optional)",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppInput(
-                      hintText: "",
-                      validate: (val) {
-                        setState(() {
-                          website = val;
-                        });
-                      },
-                      inputType: TextInputType.url,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
                     // MARK: Publick name
                     Text(
                       "Public Username",
@@ -398,6 +376,33 @@ class _AddDirectoryState extends State<AddDirectory> {
                         });
                       },
                       inputType: TextInputType.text,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    // MARK: Website
+                    Text(
+                      "Website (optional)",
+                      style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Color(0xFF17181A),
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    AppInput(
+                      hintText: "",
+                      validate: (val) {
+                        setState(() {
+                          website = val;
+                        });
+                      },
+                      inputType: TextInputType.url,
                     ),
                     SizedBox(
                       height: 16,
@@ -503,7 +508,7 @@ class _AddDirectoryState extends State<AddDirectory> {
                     AppButton(
                       text: "Create Account",
                       onTapped: () {
-                        onNext();
+                        onNext(profileProvider);
                       },
                     ),
                     SizedBox(
