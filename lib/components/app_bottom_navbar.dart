@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,15 +87,27 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
                         borderRadius: BorderRadius.circular(12),
                         color: Color(0xFF898A8D),
                       ),
+                      child: AspectRatio(
+                        aspectRatio: 1.6,
+                        child: BlurHash(
+                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                        ),
+                      ),
                     )
                   : SizedBox(
                       height: 24,
                       width: 24,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          avatar,
+                        child: CachedNetworkImage(
+                          imageUrl: avatar,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => const AspectRatio(
+                            aspectRatio: 1.6,
+                            child: BlurHash(
+                              hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                            ),
+                          ),
                         ),
                       ),
                     ),

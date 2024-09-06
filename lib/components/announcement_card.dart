@@ -1,10 +1,13 @@
 import 'dart:convert';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class AnnouncementCard extends StatefulWidget {
   const AnnouncementCard({Key? key, required this.id}) : super(key: key);
@@ -36,6 +39,8 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
   void getData() async {
     supabase = Supabase.instance.client;
+    prefs = await SharedPreferences.getInstance();
+    communityID = prefs.getString("communityID")!;
     dynamic temp =
         await supabase.from("community_logs").select().eq("id", widget.id);
     final data = temp[0];
@@ -52,10 +57,12 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
     temp = await supabase.from("profiles").select().eq("id", data["sender"]);
     if (temp.length == 1) {
+      dynamic cdata =
+          await supabase.from("communities").select().eq("id", communityID);
+      print("communityData:\n${cdata[0]["logo_url"]}");
       setState(() {
         role = "manager";
-        avatarURL =
-            "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/avatars/admin-avatar.png";
+        avatarURL = cdata[0]["logo_url"];
       });
       userInfo = temp[0];
     }
@@ -66,7 +73,6 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
     setState(() {
       try {
-        print("USERINFO:$userInfo");
         publicName =
             role == "member" ? userInfo["public_name"] : userInfo["full_name"];
         businessName = role == "member" ? userInfo["business_name"] : "Manager";
@@ -74,6 +80,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
         medias = mediasTemp;
+        print("---------------------------------><---------------------------------");
       } catch (e) {
         print(e);
       }
@@ -85,8 +92,14 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     DateTime utcDate = now.toUtc();
     DateTime targetDate = DateTime.parse(targetTime);
 
-    int differenceInMilliseconds =
-        utcDate.millisecondsSinceEpoch - targetDate.millisecondsSinceEpoch;
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    DateTime newUTC = DateTime.parse(dateFormat.format(utcDate));
+    DateTime newTarget = DateTime.parse(dateFormat.format(targetDate));
+
+    int temp1 = newUTC.millisecondsSinceEpoch;
+    int temp2 = newTarget.microsecondsSinceEpoch ~/ 1000;
+
+    int differenceInMilliseconds = (temp1 - temp2).abs();
     int differenceInMinutes = (differenceInMilliseconds / (1000 * 60)).floor();
     int differenceInHours =
         (differenceInMilliseconds / (1000 * 60 * 60)).floor();
@@ -126,9 +139,15 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: avatarURL.isNotEmpty
-                  ? Image.network(
-                      avatarURL,
+                  ? CachedNetworkImage(
+                      imageUrl: avatarURL,
                       fit: BoxFit.cover,
+                      placeholder: (context, url) => const AspectRatio(
+                        aspectRatio: 1.6,
+                        child: BlurHash(
+                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                        ),
+                      ),
                     )
                   : Container(
                       color: Colors.white,

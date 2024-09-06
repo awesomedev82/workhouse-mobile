@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -90,8 +91,14 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
     DateTime utcDate = now.toUtc();
     DateTime targetDate = DateTime.parse(targetTime);
 
-    int differenceInMilliseconds =
-        utcDate.millisecondsSinceEpoch - targetDate.millisecondsSinceEpoch;
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    DateTime newUTC = DateTime.parse(dateFormat.format(utcDate));
+    DateTime newTarget = DateTime.parse(dateFormat.format(targetDate));
+
+    int temp1 = newUTC.millisecondsSinceEpoch;
+    int temp2 = newTarget.microsecondsSinceEpoch ~/ 1000;
+
+    int differenceInMilliseconds = (temp1 - temp2).abs();
     int differenceInMinutes = (differenceInMilliseconds / (1000 * 60)).floor();
     int differenceInHours =
         (differenceInMilliseconds / (1000 * 60 * 60)).floor();

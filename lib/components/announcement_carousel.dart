@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:workhouse/components/app_video_player.dart';
 
@@ -53,11 +55,18 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                         child: widget.data[i]["type"] == "image"
                             ? Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: const Color(0xFFF5F5F5),
                                 ),
-                                child: Image.network(
-                                  widget.data[i]["url"],
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.data[i]["url"],
                                   fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      const AspectRatio(
+                                    aspectRatio: 1.6,
+                                    child: BlurHash(
+                                      hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                    ),
+                                  ),
                                 ),
                               )
                             : AppVideoPlayer(

@@ -4,12 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/utils/app_router.dart';
 import 'package:workhouse/utils/profile_provider.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/standalone.dart' as tz;
 
 /**
  * MARK: App Entry point
  */
 
 Future<void> main() async {
+  tzdata.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('America/New_York'));
   await Supabase.initialize(
     url: 'https://lgkqpwmgwwexlxfnvoyp.supabase.co',
     anonKey:

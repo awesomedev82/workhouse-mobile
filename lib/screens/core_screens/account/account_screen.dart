@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -237,10 +239,25 @@ class _AccountScreenState extends State<AccountScreen> {
                                   child: _avatar == ""
                                       ? Container(
                                           color: Colors.white,
+                                          child: AspectRatio(
+                                            aspectRatio: 1.6,
+                                            child: BlurHash(
+                                              hash:
+                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                            ),
+                                          ),
                                         )
-                                      : Image.network(
-                                          _avatar,
+                                      : CachedNetworkImage(
+                                          imageUrl: _avatar,
                                           fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              const AspectRatio(
+                                            aspectRatio: 1.6,
+                                            child: BlurHash(
+                                              hash:
+                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                            ),
+                                          ),
                                         ),
                                 ),
                               ),
