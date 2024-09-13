@@ -402,6 +402,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
           // returnURL: 'flutterstripe://redirect',
         ),
       );
+      FocusScope.of(context).unfocus();
       // Display payment sheet
       displayPaymentSheet();
     } catch (e) {
