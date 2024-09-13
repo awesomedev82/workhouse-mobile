@@ -184,7 +184,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                   height: 18,
                   alignment: Alignment.topRight,
                   child: Text(
-                    createdAt,
+                    timeDifference(announcements[widget.idx]["created_at"]),
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontFamily: "SF-Pro-Display",
