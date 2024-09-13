@@ -15,6 +15,7 @@ import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/header_bar.dart';
 import 'package:workhouse/components/image_carousel.dart';
 import 'package:workhouse/screens/create_announcement/announcement_create_screen.dart';
+import 'package:workhouse/screens/create_announcement/community_empty_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -151,65 +152,68 @@ class _CommunityScreenState extends State<CommunityScreen> {
             child: Column(
               children: [
                 HeaderBar(title: "Workhouse"),
-                Expanded(
-                  child: FlutterPullUpDownRefresh(
-                    scrollController: ScrollController(),
-                    showRefreshIndicator: true,
-                    refreshIndicatorColor: Color(0xFFDC6803),
-                    isLoading: false,
-                    loadingColor: Colors.red,
-                    loadingBgColor: Colors.grey.withAlpha(100),
-                    isBootomLoading: false,
-                    bottomLoadingColor: Colors.green,
-                    scaleBottomLoading: 0.6,
-                    onRefresh: () async {
-                      _showProgressModal(context);
-                      await getData();
-                      // End refresh
-                    },
-                    onAtBottom: (status) {},
-                    onAtTop: (status) {
-                      if (kDebugMode) {
-                        print("Scroll at Top");
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 12,
-                          ),
-                          child: Text(
-                            "Sponsored",
-                            textAlign: TextAlign.left,
-                            style: GoogleFonts.inter(
-                              color: APP_BLACK_COLOR,
-                              fontSize: 14,
-                              height: 1.6,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
-                        ImageCarousel(),
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: announcementProvider.announcements.length,
-                          itemBuilder: (context, index) {
-                            return AnnouncementCard(
-                              id: announcementProvider.announcements[index]
-                                  ["id"],
-                              idx: index,
-                            );
+                announcementProvider.announcements.isEmpty
+                    ? CommunityEmptyScreen()
+                    : Expanded(
+                        child: FlutterPullUpDownRefresh(
+                          scrollController: ScrollController(),
+                          showRefreshIndicator: true,
+                          refreshIndicatorColor: Color(0xFFDC6803),
+                          isLoading: false,
+                          loadingColor: Colors.red,
+                          loadingBgColor: Colors.grey.withAlpha(100),
+                          isBootomLoading: false,
+                          bottomLoadingColor: Colors.green,
+                          scaleBottomLoading: 0.6,
+                          onRefresh: () async {
+                            _showProgressModal(context);
+                            await getData();
+                            // End refresh
                           },
+                          onAtBottom: (status) {},
+                          onAtTop: (status) {
+                            if (kDebugMode) {
+                              print("Scroll at Top");
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Text(
+                                  "Sponsored",
+                                  textAlign: TextAlign.left,
+                                  style: GoogleFonts.inter(
+                                    color: APP_BLACK_COLOR,
+                                    fontSize: 14,
+                                    height: 1.6,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                              ImageCarousel(),
+                              ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    announcementProvider.announcements.length,
+                                itemBuilder: (context, index) {
+                                  return AnnouncementCard(
+                                    id: announcementProvider
+                                        .announcements[index]["id"],
+                                    idx: index,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ],
             ),
           );
@@ -218,26 +222,32 @@ class _CommunityScreenState extends State<CommunityScreen> {
       bottomNavigationBar: AppBottomNavbar(
         index: 0,
       ),
-      floatingActionButton: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Color(0xFFAAD130),
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            _showAnnouncementInfoModal(context);
-          },
-          backgroundColor: Color(0xFFAAD130),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: Icon(
-            Ionicons.add_outline,
-            size: 24,
-          ),
-        ),
+      floatingActionButton: Consumer<AnnouncementProvider>(
+        builder: (context, announcementProvider, child) {
+          return announcementProvider.announcements.isEmpty
+              ? Container()
+              : Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Color(0xFFAAD130),
+                  ),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      _showAnnouncementInfoModal(context);
+                    },
+                    backgroundColor: Color(0xFFAAD130),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Icon(
+                      Ionicons.add_outline,
+                      size: 24,
+                    ),
+                  ),
+                );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
