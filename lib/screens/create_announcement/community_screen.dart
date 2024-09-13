@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_card.dart';
@@ -14,6 +16,7 @@ import 'package:workhouse/components/header_bar.dart';
 import 'package:workhouse/components/image_carousel.dart';
 import 'package:workhouse/screens/create_announcement/announcement_create_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
+import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/constant.dart';
 import 'package:flutter_pull_up_down_refresh/flutter_pull_up_down_refresh.dart';
 
@@ -32,11 +35,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late SharedPreferences prefs;
   late SupabaseClient supabase;
   String communityID = "";
-  List<dynamic> announcements = <dynamic>[];
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showProgressModal(context);
+    });
     getData();
   }
 
@@ -47,13 +52,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     communityID = prefs.getString("communityID")!;
 
     final data = await supabase
-        .from("community_logs_with_roles")
+        .from("community_logs_with_sender")
         .select()
         .eq("community_id", communityID)
         .order('role', ascending: true)
         .order("created_at", ascending: false);
-    setState(() {
-      announcements = data;
+
+    // Update announcements in provider
+    Provider.of<AnnouncementProvider>(context, listen: false)
+        .setAnnouncements(data);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pop();
     });
     return;
   }
@@ -130,75 +140,80 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: APP_WHITE_COLOR,
-        ),
-        child: Column(
-          children: [
-            HeaderBar(title: "Workhouse"),
-            Expanded(
-              child: FlutterPullUpDownRefresh(
-                scrollController: ScrollController(),
-                showRefreshIndicator: true,
-                refreshIndicatorColor: Color(0xFFDC6803),
-                isLoading: false,
-                loadingColor: Colors.red,
-                loadingBgColor: Colors.grey.withAlpha(100),
-                isBootomLoading: false,
-                bottomLoadingColor: Colors.green,
-                scaleBottomLoading: 0.6,
-                onRefresh: () async {
-                  // Start refresh
-                  // await pullRefresh();
-                  await getData();
-                  // End refresh
-                },
-                onAtBottom: (status) {},
-                onAtTop: (status) {
-                  if (kDebugMode) {
-                    print("Scroll at Top");
-                  }
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
-                      ),
-                      child: Text(
-                        "Sponsored",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.inter(
-                          color: APP_BLACK_COLOR,
-                          fontSize: 14,
-                          height: 1.6,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ),
-                    ImageCarousel(),
-                    ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: announcements.length,
-                      itemBuilder: (context, index) {
-                        return AnnouncementCard(
-                          id: announcements[index]["id"],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+      body: Consumer<AnnouncementProvider>(
+        builder: (context, announcementProvider, child) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: APP_WHITE_COLOR,
             ),
-          ],
-        ),
+            child: Column(
+              children: [
+                HeaderBar(title: "Workhouse"),
+                Expanded(
+                  child: FlutterPullUpDownRefresh(
+                    scrollController: ScrollController(),
+                    showRefreshIndicator: true,
+                    refreshIndicatorColor: Color(0xFFDC6803),
+                    isLoading: false,
+                    loadingColor: Colors.red,
+                    loadingBgColor: Colors.grey.withAlpha(100),
+                    isBootomLoading: false,
+                    bottomLoadingColor: Colors.green,
+                    scaleBottomLoading: 0.6,
+                    onRefresh: () async {
+                      _showProgressModal(context);
+                      await getData();
+                      // End refresh
+                    },
+                    onAtBottom: (status) {},
+                    onAtTop: (status) {
+                      if (kDebugMode) {
+                        print("Scroll at Top");
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 12,
+                          ),
+                          child: Text(
+                            "Sponsored",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.inter(
+                              color: APP_BLACK_COLOR,
+                              fontSize: 14,
+                              height: 1.6,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                        ImageCarousel(),
+                        ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: announcementProvider.announcements.length,
+                          itemBuilder: (context, index) {
+                            return AnnouncementCard(
+                              id: announcementProvider.announcements[index]
+                                  ["id"],
+                              idx: index,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
       bottomNavigationBar: AppBottomNavbar(
         index: 0,
@@ -228,39 +243,3 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 }
-
-/**
- * child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
-                      ),
-                      child: Text(
-                        "Sponsored",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.inter(
-                          color: APP_BLACK_COLOR,
-                          fontSize: 14,
-                          height: 1.6,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ),
-                    ImageCarousel(),
-                    ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: announcements.length,
-                      itemBuilder: (context, index) {
-                        return AnnouncementCard(
-                          id: announcements[index]["id"],
-                        );
-                      },
-                    ),
-                  ],
-                ),
- */

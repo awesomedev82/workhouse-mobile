@@ -129,7 +129,7 @@ class _AppDropdownState extends State<AppDropdown> {
                                   padding: EdgeInsets.symmetric(horizontal: 24),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? Color(0xFFAAD130).withOpacity(0.1)
+                                        ? Color(0xFFDC6803).withOpacity(0.39)
                                         : Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border(
@@ -148,7 +148,7 @@ class _AppDropdownState extends State<AppDropdown> {
                                       Icon(
                                         Icons.check_circle,
                                         color: isSelected
-                                            ? Color(0xFF17181A)
+                                            ? Color(0xFFDC6803)
                                             : Colors.grey.withOpacity(0),
                                         size: 24,
                                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/app_router.dart';
 import 'package:workhouse/utils/profile_provider.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
@@ -31,8 +32,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AnnouncementProvider(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Workhouse',

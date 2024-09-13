@@ -3,16 +3,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart';
+import 'package:workhouse/utils/announcement_provider.dart';
 
 class AnnouncementCard extends StatefulWidget {
-  const AnnouncementCard({Key? key, required this.id}) : super(key: key);
+  const AnnouncementCard({Key? key, required this.id, required this.idx})
+      : super(key: key);
 
   final int id;
+
+  final int idx;
 
   @override
   _AnnouncementCardState createState() => _AnnouncementCardState();
@@ -29,6 +34,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
   late String businessName = "";
   late String description = "";
   late String createdAt = "";
+  late String communityName = "";
   List<dynamic> medias = <dynamic>[];
 
   @override
@@ -63,6 +69,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
       setState(() {
         role = "manager";
         avatarURL = cdata[0]["logo_url"];
+        communityName = cdata[0]["name"];
       });
       userInfo = temp[0];
     }
@@ -79,8 +86,8 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
         description = data["description"];
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
-        medias = mediasTemp;
-        print("---------------------------------><---------------------------------");
+        print(
+            "---------------------------------><---------------------------------");
       } catch (e) {
         print(e);
       }
@@ -115,8 +122,19 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     }
   }
 
+  List<dynamic> getMediaData(data) {
+    List<dynamic> mediasData = <dynamic>[];
+    for (var media in json.decode(data)) {
+      mediasData.add({"type": media["type"], "url": media["url"]});
+    }
+    return mediasData;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final announcementProvider = Provider.of<AnnouncementProvider>(context);
+    dynamic announcements = announcementProvider.announcements;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
@@ -138,9 +156,9 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
             height: 48,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
-              child: avatarURL.isNotEmpty
+              child: announcements[widget.idx]["avatar_url"] != null
                   ? CachedNetworkImage(
-                      imageUrl: avatarURL,
+                      imageUrl: announcements[widget.idx]["avatar_url"],
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const AspectRatio(
                         aspectRatio: 1.6,
@@ -185,7 +203,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                   child: Row(
                     children: [
                       Text(
-                        publicName,
+                        announcements[widget.idx]["public_name"],
                         style: TextStyle(
                           fontSize: 16,
                           height: 1.3,
@@ -197,7 +215,9 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       SizedBox(
                         width: 4,
                       ),
-                      if (publicName != "" && businessName != "")
+                      if (announcements[widget.idx]["public_name"] != "" &&
+                          announcements[widget.idx]["business_name"] != "" &&
+                          announcements[widget.idx]["role"] != "manager")
                         Container(
                           width: 2,
                           height: 2,
@@ -210,21 +230,22 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                         width: 4,
                       ),
                       //MARK: Business name
-                      Expanded(
-                        child: Text(
-                          businessName,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF17181A),
-                              fontWeight: FontWeight.w300,
-                              height: 1.6,
+                      if (announcements[widget.idx]["role"] == "member")
+                        Expanded(
+                          child: Text(
+                            announcements[widget.idx]["business_name"],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF17181A),
+                                fontWeight: FontWeight.w300,
+                                height: 1.6,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -234,7 +255,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    description,
+                    announcements[widget.idx]["description"],
                     textAlign: TextAlign.left,
                     style: GoogleFonts.inter(
                       fontSize: 14,
@@ -249,8 +270,12 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: medias.isNotEmpty
-                        ? AnnouncementCarousel(data: medias)
+                    child: announcements[widget.idx]["images"] != null
+                        ? AnnouncementCarousel(
+                            data: getMediaData(
+                              announcements[widget.idx]["images"],
+                            ),
+                          )
                         : Container(),
                   ),
                 ),
