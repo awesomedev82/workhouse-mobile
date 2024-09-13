@@ -58,7 +58,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                           color: APP_BLACK_COLOR,
                         ),
                         child: Text(
-                          'Workhorse',
+                          'Workhouse',
                         ),
                       ),
                       DefaultTextStyle(
@@ -74,33 +74,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 62.0,
-                            width: 62.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(31),
-                            ),
-                            child: FittedBox(
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/walk-first');
-                                },
-                                backgroundColor: APP_BLACK_COLOR,
-                                foregroundColor: APP_WHITE_COLOR,
-                                shape: CircleBorder(),
-                                elevation: 0.0,
-                                child: SvgPicture.asset(
-                                  'assets/images/arrow-right-white.svg',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        height: 120,
                       ),
                     ],
                   ),

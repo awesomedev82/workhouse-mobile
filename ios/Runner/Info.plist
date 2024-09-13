@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
+		<true />
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -25,9 +25,9 @@
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>FLTEnableImpeller</key>
-		<false/>
+		<false />
 		<key>LSRequiresIPhoneOS</key>
-		<true/>
+		<true />
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSExceptionDomains</key>
@@ -35,9 +35,9 @@
 				<key>lgkqpwmgwwexlxfnvoyp.supabase.co</key>
 				<dict>
 					<key>NSIncludesSubdomains</key>
-					<true/>
+					<true />
 					<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-					<true/>
+					<true />
 					<key>NSTemporaryExceptionMinimumTLSVersion</key>
 					<string>TLSv1.2</string>
 				</dict>
@@ -50,7 +50,7 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>App needs access to photo lib for profile images</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
+		<true />
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -72,6 +72,18 @@
 		<array>
 			<string>sms</string>
 			<string>tel</string>
+		</array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>googlegmail</string>
+			<string>x-dispatch</string>
+			<string>readdle-spark</string>
+			<string>airmail</string>
+			<string>ms-outlook</string>
+			<string>ymail</string>
+			<string>fastmail</string>
+			<string>superhuman</string>
+			<string>protonmail</string>
 		</array>
 	</dict>
 </plist>

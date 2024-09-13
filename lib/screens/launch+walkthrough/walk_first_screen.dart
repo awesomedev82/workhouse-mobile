@@ -68,33 +68,7 @@ class _WalkFirstScreenState extends State<WalkFirstScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                height: 62.0,
-                                width: 62.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(31),
-                                ),
-                                child: FittedBox(
-                                  child: FloatingActionButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, '/walk-second');
-                                    },
-                                    backgroundColor: APP_BLACK_COLOR,
-                                    foregroundColor: APP_WHITE_COLOR,
-                                    shape: CircleBorder(),
-                                    elevation: 0.0,
-                                    child: SvgPicture.asset(
-                                      'assets/images/arrow-right-white.svg',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            height: 120,
                           ),
                         ],
                       ),

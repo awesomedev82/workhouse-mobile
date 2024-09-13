@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -20,6 +21,7 @@ class AppVideoPlayer extends StatefulWidget {
 
 class _AppVideoPlayerState extends State<AppVideoPlayer> {
   late VideoPlayerController _controller;
+  late FlickManager flickManager;
 
   @override
   void initState() {
@@ -29,10 +31,24 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
           widget.source,
         ),
       );
+      flickManager = FlickManager(
+        autoPlay: false,
+        videoPlayerController: VideoPlayerController.networkUrl(
+          Uri.parse(
+            widget.source,
+          ),
+        ),
+      );
     } else if (widget.type == "file") {
       _controller = VideoPlayerController.networkUrl(
         Uri.parse(
           'https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/community/1724233507205',
+        ),
+      );
+      flickManager = FlickManager(
+        autoPlay: false,
+        videoPlayerController: VideoPlayerController.file(
+          widget.source,
         ),
       );
     }
@@ -57,22 +73,24 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
         color: Colors.black,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: _controller.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            )
-          : Container(
-              child: Center(
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+      child: FlickVideoPlayer(flickManager: flickManager),
+      // child: _controller.value.isInitialized
+      //     ? AspectRatio(
+      //         aspectRatio: _controller.value.aspectRatio,
+      //         // child: VideoPlayer(_controller),
+      //         child: FlickVideoPlayer(flickManager: flickManager),
+      //       )
+      //     : Container(
+      //         child: Center(
+      //           child: Container(
+      //             width: 40,
+      //             height: 40,
+      //             child: CircularProgressIndicator(
+      //               color: Colors.white,
+      //             ),
+      //           ),
+      //         ),
+      //       ),
     );
   }
 }

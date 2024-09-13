@@ -54,6 +54,28 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
           .from("member_community_view")
           .select()
           .eq("id", response.user!.id);
+
+      // Add active listener
+      supabase
+          .from("members")
+          .stream(primaryKey: ['id'])
+          .eq("id", response.user!.id)
+          .listen((payload) {
+            final newRecord = payload.first;
+            if (newRecord['is_active'] == false) {
+              Supabase.instance.client.auth.signOut();
+              CherryToast.info(
+                animationDuration: Duration(milliseconds: 300),
+                title: Text(
+                  "Your account was deactivated!",
+                  style: TextStyle(color: Colors.red[600]),
+                ),
+                // ignore: use_build_context_synchronously
+              ).show(context);
+              Navigator.pushReplacementNamed(context, "/sign-in");
+            }
+          });
+
       print(data[0]);
       String fullname = data[0]["full_name"] ?? "";
       String businessName = data[0]["business_name"] ?? "";
@@ -203,6 +225,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                         color: APP_MAIN_LABEL_COLOR,
+                        height: 1.42,
                       ),
                       child: Text(
                         'Verification Code',

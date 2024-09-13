@@ -4,10 +4,12 @@ import 'package:workhouse/screens/create_announcement/community_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_third_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/launch_screen.dart';
+import 'package:workhouse/screens/launch+walkthrough/launch_total.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_first_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_fouth_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_second_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/walk_third_screen.dart';
+import 'package:workhouse/screens/signin+create_account/check_email.dart';
 import 'package:workhouse/screens/signin+create_account/code_verification_screen.dart';
 import 'package:workhouse/screens/signin+create_account/create_account_screen.dart';
 import 'package:workhouse/screens/signin+create_account/directory/add_directory.dart';
@@ -17,7 +19,7 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => LaunchScreen());
+        return MaterialPageRoute(builder: (_) => LaunchTotal());
       case '/walk-first':
         return MaterialPageRoute(builder: (_) => WalkFirstScreen());
       case '/walk-second':
@@ -28,6 +30,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => WalkFouthScreen());
       case '/sign-in':
         return MaterialPageRoute(builder: (_) => SignInScreen());
+      case '/check-email':
+        return MaterialPageRoute(builder: (_) => CheckEmail());
       case '/create-account':
         return MaterialPageRoute(builder: (_) => CreateAccountScreen());
       case '/code-verification':

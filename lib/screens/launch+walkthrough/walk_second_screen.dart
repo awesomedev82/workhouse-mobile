@@ -9,7 +9,7 @@ import 'package:workhouse/utils/constant.dart';
  */
 
 class WalkSecondScreen extends StatefulWidget {
-  const WalkSecondScreen({ Key? key }) : super(key: key);
+  const WalkSecondScreen({Key? key}) : super(key: key);
 
   @override
   _WalkSecondScreenState createState() => _WalkSecondScreenState();
@@ -31,7 +31,10 @@ class _WalkSecondScreenState extends State<WalkSecondScreen> {
               children: [
                 Positioned.fromRect(
                   rect: Rect.fromLTWH(marginLeft, 144, 300, 300),
-                  child: Image.asset('assets/images/walk_2.png', fit: BoxFit.cover,),
+                  child: Image.asset(
+                    'assets/images/walk_2.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Positioned.fill(
                   child: Align(
@@ -67,33 +70,7 @@ class _WalkSecondScreenState extends State<WalkSecondScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              height: 62.0,
-                              width: 62.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(31),
-                              ),
-                              child: FittedBox(
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/walk-third');
-                                  },
-                                  backgroundColor: APP_BLACK_COLOR,
-                                  foregroundColor: APP_WHITE_COLOR,
-                                  shape: CircleBorder(),
-                                  elevation: 0.0,
-                                  child: SvgPicture.asset(
-                                    'assets/images/arrow-right-white.svg',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          height: 120,
                         ),
                       ],
                     ),

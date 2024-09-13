@@ -536,7 +536,9 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: AppBottomNavbar(),
+      bottomNavigationBar: AppBottomNavbar(
+        index: 2,
+      ),
     );
   }
 }

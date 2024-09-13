@@ -14,6 +14,7 @@ import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:video_player/video_player.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/components/app_video_player.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -39,6 +40,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   late SupabaseClient supabase;
   Map<String, dynamic>? paymentIntent;
   String _description = "";
+  late VideoPlayerController? _videoController;
 
   List<Asset> images = <Asset>[];
   List<File> imagefiles = <File>[];
@@ -60,6 +62,23 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     final medias = await picker.pickMultipleMedia();
     List<File> resultFiles = imagefiles;
     for (var media in medias) {
+      final temp = File(media.path);
+      if (lookupMimeType(media.path).toString().startsWith("video")) {
+        _videoController = VideoPlayerController.file(temp);
+        await _videoController?.initialize();
+
+        if (_videoController!.value.duration.inSeconds > 30) {
+          CherryToast.error(
+            animationDuration: Duration(milliseconds: 300),
+            title: Text(
+              "Video length has to be less than 30s!",
+              style: TextStyle(color: Colors.red[600]),
+            ),
+            // ignore: use_build_context_synchronously
+          ).show(context);
+          return;
+        }
+      }
       resultFiles.add(File(media.path));
     }
     setState(() {
@@ -89,7 +108,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.video_camera_back),
-                title: Text('Camera'),
+                title: Text('Video'),
                 onTap: () {
                   _pickImage("video");
                   Navigator.of(context).pop();
@@ -108,7 +127,23 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     if (type == "image") {
       pickedFile = await picker.pickImage(source: ImageSource.camera);
     } else {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
+      pickedFile = await picker.pickVideo(source: ImageSource.camera);
+      if (pickedFile != null) {
+        _videoController = VideoPlayerController.file(File(pickedFile.path));
+        await _videoController?.initialize();
+
+        if (_videoController!.value.duration.inSeconds > 30) {
+          CherryToast.error(
+            animationDuration: Duration(milliseconds: 300),
+            title: Text(
+              "Video length has to be less than 30s!",
+              style: TextStyle(color: Colors.red[600]),
+            ),
+            // ignore: use_build_context_synchronously
+          ).show(context);
+          return;
+        }
+      }
     }
 
     setState(() {
@@ -217,9 +252,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
             (node) {
               return GestureDetector(
                 onTap: () {
-                  // print("gallery");
                   _loadMediaFromGallery();
-                  // node.unfocus();
                 },
                 child: Container(
                   width: 32,

@@ -9,7 +9,7 @@ import 'package:workhouse/utils/constant.dart';
  */
 
 class WalkThirdScreen extends StatefulWidget {
-  const WalkThirdScreen({ Key? key }) : super(key: key);
+  const WalkThirdScreen({Key? key}) : super(key: key);
 
   @override
   _WalkThirdScreenState createState() => _WalkThirdScreenState();
@@ -42,11 +42,10 @@ class _WalkThirdScreenState extends State<WalkThirdScreen> {
                       children: [
                         DefaultTextStyle(
                           style: TextStyle(
-                            fontFamily: "Lastik-test",
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            color: APP_BLACK_COLOR
-                          ),
+                              fontFamily: "Lastik-test",
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: APP_BLACK_COLOR),
                           child: Text(
                             'Paid Announcements',
                           ),
@@ -67,33 +66,7 @@ class _WalkThirdScreenState extends State<WalkThirdScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              height: 62.0,
-                              width: 62.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(31),
-                              ),
-                              child: FittedBox(
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/walk-fouth');
-                                  },
-                                  backgroundColor: APP_BLACK_COLOR,
-                                  foregroundColor: APP_WHITE_COLOR,
-                                  shape: CircleBorder(),
-                                  elevation: 0.0,
-                                  child: SvgPicture.asset(
-                                    'assets/images/arrow-right-white.svg',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          height: 120,
                         ),
                       ],
                     ),

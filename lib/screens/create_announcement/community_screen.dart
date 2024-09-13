@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ import 'package:workhouse/components/image_carousel.dart';
 import 'package:workhouse/screens/create_announcement/announcement_create_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/utils/constant.dart';
+import 'package:flutter_pull_up_down_refresh/flutter_pull_up_down_refresh.dart';
 
 /**
  * MARK Community Screen UI Widget Class
@@ -39,7 +41,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   // MARK: Init data
-  void getData() async {
+  Future<void> getData() async {
     supabase = Supabase.instance.client;
     prefs = await SharedPreferences.getInstance();
     communityID = prefs.getString("communityID")!;
@@ -53,6 +55,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     setState(() {
       announcements = data;
     });
+    return;
   }
 
   void _showAnnouncementInfoModal(BuildContext context) {
@@ -137,7 +140,28 @@ class _CommunityScreenState extends State<CommunityScreen> {
           children: [
             HeaderBar(title: "Workhouse"),
             Expanded(
-              child: SingleChildScrollView(
+              child: FlutterPullUpDownRefresh(
+                scrollController: ScrollController(),
+                showRefreshIndicator: true,
+                refreshIndicatorColor: Color(0xFFDC6803),
+                isLoading: false,
+                loadingColor: Colors.red,
+                loadingBgColor: Colors.grey.withAlpha(100),
+                isBootomLoading: false,
+                bottomLoadingColor: Colors.green,
+                scaleBottomLoading: 0.6,
+                onRefresh: () async {
+                  // Start refresh
+                  // await pullRefresh();
+                  await getData();
+                  // End refresh
+                },
+                onAtBottom: (status) {},
+                onAtTop: (status) {
+                  if (kDebugMode) {
+                    print("Scroll at Top");
+                  }
+                },
                 child: Column(
                   children: [
                     Container(
@@ -176,7 +200,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: AppBottomNavbar(),
+      bottomNavigationBar: AppBottomNavbar(
+        index: 0,
+      ),
       floatingActionButton: Container(
         width: 60,
         height: 60,
@@ -202,3 +228,39 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 }
+
+/**
+ * child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 12,
+                      ),
+                      child: Text(
+                        "Sponsored",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.inter(
+                          color: APP_BLACK_COLOR,
+                          fontSize: 14,
+                          height: 1.6,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                    ImageCarousel(),
+                    ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: announcements.length,
+                      itemBuilder: (context, index) {
+                        return AnnouncementCard(
+                          id: announcements[index]["id"],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+ */

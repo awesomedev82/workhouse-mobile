@@ -1,7 +1,7 @@
 import 'package:cherry_toast/cherry_toast.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
@@ -11,10 +11,6 @@ import 'package:workhouse/utils/constant.dart';
 /**
  * MARK: Sign In Screen UI Widget Class
  */
-
-final supabase = SupabaseClient("https://lgkqpwmgwwexlxfnvoyp.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna3Fwd21nd3dleGx4Zm52b3lwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjM2NTUwNTAsImV4cCI6MjAzOTIzMTA1MH0.qiFcXbioNaggHs194TZJJS48hpbSvVssnhcnrIi7jbw");
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -26,8 +22,10 @@ class _SignInScreenState extends State<SignInScreen> {
   String emailAddress = "";
   String phoneValidText = "";
   late SharedPreferences prefs;
+  late SupabaseClient supabase;
 
-  bool validateemailAddress() {
+  Future<bool> validateemailAddress() async {
+    _showProgressModal(context);
     if (emailAddress.isEmpty) {
       setState(() {
         phoneValidText = "Please enter a email address";
@@ -39,6 +37,23 @@ class _SignInScreenState extends State<SignInScreen> {
         phoneValidText = "Please enter a valid email address";
       });
       return false;
+    } else {
+      supabase = Supabase.instance.client;
+      final data =
+          await supabase.from("members").select().eq("email", emailAddress);
+
+      print(data);
+      if (data.isEmpty) {
+        setState(() {
+          phoneValidText = "Email doesn't exist!";
+        });
+        return false;
+      } else if (data[0]["is_active"] == false) {
+        setState(() {
+          phoneValidText = "You account was deactivated!";
+        });
+        return false;
+      }
     }
     return true;
   }
@@ -50,6 +65,51 @@ class _SignInScreenState extends State<SignInScreen> {
     prefs = await SharedPreferences.getInstance();
     prefs.setString("email", emailAddress);
     print(prefs.getString("email"));
+  }
+
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
   }
 
   @override
@@ -77,6 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: APP_MAIN_LABEL_COLOR,
+                  height: 1.42,
                 ),
                 child: Text(
                   'Sign In',
@@ -130,8 +191,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               AppButton(
                 text: "Login",
-                onTapped: () {
-                  if (validateemailAddress() == false) {
+                onTapped: () async {
+                  if (await validateemailAddress() == false) {
+                    Navigator.of(context).pop();
                     CherryToast.error(
                       animationDuration: Duration(milliseconds: 300),
                       title: Text(
@@ -140,8 +202,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ).show(context);
                   } else {
+                    Navigator.of(context).pop();
                     sendOTP();
-                    Navigator.pushNamed(context, "/code-verification");
+                    Navigator.pushNamed(context, "/check-email");
                   }
                 },
               ),

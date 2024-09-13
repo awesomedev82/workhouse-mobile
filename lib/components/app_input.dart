@@ -54,37 +54,6 @@ class _AppInputState extends State<AppInput> {
           cursorHeight: 20,
           keyboardType: widget.inputType,
           decoration: InputDecoration(
-            suffixIcon: widget.obscureText
-                ? InkWell(
-                    child: isPasswordShow
-                        ? Icon(Ionicons.eye_outline)
-                        : Icon(Ionicons.eye_off_outline),
-                    // MARK: show password icon click
-                    onTap: () {
-                      setState(() {
-                        isPasswordShow = !isPasswordShow;
-                      });
-                    },
-                  )
-                : !widget.isSeconderyIcon
-                    ? isTyping
-                        ? InkWell(
-                            child: Icon(Ionicons.remove_circle),
-                            // MARK: clear icon click
-                            onTap: () {
-                              setState(() {
-                                controller.text = "";
-                                isTyping = false;
-                              });
-                            },
-                          )
-                        : Icon(null)
-                    : InkWell(
-                        child: Image.asset("assets/secondery_icon.png"),
-                        // MARK: secondery icon click
-                        onTap: () {},
-                      ),
-            suffixStyle: TextStyle(color: Colors.black.withAlpha(60)),
             hintText: widget.hintText,
             hintStyle: GoogleFonts.inter(
               textStyle: TextStyle(

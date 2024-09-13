@@ -10,9 +10,11 @@ class AppButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onTapped,
+    this.color = 0xFFDC6803,
   }) : super(key: key);
   final String text;
   final Function() onTapped;
+  final dynamic color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +23,22 @@ class AppButton extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Color(color).withOpacity(0.5),
             blurRadius: 10,
-            offset: const Offset(0, 3),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.black,
+          backgroundColor: Color(color),
+          foregroundColor: Color(color),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
           side: BorderSide(
-            color: Colors.black,
+            color: Color(color),
             width: 1.0,
             style: BorderStyle.solid,
           ),
