@@ -270,7 +270,8 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: announcements[widget.idx]["images"] != null
+                    child: getMediaData(announcements[widget.idx]["images"])
+                            .isNotEmpty
                         ? AnnouncementCarousel(
                             data: getMediaData(
                               announcements[widget.idx]["images"],
