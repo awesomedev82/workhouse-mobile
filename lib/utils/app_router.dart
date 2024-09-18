@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workhouse/screens/core_screens/account/account_screen.dart';
+import 'package:workhouse/screens/core_screens/account/edit_profile_screen.dart';
+import 'package:workhouse/screens/core_screens/directory/directory_screen.dart';
 import 'package:workhouse/screens/create_announcement/community_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_third_screen.dart';
@@ -46,6 +48,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ShareThirdScreen());
       case '/account':
         return MaterialPageRoute(builder: (_) => AccountScreen());
+      case '/edit-profile':
+        return MaterialPageRoute(builder: (_) => EditProfileScreen());
+      case '/directory':
+        return MaterialPageRoute(builder: (_) => DirectoryScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

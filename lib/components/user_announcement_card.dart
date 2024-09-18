@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
+import 'package:workhouse/utils/announcement_provider.dart';
 
 class UserAnnouncementCard extends StatefulWidget {
   const UserAnnouncementCard({
@@ -114,6 +118,14 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
     }
   }
 
+  List<dynamic> getMediaData(data) {
+    List<dynamic> mediasData = <dynamic>[];
+    for (var media in json.decode(data)) {
+      mediasData.add({"type": media["type"], "url": media["url"]});
+    }
+    return mediasData;
+  }
+
   //MARK: Show delete button
   void _showDeleteBottomSheet(context) {
     showModalBottomSheet(
@@ -193,10 +205,42 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     //MARK: On delete:
+                    _showProgressModal(context);
+                    try {
+                      await supabase
+                          .from("community_logs")
+                          .delete()
+                          .eq("id", widget.id);
+                      final announcementProvider =
+                          Provider.of<AnnouncementProvider>(context,
+                              listen: false);
+                      List<dynamic> myAnnouncements =
+                          announcementProvider.myAnnouncements;
+                      myAnnouncements.removeAt(widget.index);
+
+                      Provider.of<AnnouncementProvider>(context, listen: false)
+                          .setMyAnnouncements(myAnnouncements);
+
+                      CherryToast.success(
+                        animationDuration: Duration(milliseconds: 300),
+                        title: Text(
+                          "Deleted successfully!",
+                          style: TextStyle(color: Colors.blue[600]),
+                        ),
+                      ).show(context);
+                    } catch (e) {
+                      CherryToast.error(
+                        animationDuration: Duration(milliseconds: 300),
+                        title: Text(
+                          "Error occured!",
+                          style: TextStyle(color: Colors.red[600]),
+                        ),
+                      ).show(context);
+                    }
                     Navigator.of(context).pop();
-                    widget.onDelete!(widget.index, widget.id);
+                    Navigator.of(context).pop();
                   },
                   child: Container(
                     height: 70,
@@ -227,8 +271,56 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
     );
   }
 
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final announcementProvider = Provider.of<AnnouncementProvider>(context);
+    dynamic myAnnouncements = announcementProvider.myAnnouncements;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -270,7 +362,7 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    description,
+                    myAnnouncements[widget.index]["description"],
                     textAlign: TextAlign.left,
                     style: GoogleFonts.inter(
                       fontSize: 14,
@@ -285,8 +377,14 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: medias.isNotEmpty
-                        ? AnnouncementCarousel(height: 240, data: medias)
+                    child: getMediaData(myAnnouncements[widget.index]["images"])
+                            .isNotEmpty
+                        ? AnnouncementCarousel(
+                            height: 240,
+                            data: getMediaData(
+                              myAnnouncements[widget.index]["images"],
+                            ),
+                          )
                         : Container(),
                   ),
                 ),

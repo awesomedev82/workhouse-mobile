@@ -73,7 +73,9 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed('/directory');
+              },
               child: SizedBox(
                 height: 44,
                 width: 44,

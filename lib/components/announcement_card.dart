@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -138,7 +139,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
-        color: role == "manager"
+        color: announcements[widget.idx]["role"] == "manager"
             ? Color(0xFF349B6F).withOpacity(0.19)
             : Colors.white,
         border: Border(
@@ -203,7 +204,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                   child: Row(
                     children: [
                       Text(
-                        announcements[widget.idx]["public_name"],
+                        announcements[widget.idx]["public_name"] ?? "",
                         style: TextStyle(
                           fontSize: 16,
                           height: 1.3,
@@ -246,6 +247,22 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                             ),
                           ),
                         ),
+                      if (announcements[widget.idx]["public_name"] != "" &&
+                          announcements[widget.idx]["business_name"] != "" &&
+                          announcements[widget.idx]["role"] != "manager")
+                        GestureDetector(
+                          onTap: () {
+                            print(widget.id);
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            child: Icon(Ionicons.ellipsis_horizontal),
+                          ),
+                        ),
+                      SizedBox(
+                        width: 4,
+                      ),
                     ],
                   ),
                 ),

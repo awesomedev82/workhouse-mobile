@@ -20,15 +20,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 49,
-      decoration: BoxDecoration(
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Color(color).withOpacity(0.5),
-            blurRadius: 10,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(color),
