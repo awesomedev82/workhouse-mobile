@@ -90,7 +90,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "bio": bio,
       "industry": industry,
     }).eq("id", userID);
-    Navigator.of(context).pushNamed("/account");
+    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacementNamed("/account");
   }
 
   @override
@@ -245,7 +246,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           hintText: "",
                           validate: (val) {
                             setState(() {
-                              website = val;
+                              bio = val;
                             });
                           },
                           inputType: TextInputType.url,
