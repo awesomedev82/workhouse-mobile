@@ -71,7 +71,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
 
     print("Announcement Data:\n$adata");
     setState(() {
-      announcements = adata ?? [];
+      announcements = adata;
       _bio = userdata[0]["bio"] ?? "";
       _bname = userdata[0]["business_name"] ?? "";
       _pname = userdata[0]["public_name"] ?? "";

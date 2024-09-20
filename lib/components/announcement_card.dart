@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -131,6 +134,173 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     return mediasData;
   }
 
+  //MARK: Show delete button
+  void _showDeleteBottomSheet(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            height: 102,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0), // TL: Top Left
+                topRight: Radius.circular(30.0), // TR: Top Right
+              ),
+            ),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 30,
+                  // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF2F2F2).withOpacity(1),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    //MARK: On delete:
+
+                    _showProgressModal(context);
+                    try {
+                      await supabase
+                          .from("community_logs")
+                          .update({'hide': true}).eq("id", widget.id);
+                      final announcementProvider =
+                          Provider.of<AnnouncementProvider>(context,
+                              listen: false);
+                      List<dynamic> announcements =
+                          announcementProvider.announcements;
+                      announcements.removeAt(widget.idx);
+
+                      Provider.of<AnnouncementProvider>(context, listen: false)
+                          .setMyAnnouncements(announcements);
+
+                      CherryToast.success(
+                        animationDuration: Duration(milliseconds: 300),
+                        title: Text(
+                          "Hidden successfully!",
+                          style: TextStyle(color: Colors.blue[600]),
+                        ),
+                      ).show(context);
+                    } catch (e) {
+                      CherryToast.error(
+                        animationDuration: Duration(milliseconds: 300),
+                        title: Text(
+                          "Error occured!",
+                          style: TextStyle(color: Colors.red[600]),
+                        ),
+                      ).show(context);
+                    }
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 70,
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFF2F2F2),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          width: 30,
+                          height: 30,
+                          'assets/images/hide_announcement_icon.svg',
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text("Hide Announcement"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
@@ -253,6 +423,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                         GestureDetector(
                           onTap: () {
                             print(widget.id);
+                            _showDeleteBottomSheet(context);
                           },
                           child: Container(
                             width: 24,

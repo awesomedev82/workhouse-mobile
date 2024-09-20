@@ -4,6 +4,7 @@ import 'package:workhouse/screens/core_screens/account/edit_profile_screen.dart'
 import 'package:workhouse/screens/core_screens/directory/directory_screen.dart';
 import 'package:workhouse/screens/core_screens/directory/selected_member_screen.dart';
 import 'package:workhouse/screens/create_announcement/community_screen.dart';
+import 'package:workhouse/screens/create_announcement/selected_announcement_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_first_screen.dart';
 import 'package:workhouse/screens/create_announcement/share_third_screen.dart';
 import 'package:workhouse/screens/launch+walkthrough/launch_screen.dart';
@@ -55,6 +56,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => DirectoryScreen());
       case '/selected-member':
         return MaterialPageRoute(builder: (_) => SelectedMemberScreen());
+      case '/selected-announcement':
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => SelectedAnnouncementScreen(data: args['data']),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

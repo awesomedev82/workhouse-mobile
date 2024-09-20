@@ -49,7 +49,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
           .from('members')
           .select()
           .or('full_name.ilike.%$_searchValue%,public_name.ilike.%$_searchValue%')
-          // .not('id', 'eq', userID)
+          .not('id', 'eq', userID)
           .eq("community_id", communityID);
     }
     setState(() {

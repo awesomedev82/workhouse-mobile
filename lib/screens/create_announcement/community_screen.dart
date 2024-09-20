@@ -55,6 +55,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final data = await supabase
         .from("community_logs_with_sender")
         .select()
+        .not('hide', 'eq', true)
         .eq("community_id", communityID)
         .order('role', ascending: true)
         .order("created_at", ascending: false);
@@ -67,6 +68,17 @@ class _CommunityScreenState extends State<CommunityScreen> {
       Navigator.of(context).pop();
     });
     return;
+  }
+
+  // MARK: Select Announcement
+  Future<void> onSelectAnnouncement(data) async {
+    print(data);
+    Navigator.of(context).pushNamed(
+      '/selected-announcement',
+      arguments: {
+        'data': data,
+      },
+    );
   }
 
   void _showAnnouncementInfoModal(BuildContext context) {
@@ -203,10 +215,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 itemCount:
                                     announcementProvider.announcements.length,
                                 itemBuilder: (context, index) {
-                                  return AnnouncementCard(
-                                    id: announcementProvider
-                                        .announcements[index]["id"],
-                                    idx: index,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onSelectAnnouncement(
+                                        announcementProvider
+                                            .announcements[index],
+                                      );
+                                    },
+                                    child: AnnouncementCard(
+                                      id: announcementProvider
+                                          .announcements[index]["id"],
+                                      idx: index,
+                                    ),
                                   );
                                 },
                               ),
