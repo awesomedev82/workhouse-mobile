@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/components/app_progress_indicator.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/otp_input.dart';
 import 'package:workhouse/components/page_indicator.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -64,14 +65,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
             final newRecord = payload.first;
             if (newRecord['is_active'] == false) {
               Supabase.instance.client.auth.signOut();
-              CherryToast.info(
-                animationDuration: Duration(milliseconds: 300),
-                title: Text(
-                  "Your account was deactivated!",
-                  style: TextStyle(color: Colors.red[600]),
-                ),
-                // ignore: use_build_context_synchronously
-              ).show(context);
+              showAppToast(context, "Your account was deactivated!");
               Navigator.pushReplacementNamed(context, "/sign-in");
             }
           });
@@ -90,9 +84,6 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
 
       if (fullname.isEmpty) {
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, "/create-account");
-      } else if (businessName.isEmpty) {
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, "/add-directory");
       } else {
         // ignore: use_build_context_synchronously
@@ -100,14 +91,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
       }
     } catch (e) {
       Navigator.of(context).pop();
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Code is incorrect or expired!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-        // ignore: use_build_context_synchronously
-      ).show(context);
+      showAppToast(context, "Code is incorrect or expired!");
       print("Error:$e");
     }
   }
@@ -120,21 +104,9 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
       final response = await Supabase.instance.client.auth.signInWithOtp(
         email: _emailAddress,
       );
-      CherryToast.info(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "New code was sent!",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "New code was sent!");
     } catch (e) {
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Error occured, please try again!",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Error occured, please try again!");
     }
   }
 

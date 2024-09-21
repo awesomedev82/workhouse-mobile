@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/utils/constant.dart';
 
 /**
@@ -28,7 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
     _showProgressModal(context);
     if (emailAddress.isEmpty) {
       setState(() {
-        phoneValidText = "Please enter a email address";
+        phoneValidText = "Please enter an email address";
       });
       return false;
     } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
@@ -45,7 +49,7 @@ class _SignInScreenState extends State<SignInScreen> {
       print(data);
       if (data.isEmpty) {
         setState(() {
-          phoneValidText = "Email doesn't exist!";
+          phoneValidText = "Please use the email address from your invite";
         });
         return false;
       } else if (data[0]["is_active"] == false) {
@@ -131,20 +135,32 @@ class _SignInScreenState extends State<SignInScreen> {
               SizedBox(
                 height: 84,
               ),
-              DefaultTextStyle(
-                style: TextStyle(
-                  fontFamily: "Lastik-test",
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: APP_MAIN_LABEL_COLOR,
-                  height: 1.42,
-                ),
-                child: Text(
-                  'Sign In',
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DefaultTextStyle(
+                    style: TextStyle(
+                      fontFamily: "Lastik-test",
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: APP_MAIN_LABEL_COLOR,
+                      height: 1.42,
+                    ),
+                    child: Text(
+                      'Sign in with email',
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      exit(0);
+                    },
+                    child: SvgPicture.asset('assets/images/x.svg'),
+                  ),
+                ],
               ),
               SizedBox(
-                height: 4,
+                height: 24,
               ),
               DefaultTextStyle(
                 style: GoogleFonts.inter(
@@ -156,7 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 child: Text(
-                  'We use mobile authentication to keep our app safe and secure.',
+                  'Enter the email address associated with your Workhouse invite. We’ll send a code to your email to confirm your account.',
                 ),
               ),
               SizedBox(
@@ -194,13 +210,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 onTapped: () async {
                   if (await validateemailAddress() == false) {
                     Navigator.of(context).pop();
-                    CherryToast.error(
-                      animationDuration: Duration(milliseconds: 300),
-                      title: Text(
-                        phoneValidText,
-                        style: TextStyle(color: Colors.red[600]),
-                      ),
-                    ).show(context);
+                    showAppToast(context, phoneValidText);
                   } else {
                     Navigator.of(context).pop();
                     sendOTP();

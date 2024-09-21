@@ -12,6 +12,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_dropdown.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/otp_input.dart';
 import 'package:workhouse/components/page_indicator.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -27,10 +28,11 @@ class AddDirectory extends StatefulWidget {
 class _AddDirectoryState extends State<AddDirectory> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  String fullname = "";
   String businessName = "";
   String website = "";
   String publicName = "";
-  String industry = "Architecture";
+  String industry = "";
   String company = "None";
   String imgURL = "";
   late SupabaseClient supabase;
@@ -90,33 +92,20 @@ class _AddDirectoryState extends State<AddDirectory> {
   }
 
   void onNext(ProfileProvider profileProvider) async {
-    if (businessName.isEmpty) {
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Enter business name!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+    if (fullname.isEmpty) {
+      showAppToast(context, "Enter full name!");
+    } else if (businessName.isEmpty) {
+      showAppToast(context, "Enter business name!");
     } else if (publicName.isEmpty) {
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Enter public name!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Enter public name!");
     } else if (_image == null) {
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Upload avatar!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Upload avatar!");
+    } else if (industry == '') {
+      showAppToast(context, "Choose industry!");
     } else {
       _showCustomModal(context);
       prefs = await SharedPreferences.getInstance();
+      prefs.setString("fullname", fullname);
       prefs.setString("businessName", businessName);
       prefs.setString("publicName", publicName);
       supabase = Supabase.instance.client;
@@ -134,19 +123,14 @@ class _AddDirectoryState extends State<AddDirectory> {
         imgURL = fullPath;
       } catch (e) {
         print("image upload error:\n$e");
-        CherryToast.error(
-          animationDuration: Duration(milliseconds: 300),
-          title: Text(
-            "Some error occured!",
-            style: TextStyle(color: Colors.red[600]),
-          ),
-        ).show(context);
+        showAppToast(context, "Some error occured!");
       }
       print("imgURL:$imgURL");
       prefs.setString("avatar", imgURL);
       profileProvider.avatar = imgURL;
       try {
         await supabase.from('members').update({
+          "full_name": fullname,
           "business_name": businessName,
           "public_name": publicName,
           "avatar_url": imgURL,
@@ -157,13 +141,7 @@ class _AddDirectoryState extends State<AddDirectory> {
         Navigator.pushReplacementNamed(context, "/community");
       } catch (e) {
         Navigator.of(context).pop();
-        CherryToast.error(
-          animationDuration: Duration(milliseconds: 300),
-          title: Text(
-            "Some error occured!",
-            style: TextStyle(color: Colors.red[600]),
-          ),
-        ).show(context);
+        showAppToast(context, "Some error occured!");
       }
     }
   }
@@ -234,7 +212,6 @@ class _AddDirectoryState extends State<AddDirectory> {
                     SizedBox(
                       height: 64,
                     ),
-                    PageIndicator(index: 2),
                     SizedBox(
                       height: 14,
                     ),
@@ -298,7 +275,7 @@ class _AddDirectoryState extends State<AddDirectory> {
                         _showPicker(context);
                       },
                       child: CircleAvatar(
-                        radius: 40,
+                        radius: 30,
                         backgroundColor: Colors.grey[200],
                         child: _image != null
                             ? ClipRRect(
@@ -322,6 +299,33 @@ class _AddDirectoryState extends State<AddDirectory> {
                                 ),
                               ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    // MARK: Full Name
+                    Text(
+                      "Full Name",
+                      style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Color(0xFF17181A),
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    AppInput(
+                      hintText: "Full Name",
+                      validate: (val) {
+                        setState(() {
+                          fullname = val;
+                        });
+                      },
+                      inputType: TextInputType.text,
                     ),
                     SizedBox(
                       height: 16,
@@ -424,6 +428,7 @@ class _AddDirectoryState extends State<AddDirectory> {
                     ),
                     AppDropdown(
                       items: [
+                        '',
                         'Architecture',
                         'Advertising and Marketing',
                         'Art and Illustration',

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092457255087",
+    "project_id": "workhouse-cbff5",
+    "storage_bucket": "workhouse-cbff5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092457255087:android:94f08cae704beaa661845a",
+        "android_client_info": {
+          "package_name": "com.workhouse.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLje6KOVot1kXAFq8AuGM19TW7_Bfv6Do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

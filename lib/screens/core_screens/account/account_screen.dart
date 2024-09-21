@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/user_announcement_card.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -413,15 +414,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     ),
                                   );
                                 } else {
-                                  CherryToast.error(
-                                    animationDuration:
-                                        Duration(milliseconds: 300),
-                                    title: Text(
-                                      "Link format is invalid",
-                                      style: TextStyle(color: Colors.red[600]),
-                                    ),
-                                    // ignore: use_build_context_synchronously
-                                  ).show(context);
+                                  showAppToast(context, "Link format is invalid");
                                 }
                               },
                               child: Text(

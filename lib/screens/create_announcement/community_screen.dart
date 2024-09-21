@@ -36,10 +36,20 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late SharedPreferences prefs;
   late SupabaseClient supabase;
   String communityID = "";
+  late SupabaseClient supabaseIns;
 
   @override
   void initState() {
     super.initState();
+    supabaseIns = Supabase.instance.client;
+    supabaseIns
+        .from('community_logs')
+        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> events) {
+      for (var event in events) {
+        // Handle the event
+        // You might want to call a function to send a notification
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showProgressModal(context);
     });

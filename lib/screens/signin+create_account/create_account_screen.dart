@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/otp_input.dart';
 import 'package:workhouse/components/page_indicator.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -33,24 +34,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Future<bool> validateInputs() async {
     if (fullname.isEmpty) {
       validateText = "Input Full Name";
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          validateText,
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+      showAppToast(context, validateText);
       return false;
     } else if (phonenumber.isEmpty ||
         !RegExp(r'^\d{3}\.\d{3}\.\d{4}$').hasMatch(phonenumber)) {
       validateText = "Input Correct Phonenumber";
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          validateText,
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+      showAppToast(context, validateText);
       return false;
     } else {
       prefs = await SharedPreferences.getInstance();
@@ -69,24 +58,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           return true;
         } catch (e) {
           print(e);
-          CherryToast.error(
-            animationDuration: Duration(milliseconds: 300),
-            title: Text(
-              "Error occured during the execution!",
-              style: TextStyle(color: Colors.red[600]),
-            ),
-          ).show(context);
+          showAppToast(context, "Error occured during the execution!");
           Navigator.of(context).pop();
           return false;
         }
       } else {
-        CherryToast.error(
-          animationDuration: Duration(milliseconds: 300),
-          title: Text(
-            "Error occured during the execution!",
-            style: TextStyle(color: Colors.red[600]),
-          ),
-        ).show(context);
+        showAppToast(context, "Error occured during the execution!");
         return false;
       }
     }

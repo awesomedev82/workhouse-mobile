@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 
 class UserAnnouncementCard extends StatefulWidget {
@@ -222,22 +223,9 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
 
                       Provider.of<AnnouncementProvider>(context, listen: false)
                           .setMyAnnouncements(myAnnouncements);
-
-                      CherryToast.success(
-                        animationDuration: Duration(milliseconds: 300),
-                        title: Text(
-                          "Deleted successfully!",
-                          style: TextStyle(color: Colors.blue[600]),
-                        ),
-                      ).show(context);
+                      showAppToast(context, "Deleted successfully!");
                     } catch (e) {
-                      CherryToast.error(
-                        animationDuration: Duration(milliseconds: 300),
-                        title: Text(
-                          "Error occured!",
-                          style: TextStyle(color: Colors.red[600]),
-                        ),
-                      ).show(context);
+                      showAppToast(context, "Error occured!");
                     }
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();

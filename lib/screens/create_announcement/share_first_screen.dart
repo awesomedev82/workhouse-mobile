@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:video_player/video_player.dart';
 import 'package:workhouse/components/app_input.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/app_video_player.dart';
 import 'package:workhouse/utils/constant.dart';
 import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
@@ -68,14 +69,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         await _videoController?.initialize();
 
         if (_videoController!.value.duration.inSeconds > 30) {
-          CherryToast.error(
-            animationDuration: Duration(milliseconds: 300),
-            title: Text(
-              "Video length has to be less than 30s!",
-              style: TextStyle(color: Colors.red[600]),
-            ),
-            // ignore: use_build_context_synchronously
-          ).show(context);
+          showAppToast(context, "Video length has to be less than 30s!");
           return;
         }
       }
@@ -133,14 +127,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         await _videoController?.initialize();
 
         if (_videoController!.value.duration.inSeconds > 30) {
-          CherryToast.error(
-            animationDuration: Duration(milliseconds: 300),
-            title: Text(
-              "Video length has to be less than 30s!",
-              style: TextStyle(color: Colors.red[600]),
-            ),
-            // ignore: use_build_context_synchronously
-          ).show(context);
+          showAppToast(context, "Video length has to be less than 30s!");
           return;
         }
       }
@@ -197,25 +184,12 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      CherryToast.success(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Created successfully!",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Created successfully!");
       Navigator.pushNamed(context, '/community');
     } catch (e) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Error occured, please try again!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-        // ignore: use_build_context_synchronously
-      ).show(context);
+      showAppToast(context, "Error occured, please try again!");
     }
   }
 
@@ -286,13 +260,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
                 onTap: () async {
                   // Navigator.of(context).pushNamed('/share-payment');
                   if (_description.isEmpty) {
-                    CherryToast.error(
-                      animationDuration: Duration(milliseconds: 300),
-                      title: Text(
-                        "Please type description!",
-                        style: TextStyle(color: Colors.red[600]),
-                      ),
-                    ).show(context);
+                    showAppToast(context, "Please type description!");
                     return;
                   }
                   await makePayment();
@@ -375,13 +343,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
 
   Future<void> makePayment() async {
     if (_description.isEmpty) {
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Please type description!",
-          style: TextStyle(color: Colors.red[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Please type description!");
       return;
     }
     try {
@@ -423,36 +385,18 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       // Show when payment is done
       // Displaying snackbar for it
       createAnnouncement();
-      CherryToast.success(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Paid successfully!",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Paid successfully!");
       paymentIntent = null;
     } on StripeException catch (e) {
       // If any error comes during payment
       // so payment will be cancelled
       print('Error: $e');
 
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Payment cancelled",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Payment cancelled");
     } catch (e) {
       print("Error in displaying");
       print('$e');
-      CherryToast.error(
-        animationDuration: Duration(milliseconds: 300),
-        title: Text(
-          "Error occured! Please try again.",
-          style: TextStyle(color: Colors.blue[600]),
-        ),
-      ).show(context);
+      showAppToast(context, "Error occured! Please try again.");
     }
   }
 

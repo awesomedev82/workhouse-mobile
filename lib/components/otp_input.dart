@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:otp_input_editor/otp_input_editor.dart';
 
 class OtpInput extends StatefulWidget {
   const OtpInput({
@@ -66,6 +64,23 @@ class _OtpInputState extends State<OtpInput> {
     widget.codeChanged(otpCode);
   }
 
+  // Handle paste event
+  void _handlePaste(int i, String? pastedText) {
+    if (pastedText == null || pastedText.length != 6) return;
+
+    for (int j = 0; j < 6; j++) {
+      if (j < pastedText.length) {
+        _controllers[j].text = pastedText[j];
+      } else {
+        _controllers[j].text = '';
+      }
+    }
+
+    otpCode = _controllers.map((controller) => controller.text).join();
+    widget.codeChanged(otpCode);
+    FocusScope.of(context).unfocus();
+  }
+
   Widget buildTextField(int i) {
     return Container(
       width: 48,
@@ -81,7 +96,12 @@ class _OtpInputState extends State<OtpInput> {
           _handleChange(i, value);
         },
         onTap: () {
-          // No action required here now for clear
+          Clipboard.getData("text/plain").then((clipboarContents) {
+            final pastedText = clipboarContents?.text;
+            if (pastedText != null && pastedText.length == 6) {
+              _handlePaste(i, pastedText);
+            }
+          });
         },
         style: GoogleFonts.inter(
           textStyle: TextStyle(

@@ -117,45 +117,50 @@ class _AppDropdownState extends State<AppDropdown> {
                           ...widget.items.map(
                             (option) {
                               bool isSelected = _tempSelectedItem == option;
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _tempSelectedItem = option;
-                                    print(_tempSelectedItem);
-                                  });
-                                },
-                                child: Container(
-                                  height: 70,
-                                  padding: EdgeInsets.symmetric(horizontal: 24),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? Color(0xFFDC6803).withOpacity(0.39)
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Color(0xFFF2F2F2),
-                                        width: 1,
+                              return option != ''
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _tempSelectedItem = option;
+                                          print(_tempSelectedItem);
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 70,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 24),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? Color(0xFFDC6803)
+                                                  .withOpacity(0.39)
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              color: Color(0xFFF2F2F2),
+                                              width: 1,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(option),
+                                            SizedBox(width: 16),
+                                            Icon(
+                                              Icons.check_circle,
+                                              color: isSelected
+                                                  ? Color(0xFFDC6803)
+                                                  : Colors.grey.withOpacity(0),
+                                              size: 24,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(option),
-                                      SizedBox(width: 16),
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: isSelected
-                                            ? Color(0xFFDC6803)
-                                            : Colors.grey.withOpacity(0),
-                                        size: 24,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                                    )
+                                  : Container();
                             },
                           ).toList(),
                         ],

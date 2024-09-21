@@ -13,6 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 
 class AnnouncementCard extends StatefulWidget {
@@ -199,22 +200,9 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
                       Provider.of<AnnouncementProvider>(context, listen: false)
                           .setMyAnnouncements(announcements);
-
-                      CherryToast.success(
-                        animationDuration: Duration(milliseconds: 300),
-                        title: Text(
-                          "Hidden successfully!",
-                          style: TextStyle(color: Colors.blue[600]),
-                        ),
-                      ).show(context);
+                      showAppToast(context, "Hidden successfully!");
                     } catch (e) {
-                      CherryToast.error(
-                        animationDuration: Duration(milliseconds: 300),
-                        title: Text(
-                          "Error occured!",
-                          style: TextStyle(color: Colors.red[600]),
-                        ),
-                      ).show(context);
+                      showAppToast(context, "Error occured!");
                     }
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();

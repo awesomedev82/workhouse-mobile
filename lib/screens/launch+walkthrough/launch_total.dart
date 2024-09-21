@@ -39,8 +39,6 @@ class _LaunchTotalState extends State<LaunchTotal> {
     if (userID.isEmpty) {
       Navigator.pushNamed(context, '/sign-in');
     } else if (fullname.isEmpty) {
-      Navigator.pushNamed(context, '/create-account');
-    } else if (businessName.isEmpty) {
       Navigator.pushNamed(context, '/add-directory');
     } else {
       Navigator.pushNamed(context, '/community');
