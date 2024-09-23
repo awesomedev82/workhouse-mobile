@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -54,6 +56,37 @@ class _CommunityScreenState extends State<CommunityScreen> {
       _showProgressModal(context);
     });
     getData();
+    initFirebaseMessaging();
+  }
+
+  // MARK: Messaging
+  void initFirebaseMessaging() async {
+    await FirebaseMessaging.instance.requestPermission();
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      final userID = supabase.auth.currentUser!.id;
+      await supabase.from("member_fcm_tokens").upsert({
+        'id': userID,
+        'token': fcmToken,
+      });
+    }
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      final userID = supabase.auth.currentUser!.id;
+      await supabase.from("member_fcm_tokens").upsert({
+        'id': userID,
+        'token': fcmToken,
+      });
+    });
+    FirebaseMessaging.onMessage.listen((payload) {
+      final notification = payload.notification;
+      if (notification != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${notification.title} ${notification.body}'),
+          ),
+        );
+      }
+    });
   }
 
   // MARK: Init data

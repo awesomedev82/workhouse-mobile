@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDLje6KOVot1kXAFq8AuGM19TW7_Bfv6Do',
-    appId: '1:1092457255087:android:94f08cae704beaa661845a',
-    messagingSenderId: '1092457255087',
-    projectId: 'workhouse-cbff5',
-    storageBucket: 'workhouse-cbff5.appspot.com',
+    apiKey: 'AIzaSyAl9eEq5S8TxXT_Rvig0d3lMOkz4l6RpOg',
+    appId: '1:347992388458:android:79bfeb4579ebfbd283ab13',
+    messagingSenderId: '347992388458',
+    projectId: 'workhouse-d6807',
+    storageBucket: 'workhouse-d6807.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCRmCF-5H6qJNouPiMv3I_ksVqcOPfnQ3k',
-    appId: '1:1092457255087:ios:e4ecc4e2c0c6d93a61845a',
-    messagingSenderId: '1092457255087',
-    projectId: 'workhouse-cbff5',
-    storageBucket: 'workhouse-cbff5.appspot.com',
+    apiKey: 'AIzaSyDtJZBtUg03GKni7TcyEbABMksOfmmVQhs',
+    appId: '1:347992388458:ios:9905d857ffc4a66583ab13',
+    messagingSenderId: '347992388458',
+    projectId: 'workhouse-d6807',
+    storageBucket: 'workhouse-d6807.appspot.com',
     iosBundleId: 'com.workhouse',
   );
+
 }
