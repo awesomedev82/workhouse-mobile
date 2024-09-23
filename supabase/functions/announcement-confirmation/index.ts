@@ -1,7 +1,6 @@
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { createClient } from 'npm:@supabase/supabase-js@2'
-import { JWT } from 'npm:google-auth-library@9'
+import { createClient } from 'npm:@supabase/supabase-js'
+import { JWT } from 'npm:google-auth-library'
 
 interface Announcement {
   id: any
@@ -27,11 +26,7 @@ const supabase = createClient(
 )
 
 Deno.serve(async (req) => {
-  const payload: WebhookPayload = await req.json();
-
-  const { data } = await supabase.from('member_fcm_tokens').select('token').eq('id', payload.record.sender).single();
-
-  const fcmToken = data!.token as string;
+  const payload: WebhookPayload = await req.json()
 
   const { default: serviceAccount } = await import('../service-account.json', {
     with: { type: 'json' },
@@ -39,31 +34,45 @@ Deno.serve(async (req) => {
 
   const accessToken = await getAccessToken({ clientEmail: serviceAccount.client_email, privateKey: serviceAccount.private_key, });
 
-  const res = await fetch(
-    `https://fcm.googleapis.com/v1/projects/${project_id}/messages:send`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'applicatioin/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        token: fcmToken,
-        notification: {
-          title: 'New announcement',
-          body: 'New announcement was posted recently!',
-        }
-      })
-    }
-  )
+  const tokenDatas = await supabase.from('member_fcm_tokens').select('token')
 
-  cosnt resData = await res.json();
-  if (res.status < 200 || 299 < res.status) {
-    throw resData;
+  if (tokenDatas.error) {
+    throw tokenDatas.error
   }
 
+  const promises = tokenDatas.data.map(async (tokenData: { token: string }) => {
+    const res = await fetch(
+      `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          message: {
+            token: tokenData.token,
+            notification: {
+              title: 'New Announcement',
+              body: 'A new announcement was posted recently!',
+            }
+          }
+        })
+      }
+    )
+    
+    const resData = await res.json()
+    if (res.status < 200 || res.status > 299) {
+      console.error(`Error sending notification to token ${tokenData.token}:`, resData)
+    }
+    return resData
+  })
+
+  const results = await Promise.all(promises)
+  console.log("All notifications sent:", results)
+
   return new Response(
-    JSON.stringify(data),
+    JSON.stringify(tokenDatas.data),
     { headers: { "Content-Type": "application/json" } },
   )
 })
