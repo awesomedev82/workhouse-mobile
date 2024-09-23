@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_card.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
+import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/header_bar.dart';
 import 'package:workhouse/components/image_carousel.dart';
 import 'package:workhouse/screens/create_announcement/announcement_create_screen.dart';
@@ -80,11 +81,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     FirebaseMessaging.onMessage.listen((payload) {
       final notification = payload.notification;
       if (notification != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${notification.title} ${notification.body}'),
-          ),
-        );
+        print("---------------new annnouncement---------------");
+        showAppToast(context, "New announcement was added");
       }
     });
   }

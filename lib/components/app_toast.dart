@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'custom_toast.dart';
 
 void showAppToast(BuildContext context, String message) {
-  OverlayState overlayState = Overlay.of(context)!;
+  OverlayState overlayState = Overlay.of(context);
   late OverlayEntry
       overlayEntry; // Use late keyword so it can be referenced within the CustomToast callback
 

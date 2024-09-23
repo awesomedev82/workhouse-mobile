@@ -43,10 +43,14 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
   late String description = "";
   late String createdAt = "";
   List<dynamic> medias = <dynamic>[];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      isLoading = true;
+    });
     getData();
   }
 
@@ -88,6 +92,7 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
       description = data["description"];
       createdAt = timeDifference(data["created_at"]);
       medias = mediasTemp;
+      isLoading = false;
     });
   }
 

@@ -11,6 +11,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
@@ -41,6 +42,7 @@ class _AccountScreenState extends State<AccountScreen> {
   String _bio = "";
   String _website = "";
   String _cname = "";
+  bool _isLoding = true;
   List<dynamic> announcements = <dynamic>[];
 
   String prefixURL =
@@ -49,6 +51,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isLoding = true;
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showProgressModal(context);
     });
@@ -82,6 +87,7 @@ class _AccountScreenState extends State<AccountScreen> {
       _pname = userdata[0]["public_name"] ?? "";
       _website = userdata[0]["website"] ?? "";
       _cname = userdata[0]["community_name"] ?? "";
+      _isLoding = false;
     });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pop();
@@ -308,16 +314,29 @@ class _AccountScreenState extends State<AccountScreen> {
                           height: 14,
                         ),
                         //MARK: userinfo-public name
-                        Text(
-                          _pname,
-                          style: TextStyle(
-                            fontFamily: "Lastik-test",
-                            fontSize: 24,
-                            height: 1.42,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF101010),
-                          ),
-                        ),
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Text(
+                                  "Full Stack Developer",
+                                  style: TextStyle(
+                                    fontFamily: "Lastik-test",
+                                    fontSize: 24,
+                                    height: 1.42,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF101010),
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                _pname,
+                                style: TextStyle(
+                                  fontFamily: "Lastik-test",
+                                  fontSize: 24,
+                                  height: 1.42,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF101010),
+                                ),
+                              ),
                         SizedBox(
                           height: 10,
                         ),
@@ -335,102 +354,182 @@ class _AccountScreenState extends State<AccountScreen> {
                           height: 6,
                         ),
                         // MARK: userinfo-business name
-                        Row(
-                          children: [
-                            if (_bname.isNotEmpty)
-                              Icon(
-                                Ionicons.briefcase_outline,
-                                size: 14,
-                                color: Color(0xFF898A8D),
-                              ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Text(
-                              _bname,
-                              style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                  height: 1.47,
-                                  color: APP_BLACK_COLOR,
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(
+                                      "Seasoned senior full stack developer",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              )
+                            : Row(
+                                children: [
+                                  if (_bname.isNotEmpty)
+                                    Icon(
+                                      Ionicons.briefcase_outline,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    _bname,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 100,
+                                    style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 14,
+                                        height: 1.47,
+                                        color: APP_BLACK_COLOR,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                         SizedBox(
                           height: 6,
                         ),
                         // MARK: userinfo-community name
-                        Row(
-                          children: [
-                            if (_cname.isNotEmpty)
-                              Icon(
-                                Ionicons.location_outline,
-                                size: 14,
-                                color: Color(0xFF898A8D),
-                              ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Text(
-                              _cname,
-                              style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                  height: 1.47,
-                                  color: APP_BLACK_COLOR,
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    if (_cname.isNotEmpty)
+                                      Icon(
+                                        Ionicons.location_outline,
+                                        size: 14,
+                                        color: Color(0xFF898A8D),
+                                      ),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(
+                                      "Developer/Design Farm",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              )
+                            : Row(
+                                children: [
+                                  if (_cname.isNotEmpty)
+                                    Icon(
+                                      Ionicons.location_outline,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    _cname,
+                                    style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 14,
+                                        height: 1.47,
+                                        color: APP_BLACK_COLOR,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                         SizedBox(
                           height: 6,
                         ),
                         // MARK: userinfo-website
-                        Row(
-                          children: [
-                            if (_website.isNotEmpty)
-                              Icon(
-                                Ionicons.link,
-                                size: 14,
-                                color: Color(0xFF898A8D),
-                              ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (await canLaunchUrl(
-                                  Uri.parse(
-                                      "https://${_website.replaceAll("https://", "")}"),
-                                )) {
-                                  await launchUrl(
-                                    Uri.parse(
-                                      "https://${_website.replaceAll("https://", "")}",
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    if (_website.isNotEmpty)
+                                      Icon(
+                                        Ionicons.link,
+                                        size: 14,
+                                        color: Color(0xFF898A8D),
+                                      ),
+                                    SizedBox(
+                                      width: 6,
                                     ),
-                                  );
-                                } else {
-                                  showAppToast(context, "Link format is invalid");
-                                }
-                              },
-                              child: Text(
-                                _website,
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    height: 1.47,
-                                    color: Color(0xFFAAD130),
-                                  ),
+                                    GestureDetector(
+                                      child: Text(
+                                        "www.example.com",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 14,
+                                            height: 1.47,
+                                            color: Color(0xFFAAD130),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              )
+                            : Row(
+                                children: [
+                                  if (true)
+                                    Icon(
+                                      Ionicons.link,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (await canLaunchUrl(
+                                        Uri.parse(
+                                            "https://${_website.replaceAll("https://", "")}"),
+                                      )) {
+                                        await launchUrl(
+                                          Uri.parse(
+                                            "https://${_website.replaceAll("https://", "")}",
+                                          ),
+                                        );
+                                      } else {
+                                        showAppToast(
+                                            context, "Link format is invalid");
+                                      }
+                                    },
+                                    child: Text(
+                                      _website,
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: Color(0xFFAAD130),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                         SizedBox(
                           height: 14,
                         ),
