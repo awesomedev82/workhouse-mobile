@@ -580,26 +580,6 @@ class _AccountScreenState extends State<AccountScreen> {
                                     ),
                                   ),
                                   child: Image.asset(
-                                    "assets/images/mail.png",
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: Color(0xFFE2E2E2),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Image.asset(
                                     "assets/images/paper-plane.png",
                                     width: 24,
                                     height: 24,
@@ -608,21 +588,28 @@ class _AccountScreenState extends State<AccountScreen> {
                                 SizedBox(
                                   width: 16,
                                 ),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: Color(0xFFE2E2E2),
-                                      width: 1,
+                                GestureDetector(
+                                  onTap: () {
+                                    Supabase.instance.client.auth.signOut();
+                                    Navigator.pushReplacementNamed(
+                                        context, "/sign-in");
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: Color(0xFFE2E2E2),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/corner-down-right.png",
-                                    width: 24,
-                                    height: 24,
+                                    child: Image.asset(
+                                      "assets/images/corner-down-right.png",
+                                      width: 24,
+                                      height: 24,
+                                    ),
                                   ),
                                 ),
                               ],
