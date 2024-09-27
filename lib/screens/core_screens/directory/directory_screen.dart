@@ -247,6 +247,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                                                 .circular(24),
                                                         child: Image.network(
                                                           "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/${member["avatar_url"]}",
+                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
                                                     ),

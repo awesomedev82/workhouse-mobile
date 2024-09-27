@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -67,9 +68,11 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
     final adata = await supabase
         .from("community_logs")
         .select()
+        .not('hide', 'eq', true)
         .eq("sender", userID)
         .order("created_at", ascending: false);
-
+    Provider.of<AnnouncementProvider>(context, listen: false)
+        .setOtherAnnouncements(adata);
     print("Announcement Data:\n$adata");
     setState(() {
       announcements = adata;
@@ -150,375 +153,385 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 16),
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    child: SvgPicture.asset("assets/images/arrow-left.svg"),
+      body: Consumer<AnnouncementProvider>(
+        builder: (context, announcementProvider, child) {
+          return Container(
+            child: SingleChildScrollView(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 16,
                   ),
-                ),
-              ),
-              //MARK: User Info
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Color(0xFFF5F0F0),
-                      width: 1,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 16),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        child: SvgPicture.asset("assets/images/arrow-left.svg"),
+                      ),
                     ),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //MARK: Avatar
-                    Row(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              width: 80,
-                              child: Container(
-                                width: 80,
-                                height: 80,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(40),
-                                  child: _avatar == ""
-                                      ? Container(
-                                          color: Colors.white,
-                                          child: AspectRatio(
-                                            aspectRatio: 1.6,
-                                            child: BlurHash(
-                                              hash:
-                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                            ),
-                                          ),
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: _avatar,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              const AspectRatio(
-                                            aspectRatio: 1.6,
-                                            child: BlurHash(
-                                              hash:
-                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    //MARK: userinfo-public name
-                    _isLoding == true
-                        ? Skeletonizer(
-                            child: Text(
-                              "Full Stack Developer",
-                              style: TextStyle(
-                                fontFamily: "Lastik-test",
-                                fontSize: 24,
-                                height: 1.42,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF101010),
-                              ),
-                            ),
-                          )
-                        : Text(
-                            _pname,
-                            style: TextStyle(
-                              fontFamily: "Lastik-test",
-                              fontSize: 24,
-                              height: 1.42,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF101010),
-                            ),
-                          ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      _bio,
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          height: 1.47,
+                  //MARK: User Info
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFF5F0F0),
+                          width: 1,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    // MARK: userinfo-business name
-                    _isLoding == true
-                        ? Skeletonizer(
-                            child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //MARK: Avatar
+                        Row(
+                          children: [
+                            Stack(
                               children: [
-                                SizedBox(
-                                  width: 6,
-                                ),
-                                Text(
-                                  "Seasoned senior full stack developer",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14,
-                                      height: 1.47,
-                                      color: APP_BLACK_COLOR,
+                                Container(
+                                  width: 80,
+                                  child: Container(
+                                    width: 80,
+                                    height: 80,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: _avatar == ""
+                                          ? Container(
+                                              color: Colors.white,
+                                              child: AspectRatio(
+                                                aspectRatio: 1.6,
+                                                child: BlurHash(
+                                                  hash:
+                                                      'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                ),
+                                              ),
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: _avatar,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  const AspectRatio(
+                                                aspectRatio: 1.6,
+                                                child: BlurHash(
+                                                  hash:
+                                                      'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                ),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          )
-                        : Row(
-                            children: [
-                              if (_bname.isNotEmpty)
-                                Icon(
-                                  Ionicons.briefcase_outline,
-                                  size: 14,
-                                  color: Color(0xFF898A8D),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        //MARK: userinfo-public name
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Text(
+                                  "Full Stack Developer",
+                                  style: TextStyle(
+                                    fontFamily: "Lastik-test",
+                                    fontSize: 24,
+                                    height: 1.42,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF101010),
+                                  ),
                                 ),
-                              SizedBox(
-                                width: 6,
+                              )
+                            : Text(
+                                _pname,
+                                style: TextStyle(
+                                  fontFamily: "Lastik-test",
+                                  fontSize: 24,
+                                  height: 1.42,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF101010),
+                                ),
                               ),
-                              Text(
-                                _bname,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 100,
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    height: 1.47,
-                                    color: APP_BLACK_COLOR,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    // MARK: userinfo-community name
-                    _isLoding == true
-                        ? Skeletonizer(
-                            child: Row(
-                              children: [
-                                if (_cname.isNotEmpty)
-                                  Icon(
-                                    Ionicons.location_outline,
-                                    size: 14,
-                                    color: Color(0xFF898A8D),
-                                  ),
-                                SizedBox(
-                                  width: 6,
-                                ),
-                                Text(
-                                  "Developer/Design Farm",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14,
-                                      height: 1.47,
-                                      color: APP_BLACK_COLOR,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          _bio,
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 14,
+                              height: 1.47,
                             ),
-                          )
-                        : Row(
-                            children: [
-                              if (_cname.isNotEmpty)
-                                Icon(
-                                  Ionicons.location_outline,
-                                  size: 14,
-                                  color: Color(0xFF898A8D),
-                                ),
-                              SizedBox(
-                                width: 6,
-                              ),
-                              Text(
-                                _cname,
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    height: 1.47,
-                                    color: APP_BLACK_COLOR,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    // MARK: userinfo-website
-                    _isLoding == true
-                        ? Skeletonizer(
-                            child: Row(
-                              children: [
-                                if (_website.isNotEmpty)
-                                  Icon(
-                                    Ionicons.link,
-                                    size: 14,
-                                    color: Color(0xFF898A8D),
-                                  ),
-                                SizedBox(
-                                  width: 6,
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        // MARK: userinfo-business name
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(
+                                      "Seasoned senior full stack developer",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                GestureDetector(
-                                  child: Text(
-                                    "www.example.com",
+                              )
+                            : Row(
+                                children: [
+                                  if (_bname.isNotEmpty)
+                                    Icon(
+                                      Ionicons.briefcase_outline,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    _bname,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 100,
                                     style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                         fontWeight: FontWeight.w300,
                                         fontSize: 14,
                                         height: 1.47,
-                                        color: Color(0xFFAAD130),
+                                        color: APP_BLACK_COLOR,
                                       ),
                                     ),
+                                  ),
+                                ],
+                              ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        // MARK: userinfo-community name
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    if (_cname.isNotEmpty)
+                                      Icon(
+                                        Ionicons.location_outline,
+                                        size: 14,
+                                        color: Color(0xFF898A8D),
+                                      ),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(
+                                      "Developer/Design Farm",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  if (_cname.isNotEmpty)
+                                    Icon(
+                                      Ionicons.location_outline,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    _cname,
+                                    style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 14,
+                                        height: 1.47,
+                                        color: APP_BLACK_COLOR,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        // MARK: userinfo-website
+                        _isLoding == true
+                            ? Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    if (_website.isNotEmpty)
+                                      Icon(
+                                        Ionicons.link,
+                                        size: 14,
+                                        color: Color(0xFF898A8D),
+                                      ),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
+                                    GestureDetector(
+                                      child: Text(
+                                        "www.example.com",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 14,
+                                            height: 1.47,
+                                            color: Color(0xFFAAD130),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  if (true)
+                                    Icon(
+                                      Ionicons.link,
+                                      size: 14,
+                                      color: Color(0xFF898A8D),
+                                    ),
+                                  SizedBox(
+                                    width: 6,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (await canLaunchUrl(
+                                        Uri.parse(
+                                            "https://${_website.replaceAll("https://", "")}"),
+                                      )) {
+                                        await launchUrl(
+                                          Uri.parse(
+                                            "https://${_website.replaceAll("https://", "")}",
+                                          ),
+                                        );
+                                      } else {
+                                        showAppToast(
+                                            context, "Link format is invalid");
+                                      }
+                                    },
+                                    child: Text(
+                                      _website,
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: Color(0xFFAAD130),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        //MARK: Button group
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Color(0xFFE2E2E2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/mail.png",
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Color(0xFFE2E2E2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/paper-plane.png",
+                                    width: 24,
+                                    height: 24,
                                   ),
                                 ),
                               ],
                             ),
-                          )
-                        : Row(
-                            children: [
-                              if (true)
-                                Icon(
-                                  Ionicons.link,
-                                  size: 14,
-                                  color: Color(0xFF898A8D),
-                                ),
-                              SizedBox(
-                                width: 6,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  if (await canLaunchUrl(
-                                    Uri.parse(
-                                        "https://${_website.replaceAll("https://", "")}"),
-                                  )) {
-                                    await launchUrl(
-                                      Uri.parse(
-                                        "https://${_website.replaceAll("https://", "")}",
-                                      ),
-                                    );
-                                  } else {
-                                    showAppToast(
-                                        context, "Link format is invalid");
-                                  }
-                                },
-                                child: Text(
-                                  _website,
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14,
-                                      height: 1.47,
-                                      color: Color(0xFFAAD130),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    //MARK: Button group
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: Color(0xFFE2E2E2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Image.asset(
-                                "assets/images/mail.png",
-                                width: 24,
-                                height: 24,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Container(
-                              width: 40,
-                              height: 40,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: Color(0xFFE2E2E2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Image.asset(
-                                "assets/images/paper-plane.png",
-                                width: 24,
-                                height: 24,
-                              ),
-                            ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 16,
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 16,
+                  ),
+                  //MARK: Announcement List
+                  if (_isLoding == false)
+                    ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: announcementProvider.otherAnnouncements.length,
+                      itemBuilder: (context, index) {
+                        return OtherAnnouncementCard(
+                          id: announcementProvider.otherAnnouncements[index]
+                              ["id"],
+                          idx: index,
+                        );
+                      },
                     ),
-                  ],
-                ),
+                ],
               ),
-              //MARK: Announcement List
-              if (_isLoding == false)
-                ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: announcements.length,
-                  itemBuilder: (context, index) {
-                    return OtherAnnouncementCard(
-                      id: announcements[index]["id"],
-                    );
-                  },
-                ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

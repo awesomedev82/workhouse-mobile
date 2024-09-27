@@ -1,22 +1,28 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
+import 'package:workhouse/components/app_toast.dart';
+import 'package:workhouse/utils/announcement_provider.dart';
 
 class OtherAnnouncementCard extends StatefulWidget {
   const OtherAnnouncementCard({
     Key? key,
     required this.id,
+    required this.idx,
   }) : super(key: key);
 
   final int id;
+  final int idx;
 
   @override
   _OtherAnnouncementCardState createState() => _OtherAnnouncementCardState();
@@ -117,10 +123,119 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
 
   List<dynamic> getMediaData(data) {
     List<dynamic> mediasData = <dynamic>[];
-    for (var media in data) {
+    for (var media in json.decode(data)) {
       mediasData.add({"type": media["type"], "url": media["url"]});
     }
     return mediasData;
+  }
+
+  //MARK: Show delete button
+  void _showDeleteBottomSheet(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            height: 102,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0), // TL: Top Left
+                topRight: Radius.circular(30.0), // TR: Top Right
+              ),
+            ),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 30,
+                  // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF2F2F2).withOpacity(1),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    //MARK: On delete:
+
+                    _showProgressModal(context);
+                    try {
+                      await supabase
+                          .from("community_logs")
+                          .update({'hide': true}).eq("id", widget.id);
+                      final announcementProvider =
+                          Provider.of<AnnouncementProvider>(context,
+                              listen: false);
+                      List<dynamic> announcements =
+                          announcementProvider.otherAnnouncements;
+                      announcements.removeAt(widget.idx);
+
+                      Provider.of<AnnouncementProvider>(context, listen: false)
+                          .setOtherAnnouncements(announcements);
+                      showAppToast(context, "Hidden successfully!");
+                    } catch (e) {
+                      showAppToast(context, "Error occured!");
+                    }
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 70,
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFF2F2F2),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          width: 30,
+                          height: 30,
+                          'assets/images/hide_announcement_icon.svg',
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text("Hide Announcement"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // MARK: Loading Progress Animation
@@ -170,6 +285,9 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
 
   @override
   Widget build(BuildContext context) {
+    final announcementProvider = Provider.of<AnnouncementProvider>(context);
+    dynamic announcements = announcementProvider.otherAnnouncements;
+
     return isLoading == false
         ? Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -197,7 +315,7 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
                         alignment: Alignment.topRight,
                         child: GestureDetector(
                           onTap: () {
-                            // _showDeleteBottomSheet(context);
+                            _showDeleteBottomSheet(context);
                           },
                           child: Icon(
                             Ionicons.ellipsis_horizontal,
@@ -212,7 +330,7 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          description,
+                          announcements[widget.idx]["description"],
                           textAlign: TextAlign.left,
                           style: GoogleFonts.inter(
                             fontSize: 14,
@@ -227,14 +345,16 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
                       Container(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: getMediaData(medias).isNotEmpty
-                              ? AnnouncementCarousel(
-                                  height: 240,
-                                  data: getMediaData(
-                                    medias,
-                                  ),
-                                )
-                              : Container(),
+                          child:
+                              getMediaData(announcements[widget.idx]["images"])
+                                      .isNotEmpty
+                                  ? AnnouncementCarousel(
+                                      height: 240,
+                                      data: getMediaData(
+                                        announcements[widget.idx]["images"],
+                                      ),
+                                    )
+                                  : Container(),
                         ),
                       ),
                       SizedBox(
@@ -250,7 +370,7 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: role == "manager"
+                color: announcements[widget.idx]["role"] == "manager"
                     ? Color(0xFF349B6F).withOpacity(0.19)
                     : Colors.white,
                 border: Border(
