@@ -62,7 +62,7 @@ class _WalkThirdScreenState extends State<WalkThirdScreen> {
                             ),
                           ),
                           child: Text(
-                            'Share an announcement on the community board for a flat fee of \$2 to reach your entire community. ',
+                            'Share an announcement on the community board for a flat fee of \$2 to reach your entire community.',
                           ),
                         ),
                         SizedBox(

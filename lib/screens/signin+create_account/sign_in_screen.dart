@@ -214,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   } else {
                     Navigator.of(context).pop();
                     sendOTP();
-                    Navigator.pushNamed(context, "/check-email");
+                    Navigator.pushNamed(context, "/code-verification");
                   }
                 },
               ),

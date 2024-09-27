@@ -61,11 +61,11 @@ class _LaunchTotalState extends State<LaunchTotal> {
     String fullname = prefs.getString("fullname") ?? "";
     String businessName = prefs.getString("businessName") ?? "";
     if (userID.isEmpty) {
-      Navigator.pushNamed(context, '/sign-in');
+      Navigator.pushReplacementNamed(context, '/sign-in');
     } else if (fullname.isEmpty) {
-      Navigator.pushNamed(context, '/add-directory');
+      Navigator.pushReplacementNamed(context, '/add-directory');
     } else {
-      Navigator.pushNamed(context, '/community');
+      Navigator.pushReplacementNamed(context, '/community');
     }
   }
 

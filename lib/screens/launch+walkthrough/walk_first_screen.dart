@@ -64,7 +64,7 @@ class _WalkFirstScreenState extends State<WalkFirstScreen> {
                               ),
                             ),
                             child: Text(
-                              'Browse creative profiles and small businesses to find your next collaborator.',
+                              'Connect with your community, events, and announcements on the community board.',
                             ),
                           ),
                           SizedBox(
