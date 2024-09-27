@@ -5,6 +5,7 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -579,10 +580,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                       width: 1,
                                     ),
                                   ),
-                                  child: Image.asset(
-                                    "assets/images/paper-plane.png",
-                                    width: 24,
-                                    height: 24,
+                                  child: SvgPicture.asset(
+                                    "assets/images/send.svg",
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                                 SizedBox(
@@ -605,10 +606,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                         width: 1,
                                       ),
                                     ),
-                                    child: Image.asset(
-                                      "assets/images/corner-down-right.png",
-                                      width: 24,
-                                      height: 24,
+                                    child: SvgPicture.asset(
+                                      "assets/images/right_arrow.svg",
+                                      width: 20,
+                                      height: 20,
                                     ),
                                   ),
                                 ),

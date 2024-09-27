@@ -30,8 +30,32 @@ class _LaunchTotalState extends State<LaunchTotal> {
 
   late SharedPreferences prefs;
 
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoading = true;
+    });
+    init();
+  }
+
+  void init() async {
+    prefs = await SharedPreferences.getInstance();
+    bool visited = prefs.getBool("visited") ?? false;
+    if (visited == true) {
+      onNext();
+      return;
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   void onNext() async {
     prefs = await SharedPreferences.getInstance();
+    prefs.setBool("visited", true);
     String userID = prefs.getString("userID") ?? "";
     String username = prefs.getString("username") ?? "";
     String fullname = prefs.getString("fullname") ?? "";
@@ -47,66 +71,79 @@ class _LaunchTotalState extends State<LaunchTotal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              FlutterCarousel(
-                options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height,
-                  viewportFraction: 1.0,
-                  enlargeCenterPage: false,
-                  // aspectRatio: 1,
-                  showIndicator: false,
-                  autoPlay: false,
-                  disableCenter: true,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  },
-                ),
-                items: [0, 1, 2, 3].map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        child: _screens[i],
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 48,
-            left: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AppButton(
-                    text: "Get started",
-                    onTapped: () async {
-                      onNext();
-                    },
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Container(
-                    //Slider Indicator
-                    child: LaunchSliderIndicator(index: _current),
-                  ),
-                ],
+    return _isLoading
+        ? Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
+            child: Center(
+              child: Image.asset(
+                "assets/images/appicon.png",
+                width: 96,
+                height: 96,
               ),
             ),
           )
-        ],
-      ),
-    );
+        : Container(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    FlutterCarousel(
+                      options: CarouselOptions(
+                        height: MediaQuery.of(context).size.height,
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        // aspectRatio: 1,
+                        showIndicator: false,
+                        autoPlay: false,
+                        disableCenter: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                      ),
+                      items: [0, 1, 2, 3].map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              child: _screens[i],
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: 48,
+                  left: 0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AppButton(
+                          text: "Get started",
+                          onTapped: () async {
+                            onNext();
+                          },
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Container(
+                          //Slider Indicator
+                          child: LaunchSliderIndicator(index: _current),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
   }
 }
