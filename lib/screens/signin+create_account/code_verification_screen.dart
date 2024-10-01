@@ -2,6 +2,7 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:otp_pin_field/otp_pin_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -30,6 +31,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
   late SharedPreferences prefs;
   String _emailAddress = "";
   late SupabaseClient supabase;
+  final _otpPinFieldController = GlobalKey<OtpPinFieldState>();
 
   void _onCodeChanged(String? newValue) {
     setState(() {
@@ -155,6 +157,14 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
     );
   }
 
+  void onSubmit(text) {}
+
+  void onChange(text) {
+    setState(() {
+      _otpcode = text ?? "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
@@ -223,7 +233,25 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                       height: 24,
                     ),
                     // MARK: OTP Input
-                    OtpInput(codeChanged: _onCodeChanged),
+                    OtpPinField(
+                      key: _otpPinFieldController,
+                      autoFillEnable: false,
+                      textInputAction: TextInputAction.done,
+                      maxLength: 6,
+                      fieldWidth: 48,
+                      fieldHeight: 52,
+                      onSubmit: onSubmit,
+                      onChange: onChange,
+                      otpPinFieldDecoration:
+                          OtpPinFieldDecoration.defaultPinBoxDecoration,
+                      otpPinFieldStyle: OtpPinFieldStyle(
+                        fieldBorderWidth: 1,
+                        fieldPadding: 6,
+                        fieldBorderRadius: 16,
+                        activeFieldBorderColor: Colors.blue,
+                      ),
+                    ),
+                    // OtpInput(codeChanged: _onCodeChanged),
                     SizedBox(
                       height: 24,
                     ),

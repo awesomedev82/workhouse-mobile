@@ -53,8 +53,8 @@ Deno.serve(async (req) => {
           message: {
             token: tokenData.token,
             notification: {
-              title: 'New Announcement',
-              body: 'A new announcement was posted recently!',
+              title: 'Workhouse Community',
+              body: 'A new announcement was posted by the community!',
             }
           }
         })

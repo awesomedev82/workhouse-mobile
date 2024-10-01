@@ -59,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {
       fullname = userData["full_name"];
-      phonenumber = userData["phone"];
+      phonenumber = userData["phone"] ?? "";
       businessName = userData["business_name"];
       publicName = userData["public_name"];
       website = userData["website"];
