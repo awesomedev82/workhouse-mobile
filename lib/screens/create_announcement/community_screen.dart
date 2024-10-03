@@ -11,8 +11,10 @@ import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_card.dart';
+import 'package:workhouse/components/announcement_card_skeleton.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/header_bar.dart';
@@ -40,10 +42,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late SupabaseClient supabase;
   String communityID = "";
   late SupabaseClient supabaseIns;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isLoading = true;
+    });
     supabaseIns = Supabase.instance.client;
     supabaseIns
         .from('community_logs')
@@ -58,6 +64,39 @@ class _CommunityScreenState extends State<CommunityScreen> {
     });
     getData();
     initFirebaseMessaging();
+  }
+
+  // MARK: Init data
+  Future<void> getData() async {
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    supabase = Supabase.instance.client;
+    prefs = await SharedPreferences.getInstance();
+    communityID = prefs.getString("communityID")!;
+
+    final data = await supabase
+        .from("community_logs_with_sender")
+        .select()
+        .not('hide', 'eq', true)
+        .eq("community_id", communityID)
+        .order('role', ascending: true)
+        .order("created_at", ascending: false);
+
+    print(data.length);
+
+    // Update announcements in provider
+    Provider.of<AnnouncementProvider>(context, listen: false)
+        .setAnnouncements(data);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pop();
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
+    return;
   }
 
   // MARK: Messaging
@@ -85,30 +124,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
         showAppToast(context, "New announcement was added");
       }
     });
-  }
-
-  // MARK: Init data
-  Future<void> getData() async {
-    supabase = Supabase.instance.client;
-    prefs = await SharedPreferences.getInstance();
-    communityID = prefs.getString("communityID")!;
-
-    final data = await supabase
-        .from("community_logs_with_sender")
-        .select()
-        .not('hide', 'eq', true)
-        .eq("community_id", communityID)
-        .order('role', ascending: true)
-        .order("created_at", ascending: false);
-
-    // Update announcements in provider
-    Provider.of<AnnouncementProvider>(context, listen: false)
-        .setAnnouncements(data);
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pop();
-    });
-    return;
   }
 
   // MARK: Select Announcement
@@ -248,7 +263,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                   ),
                                 ),
                               ),
-                              ImageCarousel(),
+                              _isLoading
+                                  ? Skeletonizer(
+                                      child: ImageCarousel(),
+                                    )
+                                  : ImageCarousel(),
                               ListView.builder(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
@@ -256,19 +275,26 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 itemCount:
                                     announcementProvider.announcements.length,
                                 itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      onSelectAnnouncement(
-                                        announcementProvider
-                                            .announcements[index],
-                                      );
-                                    },
-                                    child: AnnouncementCard(
-                                      id: announcementProvider
-                                          .announcements[index]["id"],
-                                      idx: index,
-                                    ),
-                                  );
+                                  return _isLoading
+                                      ? Skeletonizer(
+                                          child: AnnouncementCardSkeleton(
+                                            role: announcementProvider
+                                                .announcements[index]["role"],
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            onSelectAnnouncement(
+                                              announcementProvider
+                                                  .announcements[index],
+                                            );
+                                          },
+                                          child: AnnouncementCard(
+                                            id: announcementProvider
+                                                .announcements[index]["id"],
+                                            idx: index,
+                                          ),
+                                        );
                                 },
                               ),
                             ],

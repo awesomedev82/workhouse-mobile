@@ -152,8 +152,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      exit(0);
+                    onTap: () async {
+                      // exit(0);
+                      prefs = await SharedPreferences.getInstance();
+                      prefs.setBool("visited", false);
+                      Navigator.of(context).pushReplacementNamed('/');
                     },
                     child: SvgPicture.asset('assets/images/x.svg'),
                   ),

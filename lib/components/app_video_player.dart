@@ -23,6 +23,10 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
   late VideoPlayerController _controller;
   late FlickManager flickManager;
 
+  void replay() {
+    flickManager.flickControlManager!.play();
+  }
+
   @override
   void initState() {
     if (widget.type == "url") {
@@ -32,12 +36,15 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
         ),
       );
       flickManager = FlickManager(
-        autoPlay: false,
+        autoPlay: true,
         videoPlayerController: VideoPlayerController.networkUrl(
           Uri.parse(
             widget.source,
           ),
         ),
+        onVideoEnd: () {
+          replay();
+        },
       );
     } else if (widget.type == "file") {
       _controller = VideoPlayerController.networkUrl(
@@ -46,10 +53,13 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
         ),
       );
       flickManager = FlickManager(
-        autoPlay: false,
+        autoPlay: true,
         videoPlayerController: VideoPlayerController.file(
           widget.source,
         ),
+        onVideoEnd: () {
+          replay();
+        },
       );
     }
 

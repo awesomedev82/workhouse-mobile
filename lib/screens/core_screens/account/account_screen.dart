@@ -254,59 +254,64 @@ class _AccountScreenState extends State<AccountScreen> {
                               children: [
                                 Container(
                                   width: 80,
-                                  child: Container(
-                                    width: 80,
-                                    height: 80,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: _avatar == ""
-                                          ? Container(
-                                              color: Colors.white,
-                                              child: AspectRatio(
-                                                aspectRatio: 1.6,
-                                                child: BlurHash(
-                                                  hash:
-                                                      'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                                ),
-                                              ),
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl: _avatar,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  const AspectRatio(
-                                                aspectRatio: 1.6,
-                                                child: BlurHash(
-                                                  hash:
-                                                      'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                                ),
-                                              ),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 57,
-                                  left: 64,
                                   child: GestureDetector(
                                     onTap: () {
                                       _showPicker(context, profileProvider);
                                     },
-                                    child: Container(
-                                      width: 16,
-                                      height: 16,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Color(0xFFDDDDDD),
-                                      ),
-                                      child: Icon(
-                                        Ionicons.camera_outline,
-                                        size: 8,
-                                        color: Color(0xFF17181A),
+                                    child: SizedBox(
+                                      width: 80,
+                                      height: 80,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: _avatar == ""
+                                            ? Container(
+                                                color: Colors.white,
+                                                child: AspectRatio(
+                                                  aspectRatio: 1.6,
+                                                  child: BlurHash(
+                                                    hash:
+                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                  ),
+                                                ),
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl: _avatar,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    const AspectRatio(
+                                                  aspectRatio: 1.6,
+                                                  child: BlurHash(
+                                                    hash:
+                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                  ),
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   ),
                                 ),
+                                // Positioned(
+                                //   top: 57,
+                                //   left: 64,
+                                //   child: GestureDetector(
+                                //     onTap: () {
+                                //       _showPicker(context, profileProvider);
+                                //     },
+                                //     child: Container(
+                                //       width: 16,
+                                //       height: 16,
+                                //       decoration: BoxDecoration(
+                                //         borderRadius: BorderRadius.circular(8),
+                                //         color: Color(0xFFDDDDDD),
+                                //       ),
+                                //       child: Icon(
+                                //         Ionicons.camera_outline,
+                                //         size: 8,
+                                //         color: Color(0xFF17181A),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -593,7 +598,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                   onTap: () {
                                     Supabase.instance.client.auth.signOut();
                                     Navigator.pushReplacementNamed(
-                                        context, "/sign-in");
+                                      context,
+                                      "/sign-in",
+                                    );
                                   },
                                   child: Container(
                                     width: 40,
