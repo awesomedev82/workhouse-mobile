@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -364,16 +365,17 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
           // returnURL: 'flutterstripe://redirect',
         ),
       );
+      // ignore: use_build_context_synchronously
       FocusScope.of(context).unfocus();
       // Display payment sheet
       displayPaymentSheet();
     } catch (e) {
-      print("exception $e");
+      // print("exception $e");
 
       if (e is StripeConfigException) {
-        print("Stripe exception ${e.message}");
+        // print("Stripe exception ${e.message}");
       } else {
-        print("exception $e");
+        // print("exception $e");
       }
     }
   }
@@ -385,17 +387,17 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       // Show when payment is done
       // Displaying snackbar for it
       createAnnouncement();
+      // ignore: use_build_context_synchronously
       showAppToast(context, "Paid successfully!");
       paymentIntent = null;
     } on StripeException catch (e) {
       // If any error comes during payment
       // so payment will be cancelled
-      print('Error: $e');
 
+      // ignore: use_build_context_synchronously
       showAppToast(context, "Payment cancelled");
     } catch (e) {
-      print("Error in displaying");
-      print('$e');
+      // ignore: use_build_context_synchronously
       showAppToast(context, "Error occured! Please try again.");
     }
   }
@@ -413,14 +415,14 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
           'Authorization': 'Bearer $secretKey',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
       );
-      print('Payment Intent Body: ${response.body.toString()}');
+      // print('Payment Intent Body: ${response.body.toString()}');
       return jsonDecode(response.body.toString());
     } catch (err) {
-      print('Error charging user: ${err.toString()}');
+      // print('Error charging user: ${err.toString()}');
     }
   }
 
@@ -434,112 +436,223 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 24,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // MARK: screen-description
-                TextField(
-                  maxLines: 10,
-                  minLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  focusNode: _nodeText,
-                  decoration: InputDecoration(
-                    hintText: "Share your announcement.",
-                    hintStyle: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                        color: Color(0xFFCBCBCB),
-                        fontWeight: FontWeight.w300,
-                        fontSize: 16,
-                        height: 1.47,
-                      ),
-                    ),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _description = value;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                //MARK: screen-media
                 Container(
-                  padding: EdgeInsets.zero,
-                  margin: EdgeInsets.zero,
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: imagefiles.length,
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        children: [
-                          lookupMimeType(imagefiles[index].path)
-                                  .toString()
-                                  .startsWith("image")
-                              ? Container(
-                                  height: 200,
-                                  width: double.infinity,
-                                  margin: EdgeInsets.symmetric(vertical: 5),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.file(
-                                      imagefiles[index],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: double.infinity,
-                                  margin: EdgeInsets.symmetric(vertical: 5),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: AppVideoPlayer(
-                                      type: "file",
-                                      source: imagefiles[index],
-                                    ),
-                                  ),
-                                ),
-                          Positioned(
-                            left: 12,
-                            top: 12,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  imagefiles.removeAt(index);
-                                });
-                              },
-                              child: Container(
-                                width: 34,
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF2D2D2D).withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(17),
-                                ),
-                                child: Icon(
-                                  Ionicons.close,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // print("gallery");
+                          _loadMediaFromCamera();
+                          // node.unfocus();
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: SvgPicture.asset("assets/images/Camera.svg"),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _loadMediaFromGallery();
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          // margin: EdgeInsets.fromLTRB(24, 0, 0, 0),
+                          child: SvgPicture.asset("assets/images/Gallery.svg"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          if (_description.isEmpty) {
+                            // showAppToast(context, "Please type description!");
+                            return;
+                          }
+                          await makePayment();
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: _description.isEmpty
+                                ? Color(0xFF898A8D)
+                                : Colors.black,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            "Continue",
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                height: 1.21,
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: GestureDetector(
+                            child: SvgPicture.asset(
+                              "assets/images/close.svg",
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // MARK: screen-description
+                      SizedBox(
+                        height: 4,
+                      ),
+                      TextField(
+                        maxLines: 10,
+                        minLines: 3,
+                        keyboardType: TextInputType.multiline,
+                        // focusNode: _nodeText,
+                        decoration: InputDecoration(
+                          hintText: "Share your announcement.",
+                          hintStyle: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              color: Color(0xFFCBCBCB),
+                              fontWeight: FontWeight.w300,
+                              fontSize: 16,
+                              height: 1.47,
+                            ),
+                          ),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _description = value;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      //MARK: screen-media
+                      Container(
+                        padding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: imagefiles.length,
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              children: [
+                                lookupMimeType(imagefiles[index].path)
+                                        .toString()
+                                        .startsWith("image")
+                                    ? Container(
+                                        height: 200,
+                                        width: double.infinity,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.file(
+                                            imagefiles[index],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 200,
+                                        width: double.infinity,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: AppVideoPlayer(
+                                            type: "file",
+                                            source: imagefiles[index],
+                                          ),
+                                        ),
+                                      ),
+                                Positioned(
+                                  left: 12,
+                                  top: 12,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        imagefiles.removeAt(index);
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 34,
+                                      height: 34,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color(0xFF2D2D2D).withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(17),
+                                      ),
+                                      child: Icon(
+                                        Ionicons.close,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
