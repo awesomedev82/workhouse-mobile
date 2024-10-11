@@ -572,56 +572,56 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: Color(0xFFE2E2E2),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    "assets/images/send.svg",
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Supabase.instance.client.auth.signOut();
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      "/sign-in",
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Color(0xFFE2E2E2),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: SvgPicture.asset(
-                                      "assets/images/right_arrow.svg",
-                                      width: 20,
-                                      height: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Container(
+                            //       width: 40,
+                            //       height: 40,
+                            //       alignment: Alignment.center,
+                            //       decoration: BoxDecoration(
+                            //         borderRadius: BorderRadius.circular(20),
+                            //         border: Border.all(
+                            //           color: Color(0xFFE2E2E2),
+                            //           width: 1,
+                            //         ),
+                            //       ),
+                            //       child: SvgPicture.asset(
+                            //         "assets/images/send.svg",
+                            //         width: 20,
+                            //         height: 20,
+                            //       ),
+                            //     ),
+                            //     SizedBox(
+                            //       width: 16,
+                            //     ),
+                            //     GestureDetector(
+                            //       onTap: () {
+                            //         Supabase.instance.client.auth.signOut();
+                            //         Navigator.pushReplacementNamed(
+                            //           context,
+                            //           "/sign-in",
+                            //         );
+                            //       },
+                            //       child: Container(
+                            //         width: 40,
+                            //         height: 40,
+                            //         alignment: Alignment.center,
+                            //         decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.circular(20),
+                            //           border: Border.all(
+                            //             color: Color(0xFFE2E2E2),
+                            //             width: 1,
+                            //           ),
+                            //         ),
+                            //         child: SvgPicture.asset(
+                            //           "assets/images/right_arrow.svg",
+                            //           width: 20,
+                            //           height: 20,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                         SizedBox(

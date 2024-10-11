@@ -11,6 +11,7 @@ import 'package:workhouse/components/app_control_input.dart';
 import 'package:workhouse/components/app_dropdown.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
+import 'package:workhouse/utils/constant.dart';
 
 /**
  * MARK: Edit Profile Screen UI Widget Class
@@ -386,6 +387,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onTapped: () {
                             onSave();
                           },
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          height: 49,
+                          decoration: BoxDecoration(),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              alignment: Alignment.center,
+                              side: BorderSide(
+                                color: APP_BLACK_COLOR,
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width - 40, 43),
+                              elevation: 0.8,
+                            ),
+                            onPressed: () {
+                              Supabase.instance.client.auth.signOut();
+                              Navigator.pushReplacementNamed(
+                                context,
+                                "/sign-in",
+                              );
+                            },
+                            onLongPress: () => {},
+                            child: Text(
+                              "Sign out",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  color: APP_BLACK_COLOR,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0,
+                                  height: 1.21,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 28,
