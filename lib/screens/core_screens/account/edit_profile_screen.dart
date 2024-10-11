@@ -226,7 +226,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         SizedBox(
                           height: 16,
                         ),
-                        // MARK: Website
+                        // MARK: Bio
                         Text(
                           "Bio",
                           style: GoogleFonts.inter(
@@ -249,7 +249,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               bio = val;
                             });
                           },
-                          inputType: TextInputType.url,
+                          inputType: TextInputType.text,
                         ),
                         SizedBox(
                           height: 16,

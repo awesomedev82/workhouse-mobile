@@ -59,9 +59,6 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
   void getData() async {
     prefs = await SharedPreferences.getInstance();
     supabase = Supabase.instance.client;
-    setState(() {
-      _avatar = prefixURL + prefs.getString("avatar")!;
-    });
     String userID = prefs.getString("selectedMemberID")!;
     final userdata =
         await supabase.from("member_community_view").select().eq("id", userID);
@@ -81,6 +78,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
       _pname = userdata[0]["public_name"] ?? "";
       _website = userdata[0]["website"] ?? "";
       _cname = userdata[0]["community_name"] ?? "";
+      _avatar = prefixURL + userdata[0]["avatar_url"];
       _isLoding = false;
     });
     SchedulerBinding.instance.addPostFrameCallback((_) {

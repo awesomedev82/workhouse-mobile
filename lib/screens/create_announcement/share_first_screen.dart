@@ -185,7 +185,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      showAppToast(context, "Created successfully!");
+      // showAppToast(context, "Created successfully!");
       Navigator.pushNamed(context, '/community');
     } catch (e) {
       // ignore: use_build_context_synchronously
@@ -388,14 +388,14 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       // Displaying snackbar for it
       createAnnouncement();
       // ignore: use_build_context_synchronously
-      showAppToast(context, "Paid successfully!");
+      // showAppToast(context, "Paid successfully!");
       paymentIntent = null;
     } on StripeException catch (e) {
       // If any error comes during payment
       // so payment will be cancelled
 
       // ignore: use_build_context_synchronously
-      showAppToast(context, "Payment cancelled");
+      // showAppToast(context, "Payment cancelled");
     } catch (e) {
       // ignore: use_build_context_synchronously
       showAppToast(context, "Error occured! Please try again.");

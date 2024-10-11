@@ -56,18 +56,18 @@ class _ShareThirdScreenState extends State<ShareThirdScreen> {
       await Stripe.instance.presentPaymentSheet();
       // Show when payment is done
       // Displaying snackbar for it
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Paid successfully")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("Paid successfully")),
+      // );
       paymentIntent = null;
     } on StripeException catch (e) {
       // If any error comes during payment
       // so payment will be cancelled
       print('Error: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(" Payment Cancelled")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text(" Payment Cancelled")),
+      // );
     } catch (e) {
       print("Error in displaying");
       print('$e');

@@ -121,7 +121,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       final notification = payload.notification;
       if (notification != null) {
         print("---------------new annnouncement---------------");
-        showAppToast(context, "New announcement was added");
+        showAppToast(context, "New announcement created");
       }
     });
   }
