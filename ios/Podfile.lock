@@ -80,6 +80,8 @@ PODS:
   - nanopb/encode (3.30910.0)
   - open_mail_app (0.0.1):
     - Flutter
+  - "otp_pin_field (1.2.0+2)":
+    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -148,6 +150,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - multi_image_picker_plus (from `.symlinks/plugins/multi_image_picker_plus/ios`)
   - open_mail_app (from `.symlinks/plugins/open_mail_app/ios`)
+  - otp_pin_field (from `.symlinks/plugins/otp_pin_field/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -199,6 +202,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/multi_image_picker_plus/ios"
   open_mail_app:
     :path: ".symlinks/plugins/open_mail_app/ios"
+  otp_pin_field:
+    :path: ".symlinks/plugins/otp_pin_field/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -238,6 +243,7 @@ SPEC CHECKSUMS:
   multi_image_picker_plus: b95d83279b5019ce4637ef17ca3aa14a557ffea6
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   open_mail_app: 794172f6a22cd16319d3ddaf45e945b2f74952b0
+  otp_pin_field: 0f0935fafc56252e6a48a5a045ac689b6bad3857
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
