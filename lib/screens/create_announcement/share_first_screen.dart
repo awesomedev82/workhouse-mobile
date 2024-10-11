@@ -127,8 +127,8 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         _videoController = VideoPlayerController.file(File(pickedFile.path));
         await _videoController?.initialize();
 
-        if (_videoController!.value.duration.inSeconds > 30) {
-          showAppToast(context, "Video length has to be less than 30s!");
+        if (_videoController!.value.duration.inSeconds > 60) {
+          showAppToast(context, "Video length has to be less than 1mins!");
           return;
         }
       }
@@ -439,7 +439,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: 24,
+              height: 34,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

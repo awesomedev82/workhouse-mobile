@@ -147,15 +147,57 @@ class _SelectedAnnouncementScreenState
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     widget.data["role"] == "member"
-                                        ? Text(
-                                            widget.data["business_name"],
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              height: 1.3,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: "Lastik-test",
-                                            ),
+                                        ? Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 24,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    widget.data["public_name"],
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      height: 1.3,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontFamily: "Lastik-test",
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                  Container(
+                                                    width: 2,
+                                                    height: 2,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              1),
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                  Text(
+                                                    widget
+                                                        .data["business_name"],
+                                                    style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            Color(0xFF17181A),
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        height: 1.6,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           )
                                         : Text(
                                             widget.data["public_name"],
@@ -180,20 +222,20 @@ class _SelectedAnnouncementScreenState
                                     ),
                                   ],
                                 ),
-                                if (widget.data["role"] == "member")
-                                  Text(
-                                    "Member Spotlight: ${widget.data["public_name"]}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: GoogleFonts.inter(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF17181A),
-                                        fontWeight: FontWeight.w300,
-                                        height: 1.6,
-                                      ),
-                                    ),
-                                  ),
+                                // if (widget.data["role"] == "member")
+                                //   Text(
+                                //     "Member Spotlight: ${widget.data["public_name"]}",
+                                //     overflow: TextOverflow.ellipsis,
+                                //     maxLines: 1,
+                                //     style: GoogleFonts.inter(
+                                //       textStyle: TextStyle(
+                                //         fontSize: 14,
+                                //         color: Color(0xFF17181A),
+                                //         fontWeight: FontWeight.w300,
+                                //         height: 1.6,
+                                //       ),
+                                //     ),
+                                //   ),
                               ],
                             ),
                           ),
