@@ -234,14 +234,14 @@ class _SelectedAnnouncementScreenState
                     SizedBox(
                       height: 30,
                     ),
-                    Container(
-                      width: double.infinity,
-                      child: Container(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset('assets/images/Iconly.svg'),
-                      ),
-                    ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   child: Container(
+                    //     width: 20,
+                    //     height: 20,
+                    //     child: SvgPicture.asset('assets/images/Iconly.svg'),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

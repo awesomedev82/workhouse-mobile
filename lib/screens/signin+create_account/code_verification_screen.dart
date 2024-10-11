@@ -255,43 +255,43 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                     SizedBox(
                       height: 24,
                     ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Didn’t received code?  ",
-                            style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                color: Color(0xFF000000),
-                                fontSize: 12,
-                                height: 1.6,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              _resendCode();
-                            },
-                            child: Text(
-                              "Resend Code",
-                              style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                  color: Color(0xFFE55733),
-                                  fontSize: 12,
-                                  height: 1.6,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    // Container(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       Text(
+                    //         "Didn’t received code?  ",
+                    //         style: GoogleFonts.inter(
+                    //           textStyle: TextStyle(
+                    //             color: Color(0xFF000000),
+                    //             fontSize: 12,
+                    //             height: 1.6,
+                    //             fontWeight: FontWeight.w300,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       GestureDetector(
+                    //         onTap: () async {
+                    //           _resendCode();
+                    //         },
+                    //         child: Text(
+                    //           "Resend Code",
+                    //           style: GoogleFonts.inter(
+                    //             textStyle: TextStyle(
+                    //               color: Color(0xFFE55733),
+                    //               fontSize: 12,
+                    //               height: 1.6,
+                    //               fontWeight: FontWeight.w300,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
                     AppButton(
                       text: "Login",
                       onTapped: () {
