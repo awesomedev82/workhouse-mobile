@@ -95,6 +95,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     Navigator.of(context).pushReplacementNamed("/account");
   }
 
+  void onSignout() async {
+    print("signout");
+    Supabase.instance.client.auth.signOut();
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("userID", "");
+    Navigator.pushReplacementNamed(
+      context,
+      "/sign-in",
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -412,11 +423,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               elevation: 0.8,
                             ),
                             onPressed: () {
-                              Supabase.instance.client.auth.signOut();
-                              Navigator.pushReplacementNamed(
-                                context,
-                                "/sign-in",
-                              );
+                              onSignout();
                             },
                             onLongPress: () => {},
                             child: Text(

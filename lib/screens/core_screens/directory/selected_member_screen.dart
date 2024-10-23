@@ -39,6 +39,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
   String _website = "";
   String _cname = "";
   bool _isLoding = true;
+  String _email = "";
   List<dynamic> announcements = <dynamic>[];
 
   String prefixURL =
@@ -78,6 +79,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
       _pname = userdata[0]["public_name"] ?? "";
       _website = userdata[0]["website"] ?? "";
       _cname = userdata[0]["community_name"] ?? "";
+      _email = userdata[0]["email"]!;
       _avatar = prefixURL + userdata[0]["avatar_url"];
       _isLoding = false;
     });
@@ -85,6 +87,13 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
       Navigator.of(context).pop();
     });
     return;
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 
   // MARK: Loading Progress Animation
@@ -474,32 +483,45 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                                       width: 1,
                                     ),
                                   ),
-                                  child: Image.asset(
-                                    "assets/images/mail.png",
-                                    width: 24,
-                                    height: 24,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      print(
+                                          "----------------------------------");
+                                      // const url = 'https://www.google.com';
+                                      final Uri emailLaunchUri = Uri.parse(
+                                        'mailto:workhouse1@sent.com?subject=Workhouse&body=',
+                                      );
+                                      if (await canLaunchUrl(emailLaunchUri)) {
+                                        await launchUrl(emailLaunchUri);
+                                      } else {
+                                        throw 'Could not launch $emailLaunchUri';
+                                      }
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/images/mail.svg",
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
                                   width: 16,
                                 ),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: Color(0xFFE2E2E2),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/paper-plane.png",
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                ),
+                                // Container(
+                                //   width: 40,
+                                //   height: 40,
+                                //   alignment: Alignment.center,
+                                //   decoration: BoxDecoration(
+                                //     borderRadius: BorderRadius.circular(20),
+                                //     border: Border.all(
+                                //       color: Color(0xFFE2E2E2),
+                                //       width: 1,
+                                //     ),
+                                //   ),
+                                //   child: Image.asset(
+                                //     "assets/images/paper-plane.png",
+                                //     width: 24,
+                                //     height: 24,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],

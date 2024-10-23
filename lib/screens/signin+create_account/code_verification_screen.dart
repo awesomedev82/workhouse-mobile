@@ -67,6 +67,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
             final newRecord = payload.first;
             if (newRecord['is_active'] == false) {
               Supabase.instance.client.auth.signOut();
+              prefs.setString("userID", "");
               showAppToast(context, "Your account was deactivated!");
               Navigator.pushReplacementNamed(context, "/sign-in");
             }
