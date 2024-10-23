@@ -1,12 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/components/header_bar.dart';
+import 'package:workhouse/components/skeleton_component.dart';
 import 'package:workhouse/utils/constant.dart';
 
 /**
@@ -25,16 +30,29 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
   List<dynamic> _searchResult = <dynamic>[];
   late SupabaseClient supabase;
   late SharedPreferences prefs;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      bool _isLoading = true;
+    });
     init();
   }
 
   void init() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showProgressModal(context);
+    });
     final supabase = Supabase.instance.client;
     final prefs = await SharedPreferences.getInstance();
+    Future.delayed(Duration(milliseconds: 1000), () {
+      Navigator.of(context).pop();
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   Future<void> _searchMembers() async {
@@ -78,96 +96,153 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
         child: Container(
           child: Column(
             children: [
-              HeaderBar(title: "Directory"),
+              _isLoading
+                  ? Skeletonizer(
+                      child: Container(
+                        height: 95,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        alignment: Alignment.bottomLeft,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Color(0xFFEAE6E6),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Hello World Hello World",
+                              style: TextStyle(
+                                fontFamily: "Lastik-test",
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: APP_BLACK_COLOR,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : HeaderBar(title: "Directory"),
               Expanded(
                 child: Container(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 28),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              // MARK: Full Name
-                              Text(
-                                "Search",
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    color: Color(0xFF17181A),
-                                    height: 1.6,
-                                  ),
+                        _isLoading
+                            ? Skeletonizer(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 28),
+                                      width: double.infinity,
+                                      height: 68,
+                                      child: Image.asset(
+                                        width: double.infinity,
+                                        height: 180,
+                                        "assets/images/carousel-1.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.symmetric(horizontal: 28),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    // MARK: Full Name
+                                    Text(
+                                      "Search",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          color: Color(0xFF17181A),
+                                          height: 1.6,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    TextField(
+                                      maxLines: 1,
+                                      // controller: controller,
+                                      showCursor: true,
+                                      cursorColor:
+                                          Color.fromARGB(255, 71, 71, 71),
+                                      cursorWidth: 1,
+                                      cursorHeight: 20,
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            "Search by services, business, or person",
+                                        hintStyle: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: Color(0xFF7D7E83)),
+                                        ),
+                                        prefixIcon: Icon(
+                                          Ionicons.search_outline,
+                                          size: 24,
+                                        ),
+                                        disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFFDDDDDD),
+                                              width: 1),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFFDDDDDD),
+                                              width: 1),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.blue, width: 1),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                        constraints: BoxConstraints(
+                                          maxHeight: 44,
+                                        ),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10,
+                                          horizontal: 16,
+                                        ),
+                                      ),
+                                      // MARK: onChanged
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _searchValue = value;
+                                        });
+                                        _searchMembers();
+                                      },
+                                      // MARK: onSubmitted
+                                      onSubmitted: (value) {},
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              TextField(
-                                maxLines: 1,
-                                // controller: controller,
-                                showCursor: true,
-                                cursorColor: Color.fromARGB(255, 71, 71, 71),
-                                cursorWidth: 1,
-                                cursorHeight: 20,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "Search by services, business, or person",
-                                  hintStyle: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: Color(0xFF7D7E83)),
-                                  ),
-                                  prefixIcon: Icon(
-                                    Ionicons.search_outline,
-                                    size: 24,
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFDDDDDD), width: 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFDDDDDD), width: 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue, width: 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: 44,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 16,
-                                  ),
-                                ),
-                                // MARK: onChanged
-                                onChanged: (value) {
-                                  setState(() {
-                                    _searchValue = value;
-                                  });
-                                  _searchMembers();
-                                },
-                                // MARK: onSubmitted
-                                onSubmitted: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
                         SizedBox(
                           height: 12,
                         ),
@@ -318,6 +393,51 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
       bottomNavigationBar: AppBottomNavbar(
         index: 1,
       ),
+    );
+  }
+
+  // MARK: Loading Progress Animation
+  void _showProgressModal(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (
+        BuildContext buildContext,
+        Animation animation,
+        Animation secondaryAnimation,
+      ) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: LoadingAnimationWidget.hexagonDots(
+                      color: Colors.blue, size: 32),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
     );
   }
 }

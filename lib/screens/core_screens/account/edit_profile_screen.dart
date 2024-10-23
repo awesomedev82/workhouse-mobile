@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
 import 'package:workhouse/components/app_control_input.dart';
@@ -111,47 +112,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 28,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 44,
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
+        child: isLoading == false
+            ? Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
                 padding: EdgeInsets.symmetric(
-                  vertical: 2,
+                  horizontal: 28,
                 ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: SvgPicture.asset("assets/images/arrow-left.svg"),
-                ),
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  "Edit Profile",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: "Lastik-test",
-                    fontSize: 24,
-                    height: 1.62,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              isLoading == false
-                  ? Column(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 44,
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 2,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: SvgPicture.asset("assets/images/arrow-left.svg"),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        "Edit Profile",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: "Lastik-test",
+                          fontSize: 24,
+                          height: 1.62,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // MARK: Full Name
@@ -443,11 +444,204 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 28,
                         ),
                       ],
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
+                    ),
+                  ],
+                ),
+              )
+            :
+            // MARK: skeleton UI
+            Skeletonizer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 28,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 44,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 2,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child:
+                              SvgPicture.asset("assets/images/arrow-left.svg"),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                        child: Skeletonizer(
+                          child: Text(
+                            "Edit Profile",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: "Lastik-test",
+                              fontSize: 32,
+                              // height: 1.62,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            height: 68,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                width: double.infinity,
+                                height: 180,
+                                "assets/images/carousel-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }

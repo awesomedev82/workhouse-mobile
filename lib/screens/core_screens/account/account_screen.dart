@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workhouse/components/account_announcement_card_skeleton.dart';
+import 'package:workhouse/components/announcement_card_skeleton.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/app_toast.dart';
 import 'package:workhouse/components/user_announcement_card.dart';
@@ -224,116 +226,85 @@ class _AccountScreenState extends State<AccountScreen> {
       backgroundColor: Colors.white,
       body: Consumer<AnnouncementProvider>(
         builder: (context, announcementProvider, child) {
-          return Container(
-            child: SingleChildScrollView(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 90,
-                  ),
-                  //MARK: User Info
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color(0xFFF5F0F0),
-                          width: 1,
-                        ),
-                      ),
-                    ),
+          return _isLoding == false
+              ? Container(
+                  child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //MARK: Avatar
-                        Row(
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 80,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _showPicker(context, profileProvider);
-                                    },
-                                    child: SizedBox(
-                                      width: 80,
-                                      height: 80,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(40),
-                                        child: _avatar == ""
-                                            ? Container(
-                                                color: Colors.white,
-                                                child: AspectRatio(
-                                                  aspectRatio: 1.6,
-                                                  child: BlurHash(
-                                                    hash:
-                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                                  ),
-                                                ),
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl: _avatar,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    const AspectRatio(
-                                                  aspectRatio: 1.6,
-                                                  child: BlurHash(
-                                                    hash:
-                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                                  ),
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // Positioned(
-                                //   top: 57,
-                                //   left: 64,
-                                //   child: GestureDetector(
-                                //     onTap: () {
-                                //       _showPicker(context, profileProvider);
-                                //     },
-                                //     child: Container(
-                                //       width: 16,
-                                //       height: 16,
-                                //       decoration: BoxDecoration(
-                                //         borderRadius: BorderRadius.circular(8),
-                                //         color: Color(0xFFDDDDDD),
-                                //       ),
-                                //       child: Icon(
-                                //         Ionicons.camera_outline,
-                                //         size: 8,
-                                //         color: Color(0xFF17181A),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ],
-                        ),
                         SizedBox(
-                          height: 14,
+                          height: 90,
                         ),
-                        //MARK: userinfo-public name
-                        _isLoding == true
-                            ? Skeletonizer(
-                                child: Text(
-                                  "Full Stack Developer",
-                                  style: TextStyle(
-                                    fontFamily: "Lastik-test",
-                                    fontSize: 24,
-                                    height: 1.42,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF101010),
+                        //MARK: User Info
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xFFF5F0F0),
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //MARK: Avatar
+                              Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _showPicker(
+                                                context, profileProvider);
+                                          },
+                                          child: SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: _avatar == ""
+                                                  ? Container(
+                                                      color: Colors.white,
+                                                      child: AspectRatio(
+                                                        aspectRatio: 1.6,
+                                                        child: BlurHash(
+                                                          hash:
+                                                              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : CachedNetworkImage(
+                                                      imageUrl: _avatar,
+                                                      fit: BoxFit.cover,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              const AspectRatio(
+                                                        aspectRatio: 1.6,
+                                                        child: BlurHash(
+                                                          hash:
+                                                              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              )
-                            : Text(
+                                ],
+                              ),
+                              SizedBox(
+                                height: 14,
+                              ),
+                              //MARK: userinfo-public name
+                              Text(
                                 _pname,
                                 style: TextStyle(
                                   fontFamily: "Lastik-test",
@@ -343,45 +314,24 @@ class _AccountScreenState extends State<AccountScreen> {
                                   color: Color(0xFF101010),
                                 ),
                               ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          _bio,
-                          style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                              height: 1.47,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        // MARK: userinfo-business name
-                        _isLoding == true
-                            ? Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Seasoned senior full stack developer",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          height: 1.47,
-                                          color: APP_BLACK_COLOR,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                _bio,
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 14,
+                                    height: 1.47,
+                                  ),
                                 ),
-                              )
-                            : Row(
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // MARK: userinfo-business name
+                              Row(
                                 children: [
                                   if (_bname.isNotEmpty)
                                     Icon(
@@ -407,38 +357,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        // MARK: userinfo-community name
-                        _isLoding == true
-                            ? Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    if (_cname.isNotEmpty)
-                                      Icon(
-                                        Ionicons.location_outline,
-                                        size: 14,
-                                        color: Color(0xFF898A8D),
-                                      ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Developer/Design Farm",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          height: 1.47,
-                                          color: APP_BLACK_COLOR,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Row(
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // MARK: userinfo-community name
+                              Row(
                                 children: [
                                   if (_cname.isNotEmpty)
                                     Icon(
@@ -462,40 +385,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        // MARK: userinfo-website
-                        _isLoding == true
-                            ? Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    if (_website.isNotEmpty)
-                                      Icon(
-                                        Ionicons.link,
-                                        size: 14,
-                                        color: Color(0xFF898A8D),
-                                      ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    GestureDetector(
-                                      child: Text(
-                                        "www.example.com",
-                                        style: GoogleFonts.inter(
-                                          textStyle: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 14,
-                                            height: 1.47,
-                                            color: Color(0xFFAAD130),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Row(
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // MARK: userinfo-website
+                              Row(
                                 children: [
                                   if (true)
                                     Icon(
@@ -536,117 +430,282 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
-                        SizedBox(
-                          height: 14,
-                        ),
-                        //MARK: Button group
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed('/edit-profile');
-                              },
-                              child: Container(
-                                width: 180,
-                                height: 40,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: Color(0xFFE2E2E2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  "Edit Profile",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      height: 1.6,
-                                      color: APP_MAIN_LABEL_COLOR,
+                              SizedBox(
+                                height: 14,
+                              ),
+                              //MARK: Button group
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pushNamed('/edit-profile');
+                                    },
+                                    child: Container(
+                                      width: 180,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: Color(0xFFE2E2E2),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Edit Profile",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.6,
+                                            color: APP_MAIN_LABEL_COLOR,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                            // Row(
-                            //   children: [
-                            //     Container(
-                            //       width: 40,
-                            //       height: 40,
-                            //       alignment: Alignment.center,
-                            //       decoration: BoxDecoration(
-                            //         borderRadius: BorderRadius.circular(20),
-                            //         border: Border.all(
-                            //           color: Color(0xFFE2E2E2),
-                            //           width: 1,
-                            //         ),
-                            //       ),
-                            //       child: SvgPicture.asset(
-                            //         "assets/images/send.svg",
-                            //         width: 20,
-                            //         height: 20,
-                            //       ),
-                            //     ),
-                            //     SizedBox(
-                            //       width: 16,
-                            //     ),
-                            //     GestureDetector(
-                            //       onTap: () {
-                            //         Supabase.instance.client.auth.signOut();
-                            //         Navigator.pushReplacementNamed(
-                            //           context,
-                            //           "/sign-in",
-                            //         );
-                            //       },
-                            //       child: Container(
-                            //         width: 40,
-                            //         height: 40,
-                            //         alignment: Alignment.center,
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(20),
-                            //           border: Border.all(
-                            //             color: Color(0xFFE2E2E2),
-                            //             width: 1,
-                            //           ),
-                            //         ),
-                            //         child: SvgPicture.asset(
-                            //           "assets/images/right_arrow.svg",
-                            //           width: 20,
-                            //           height: 20,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                          ],
+                              SizedBox(
+                                height: 16,
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 16,
+                        //MARK: Announcement List
+                        ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                              announcementProvider.myAnnouncements.length,
+                          itemBuilder: (context, index) {
+                            return UserAnnouncementCard(
+                              id: announcementProvider.myAnnouncements[index]
+                                  ["id"],
+                              index: index,
+                            );
+                          },
                         ),
                       ],
                     ),
                   ),
-                  //MARK: Announcement List
-                  ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: announcementProvider.myAnnouncements.length,
-                    itemBuilder: (context, index) {
-                      return UserAnnouncementCard(
-                        id: announcementProvider.myAnnouncements[index]["id"],
-                        index: index,
-                      );
-                    },
+                )
+              : Container(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 90,
+                        ),
+                        //User Info
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xFFF5F0F0),
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //Avatar
+                              Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Skeletonizer(
+                                        child: Container(
+                                          width: 80,
+                                          child: SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: CachedNetworkImage(
+                                                imageUrl: _avatar,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    const AspectRatio(
+                                                  aspectRatio: 1.6,
+                                                  child: BlurHash(
+                                                    hash:
+                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 14,
+                              ),
+                              //userinfo-public name
+                              Skeletonizer(
+                                child: Text(
+                                  "Hello world hello world !!!",
+                                  style: TextStyle(
+                                    fontFamily: "Lastik-test",
+                                    fontSize: 24,
+                                    height: 1.42,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF101010),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Skeletonizer(
+                                child: Text(
+                                  "Hello world hello world Hello world hello world",
+                                  style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 14,
+                                      height: 1.47,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // userinfo-business name
+                              Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Hello world hello world Hello world hello world",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 100,
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // userinfo-community name
+                              Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Hello world hello world Hello world hello world",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: APP_BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              // userinfo-website
+                              Skeletonizer(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Hello world hello world Hello world hello world",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14,
+                                          height: 1.47,
+                                          color: Color(0xFFAAD130),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 0,
+                              ),
+                              //Button group
+                              Skeletonizer(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .pushNamed('/edit-profile');
+                                      },
+                                      child: Text(
+                                        "Edit Profile",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 36,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.6,
+                                            color: APP_MAIN_LABEL_COLOR,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Skeletonizer(
+                          child: AccountAnnouncementCardSkeleton(
+                            role: "member",
+                          ),
+                        ),
+                        //Announcement List
+                        ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                              announcementProvider.myAnnouncements.length,
+                          itemBuilder: (context, index) {
+                            return Skeletonizer(
+                              child: AccountAnnouncementCardSkeleton(
+                                role: "member",
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          );
+                );
         },
       ),
       bottomNavigationBar: AppBottomNavbar(

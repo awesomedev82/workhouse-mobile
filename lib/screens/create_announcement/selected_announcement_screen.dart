@@ -7,8 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/announcement_carousel.dart';
+import 'package:workhouse/components/skeleton_component.dart';
 
 class SelectedAnnouncementScreen extends StatefulWidget {
   const SelectedAnnouncementScreen({Key? key, required this.data})
@@ -26,19 +28,25 @@ class _SelectedAnnouncementScreenState
   late SharedPreferences prefs;
   late SupabaseClient supabase;
 
-  bool isLoading = true;
+  bool _isLoading = true;
   List<dynamic> medias = <dynamic>[];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     getData();
   }
 
-  void getData() async {}
+  void getData() async {
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   String timeDifference(dynamic targetTime) {
     DateTime now = DateTime.now();
@@ -81,80 +89,142 @@ class _SelectedAnnouncementScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 48,
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                width: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    child: SvgPicture.asset("assets/images/arrow-left.svg"),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24,
-                ),
+        child: _isLoading == false
+            ? Container(
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: 48,
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          child:
+                              SvgPicture.asset("assets/images/arrow-left.svg"),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: double.infinity,
-                      child: Row(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      child: Column(
                         children: [
                           Container(
-                            width: 48,
-                            height: 48,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: CachedNetworkImage(
-                                imageUrl: widget.data["avatar_url"],
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    const AspectRatio(
-                                  aspectRatio: 1.6,
-                                  child: BlurHash(
-                                    hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                            width: double.infinity,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.data["avatar_url"],
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const AspectRatio(
+                                        aspectRatio: 1.6,
+                                        child: BlurHash(
+                                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    widget.data["role"] == "member"
-                                        ? Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 24,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          widget.data["role"] == "member"
+                                              ? Container(
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            widget.data[
+                                                                "public_name"],
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              height: 1.3,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontFamily:
+                                                                  "Lastik-test",
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 4,
+                                                          ),
+                                                          Container(
+                                                            width: 2,
+                                                            height: 2,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          1),
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 4,
+                                                          ),
+                                                          Text(
+                                                            widget.data[
+                                                                "business_name"],
+                                                            style: GoogleFonts
+                                                                .inter(
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                fontSize: 14,
+                                                                color: Color(
+                                                                    0xFF17181A),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                height: 1.6,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(
+                                                  child: Text(
                                                     widget.data["public_name"],
                                                     style: TextStyle(
                                                       fontSize: 16,
@@ -165,131 +235,233 @@ class _SelectedAnnouncementScreenState
                                                       fontFamily: "Lastik-test",
                                                     ),
                                                   ),
-                                                  SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Container(
-                                                    width: 2,
-                                                    height: 2,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              1),
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Text(
-                                                    widget
-                                                        .data["business_name"],
-                                                    style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF17181A),
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        height: 1.6,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            widget.data["public_name"],
+                                                ),
+                                          Text(
+                                            timeDifference(
+                                              widget.data["created_at"],
+                                            ),
+                                            textAlign: TextAlign.right,
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              height: 1.3,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: "Lastik-test",
+                                              fontFamily: "SF-Pro-Display",
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xFF9D9D9D),
+                                              fontSize: 13,
+                                              height: 1.4,
                                             ),
                                           ),
-                                    Text(
-                                      timeDifference(widget.data["created_at"]),
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        fontFamily: "SF-Pro-Display",
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xFF9D9D9D),
-                                        fontSize: 13,
-                                        height: 1.4,
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                // if (widget.data["role"] == "member")
-                                //   Text(
-                                //     "Member Spotlight: ${widget.data["public_name"]}",
-                                //     overflow: TextOverflow.ellipsis,
-                                //     maxLines: 1,
-                                //     style: GoogleFonts.inter(
-                                //       textStyle: TextStyle(
-                                //         fontSize: 14,
-                                //         color: Color(0xFF17181A),
-                                //         fontWeight: FontWeight.w300,
-                                //         height: 1.6,
-                                //       ),
-                                //     ),
-                                //   ),
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 18,
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.data["description"],
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                height: 1.6,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child:
+                                  getMediaData(widget.data["images"]).isNotEmpty
+                                      ? AnnouncementCarousel(
+                                          height: 230,
+                                          data: getMediaData(
+                                            widget.data["images"],
+                                          ),
+                                        )
+                                      : Container(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
                           ),
                         ],
                       ),
                     ),
+                  ],
+                ),
+              )
+            : Container(
+                child: Column(
+                  children: [
                     SizedBox(
-                      height: 18,
+                      height: 48,
                     ),
                     Container(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: getMediaData(widget.data["images"]).isNotEmpty
-                            ? AnnouncementCarousel(
-                                height: 230,
-                                data: getMediaData(
-                                  widget.data["images"],
-                                ),
-                              )
-                            : Container(),
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          child:
+                              SvgPicture.asset("assets/images/arrow-left.svg"),
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 12,
                     ),
                     Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        widget.data["description"],
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          height: 1.6,
-                          fontWeight: FontWeight.w300,
-                        ),
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Skeletonizer(
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: CachedNetworkImage(
+                                        imageUrl: widget.data["avatar_url"],
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const AspectRatio(
+                                          aspectRatio: 1.6,
+                                          child: BlurHash(
+                                            hash:
+                                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Skeletonizer(
+                                            child: Container(
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Skeleton Text ------",
+                                                        style: TextStyle(
+                                                          fontSize: 24,
+                                                          height: 1.3,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFamily:
+                                                              "Lastik-test",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Skeletonizer(
+                                            child: Text(
+                                              "999 hours",
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                fontFamily: "SF-Pro-Display",
+                                                fontWeight: FontWeight.w400,
+                                                color: Color(0xFF9D9D9D),
+                                                fontSize: 16,
+                                                height: 1.3,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 18,
+                          ),
+                          Skeletonizer(
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Hello, this is the test announcement. In the context of graphics and image processing, a skeletonizer",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.inter(
+                                  fontSize: 20,
+                                  height: 1.6,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Skeletonizer(
+                            child: Container(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: getMediaData(widget.data["images"])
+                                        .isNotEmpty
+                                    ? AnnouncementCarousel(
+                                        height: 230,
+                                        data: getMediaData(
+                                          widget.data["images"],
+                                        ),
+                                      )
+                                    : Container(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    // Container(
-                    //   width: double.infinity,
-                    //   child: Container(
-                    //     width: 20,
-                    //     height: 20,
-                    //     child: SvgPicture.asset('assets/images/Iconly.svg'),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
