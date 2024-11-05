@@ -64,7 +64,9 @@ class _LaunchTotalState extends State<LaunchTotal> {
       Navigator.pushReplacementNamed(context, '/sign-in');
     } else if (fullname.isEmpty) {
       Navigator.pushReplacementNamed(context, '/add-directory');
-    } else {
+    }
+     else
+      {
       Navigator.pushReplacementNamed(context, '/community');
     }
   }
