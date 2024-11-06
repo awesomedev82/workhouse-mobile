@@ -268,6 +268,65 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       child: ImageCarousel(),
                                     )
                                   : ImageCarousel(),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 19,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Color(0xFFEDFDF4),
+                                  border: Border.all(
+                                    color: Color(0xFF014E53).withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                width: 360,
+                                height: 750,
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection:
+                                      Axis.horizontal, // Horizontal scroll
+                                  itemCount:
+                                      announcementProvider.announcements.length,
+                                  itemBuilder: (context, index) {
+                                    final announcement = announcementProvider
+                                        .announcements[index];
+
+                                    // Only show the AnnouncementCard if the role is 'manager'
+                                    if (announcement["role"] != "manager") {
+                                      return SizedBox
+                                          .shrink(); // Don't show the card for non-'manager' roles
+                                    }
+
+                                    return _isLoading
+                                        ? Skeletonizer(
+                                            child: AnnouncementCardSkeleton(
+                                              role: announcement["role"],
+                                            ),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () {
+                                              onSelectAnnouncement(
+                                                  announcement);
+                                            },
+                                            child: Container(
+                                              height:
+                                                  250, // Adjust height if necessary
+                                              width: 380, // Width of each item
+                                              margin: EdgeInsets.only(
+                                                  right:
+                                                      10), // Optional: Add spacing between items
+                                              child: AnnouncementCard(
+                                                id: announcement["id"],
+                                                idx: index,
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                ),
+                              ),
+
                               ListView.builder(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
@@ -275,28 +334,106 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 itemCount:
                                     announcementProvider.announcements.length,
                                 itemBuilder: (context, index) {
+                                  final announcement =
+                                      announcementProvider.announcements[index];
+
+                                  // Check your condition, for example, when role is 'manager'
+                                  if (announcement["role"] == "manager") {
+                                    // If the condition matches, return an empty widget or skip the card
+                                    return SizedBox
+                                        .shrink(); // This will render nothing
+                                  }
+
                                   return _isLoading
                                       ? Skeletonizer(
                                           child: AnnouncementCardSkeleton(
-                                            role: announcementProvider
-                                                .announcements[index]["role"],
+                                            role: announcement["role"] !=
+                                                "manager",
                                           ),
                                         )
                                       : GestureDetector(
                                           onTap: () {
-                                            onSelectAnnouncement(
-                                              announcementProvider
-                                                  .announcements[index],
-                                            );
+                                            onSelectAnnouncement(announcement);
                                           },
-                                          child: AnnouncementCard(
-                                            id: announcementProvider
-                                                .announcements[index]["id"],
-                                            idx: index,
+                                          child: SizedBox(
+                                            height: 900,
+                                            width: 300, // Width of each item
+                                            child: AnnouncementCard(
+                                              id: announcement["id"],
+                                              idx: index,
+                                            ),
                                           ),
                                         );
                                 },
-                              ),
+                              )
+
+                              // ListView.builder(
+                              //   padding: EdgeInsets.zero,
+                              //   shrinkWrap: true,
+                              //   physics: NeverScrollableScrollPhysics(),
+                              //   // Horizontal scroll
+                              //   itemCount:
+                              //       announcementProvider.announcements.length,
+                              //   itemBuilder: (context, index) {
+                              //     return _isLoading
+                              //         ? Skeletonizer(
+                              //             child: AnnouncementCardSkeleton(
+                              //               role: announcementProvider
+                              //                   .announcements[index]["role"],
+                              //             ),
+                              //           )
+                              //         : GestureDetector(
+                              //             onTap: () {
+                              //               onSelectAnnouncement(
+                              //                 announcementProvider
+                              //                     .announcements[index],
+                              //               );
+                              //             },
+                              //             child: Container(
+                              //               height: 900,
+                              //               width: 300, // Width of each item
+                              //               child: AnnouncementCard(
+                              //                 id: announcementProvider
+                              //                     .announcements[index]["id"],
+                              //                 idx: index,
+                              //               ),
+                              //             ),
+                              //           );
+                              //   },
+                              // )
+
+                              // SizedBox(
+                              //   child: ListView.builder(
+                              //     padding: EdgeInsets.zero,
+                              //     scrollDirection: Axis.horizontal,
+                              //     shrinkWrap: true,
+                              //     // physics: NeverScrollableScrollPhysics(),
+                              //     itemCount:
+                              //         announcementProvider.announcements.length,
+                              //     itemBuilder: (context, index) {
+                              //       return _isLoading
+                              //           ? Skeletonizer(
+                              //               child: AnnouncementCardSkeleton(
+                              //                 role: announcementProvider
+                              //                     .announcements[index]["role"],
+                              //               ),
+                              //             )
+                              //           : GestureDetector(
+                              //               onTap: () {
+                              //                 onSelectAnnouncement(
+                              //                   announcementProvider
+                              //                       .announcements[index],
+                              //                 );
+                              //               },
+                              //               child: AnnouncementCard(
+                              //                 id: announcementProvider
+                              //                     .announcements[index]["id"],
+                              //                 idx: index,
+                              //               ),
+                              //             );
+                              //     },
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

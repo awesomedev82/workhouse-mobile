@@ -27,11 +27,12 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // color: Colors.amber,
       child: Column(
         children: [
           FlutterCarousel(
             options: CarouselOptions(
-              height: widget.height ?? 180.0,
+              height: 390.0,
               aspectRatio: 1,
               showIndicator: false,
               slideIndicator: CircularSlideIndicator(),
@@ -48,10 +49,12 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3),
+                    //   margin: EdgeInsets.symmetric(horizontal: 3),
                     child: Container(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15)),
                         child: widget.data[i]["type"] == "image"
                             ? Container(
                                 decoration: BoxDecoration(
