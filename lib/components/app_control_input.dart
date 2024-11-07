@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -17,6 +18,7 @@ class AppControlInput extends StatefulWidget {
     this.isSeconderyIcon = false,
     this.maxLines = 1,
     this.maxHeight = 44,
+    this.prefix,
   }) : super(key: key);
 
   final String hintText;
@@ -27,6 +29,7 @@ class AppControlInput extends StatefulWidget {
   final bool isSeconderyIcon;
   final int maxLines;
   final double maxHeight;
+  final String? prefix;
 
   @override
   _AppControlInputState createState() => _AppControlInputState();
@@ -67,6 +70,25 @@ class _AppControlInputState extends State<AppControlInput> {
             ),
           ),
           decoration: InputDecoration(
+            // prefix: widget.prefix != null
+            //     ? SvgPicture.asset(
+            //         widget.prefix ?? "assets/images/w.svg",
+            //         width: 120,
+            //         height: 40,
+            //         //  color: Colors.grey,
+            //       )
+            //     : null,
+            prefixIcon: widget.prefix != null
+                ? Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: SvgPicture.asset(
+                      widget.prefix!,
+                      width: 120,
+                      height: 40,
+                      //  color: Colors.grey,
+                    ),
+                  )
+                : null,
             hintText: widget.hintText,
             hintStyle: GoogleFonts.inter(
               textStyle: TextStyle(
@@ -75,15 +97,16 @@ class _AppControlInputState extends State<AppControlInput> {
                   color: Color(0xFF7D7E83)),
             ),
             disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
+              borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
+              borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 1),
+              borderSide:
+                  BorderSide(color: Colors.black.withOpacity(0.5), width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             constraints: BoxConstraints(

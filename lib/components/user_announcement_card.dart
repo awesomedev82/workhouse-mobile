@@ -58,7 +58,7 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
   void getData() async {
     supabase = Supabase.instance.client;
     dynamic temp =
-        await supabase.from("community_logs").select().eq("id", widget.id);
+        await supabase.from("community_logs").select().eq("id", widget.id); //
     final data = temp[0];
     temp = await supabase.from("members").select().eq("id", data["sender"]);
     dynamic userInfo;
@@ -183,30 +183,30 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                           ],
                         ),
                       ),
-                      Positioned(
-                        right: 0,
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {});
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Close",
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    height: 1.6,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xFF17181A),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Positioned(
+                      //   right: 0,
+                      //   child: Row(
+                      //     children: [
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           setState(() {});
+                      //           Navigator.pop(context);
+                      //         },
+                      //         child: Text(
+                      //           "Close",
+                      //           style: GoogleFonts.inter(
+                      //             textStyle: TextStyle(
+                      //               fontSize: 14,
+                      //               height: 1.6,
+                      //               fontWeight: FontWeight.w300,
+                      //               color: Color(0xFF17181A),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -251,7 +251,12 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Delete Announcement"),
+                        Text("Delete Announcement",
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF17181A),
+                            )),
                       ],
                     ),
                   ),

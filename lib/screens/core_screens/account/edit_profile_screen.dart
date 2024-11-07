@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -135,7 +136,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: SvgPicture.asset("assets/images/arrow-left.svg"),
+                        child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFE9EAEC)),
+                            child: SvgPicture.asset(
+                                "assets/images/arrow-left.svg")),
                       ),
                     ),
                     Container(
@@ -152,6 +159,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                     ),
+                    Row(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              width: 80,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Handle onTap action here if needed
+                                },
+                                child: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Image.asset(
+                                      'assets/images/search.png', // Replace with the path to your static image
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -160,9 +194,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           "Full Name",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -188,9 +222,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           "Phone Number",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -216,9 +250,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           "Business Name",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -244,9 +278,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           "Bio",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -268,21 +302,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 16,
                         ),
                         // MARK: Website
-                        Text(
-                          "Website (optional)",
-                          style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                              color: Color(0xFF17181A),
-                              height: 1.6,
-                            ),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Website ",
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(
+                                        0xFF14151A), // Main color for "Website"
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                              TextSpan(
+                                text: "(optional)",
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(0xFF0D1126).withOpacity(
+                                        0.6), // Color with 0.6 opacity
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
                           height: 4,
                         ),
                         AppControlInput(
+                          prefix: "assets/images/w.svg",
                           defaultText: website,
                           hintText: "",
                           validate: (val) {
@@ -297,12 +351,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         // MARK: Publick name
                         Text(
-                          "Public Username",
+                          "Public Name",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -322,6 +376,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           inputType: TextInputType.text,
                         ),
                         SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Your user name will be visible on the app",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
                           height: 16,
                         ),
                         // MARK: Industry
@@ -329,9 +405,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           "Industry",
                           style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xFF17181A),
+                              color: Color(0xFF14151A),
                               height: 1.6,
                             ),
                           ),
@@ -392,8 +468,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onItemSelected: _onIndustrySelected,
                         ),
                         SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Select the industry that describes you ",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
                           height: 16,
                         ),
+
                         AppButton(
                           text: "Save Changes",
                           onTapped: () {
@@ -473,8 +572,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                          child:
-                              SvgPicture.asset("assets/images/arrow-left.svg"),
+                          child: Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFFE9EAEC)),
+                              child: SvgPicture.asset(
+                                  "assets/images/arrow-left.svg")),
                         ),
                       ),
                       Container(

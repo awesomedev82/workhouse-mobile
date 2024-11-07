@@ -270,7 +270,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                   : ImageCarousel(),
                               Container(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 19,
+                                  horizontal: 1,
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
@@ -280,91 +280,97 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                     width: 1,
                                   ),
                                 ),
-                                width: 360,
+                                width: 350,
                                 height: 750,
+                                child: Container(
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    scrollDirection:
+                                        Axis.horizontal, // Horizontal scroll
+                                    itemCount: announcementProvider
+                                        .announcements.length,
+                                    itemBuilder: (context, index) {
+                                      final announcement = announcementProvider
+                                          .announcements[index];
+
+                                      // Only show the AnnouncementCard if the role is 'manager'
+                                      if (announcement["role"] != "manager") {
+                                        return SizedBox
+                                            .shrink(); // Don't show the card for non-'manager' roles
+                                      }
+
+                                      return
+                                          // _isLoading
+                                          //     ? Skeletonizer(
+                                          //         child: AnnouncementCardSkeleton(
+                                          //           role: announcement["role"],
+                                          //         ),
+                                          //       )
+                                          //:
+                                          GestureDetector(
+                                        onTap: () {
+                                          onSelectAnnouncement(announcement);
+                                        },
+                                        child: Container(
+                                          height:
+                                              250, // Adjust height if necessary
+                                          width: 330, // Width of each item
+                                          margin: EdgeInsets.only(
+                                              left:
+                                                  3), // Optional: Add spacing between items
+                                          child: AnnouncementCard(
+                                            id: announcement["id"],
+                                            idx: index,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 25, vertical: 3),
                                 child: ListView.builder(
+                                  // itemExtent: 350,
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
-                                  scrollDirection:
-                                      Axis.horizontal, // Horizontal scroll
+                                  physics: NeverScrollableScrollPhysics(),
                                   itemCount:
                                       announcementProvider.announcements.length,
                                   itemBuilder: (context, index) {
                                     final announcement = announcementProvider
                                         .announcements[index];
 
-                                    // Only show the AnnouncementCard if the role is 'manager'
-                                    if (announcement["role"] != "manager") {
+                                    // Check your condition, for example, when role is 'manager'
+                                    if (announcement["role"] == "manager") {
+                                      // If the condition matches, return an empty widget or skip the card
                                       return SizedBox
-                                          .shrink(); // Don't show the card for non-'manager' roles
+                                          .shrink(); // This will render nothing
                                     }
 
-                                    return _isLoading
-                                        ? Skeletonizer(
-                                            child: AnnouncementCardSkeleton(
-                                              role: announcement["role"],
-                                            ),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () {
-                                              onSelectAnnouncement(
-                                                  announcement);
-                                            },
-                                            child: Container(
-                                              height:
-                                                  250, // Adjust height if necessary
-                                              width: 380, // Width of each item
-                                              margin: EdgeInsets.only(
-                                                  right:
-                                                      10), // Optional: Add spacing between items
-                                              child: AnnouncementCard(
-                                                id: announcement["id"],
-                                                idx: index,
-                                              ),
-                                            ),
-                                          );
+                                    return
+                                        //_isLoading
+                                        // ? Skeletonizer(
+                                        //     child: AnnouncementCardSkeleton(
+                                        //       role: announcement["role"] !=
+                                        //           "manager",
+                                        //     ),
+                                        //   )
+                                        // :
+                                        GestureDetector(
+                                      onTap: () {
+                                        onSelectAnnouncement(announcement);
+                                      },
+                                      child: AnnouncementCard(
+                                        id: announcement["id"],
+                                        idx: index,
+                                      ),
+                                    );
                                   },
                                 ),
-                              ),
-
-                              ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    announcementProvider.announcements.length,
-                                itemBuilder: (context, index) {
-                                  final announcement =
-                                      announcementProvider.announcements[index];
-
-                                  // Check your condition, for example, when role is 'manager'
-                                  if (announcement["role"] == "manager") {
-                                    // If the condition matches, return an empty widget or skip the card
-                                    return SizedBox
-                                        .shrink(); // This will render nothing
-                                  }
-
-                                  return _isLoading
-                                      ? Skeletonizer(
-                                          child: AnnouncementCardSkeleton(
-                                            role: announcement["role"] !=
-                                                "manager",
-                                          ),
-                                        )
-                                      : GestureDetector(
-                                          onTap: () {
-                                            onSelectAnnouncement(announcement);
-                                          },
-                                          child: SizedBox(
-                                            height: 900,
-                                            width: 300, // Width of each item
-                                            child: AnnouncementCard(
-                                              id: announcement["id"],
-                                              idx: index,
-                                            ),
-                                          ),
-                                        );
-                                },
                               )
 
                               // ListView.builder(

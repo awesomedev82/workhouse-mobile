@@ -19,6 +19,7 @@ import 'package:workhouse/components/account_announcement_card_skeleton.dart';
 import 'package:workhouse/components/announcement_card_skeleton.dart';
 import 'package:workhouse/components/app_bottom_navbar.dart';
 import 'package:workhouse/components/app_toast.dart';
+import 'package:workhouse/components/header_bar.dart';
 import 'package:workhouse/components/user_announcement_card.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/constant.dart';
@@ -232,8 +233,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        HeaderBar(title: "Account"),
                         SizedBox(
-                          height: 90,
+                          height: 10,
                         ),
                         //MARK: User Info
                         Container(
@@ -300,6 +302,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
+                           
                               SizedBox(
                                 height: 14,
                               ),
@@ -517,6 +520,43 @@ class _AccountScreenState extends State<AccountScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              _isLoding
+                                  ? Skeletonizer(
+                                      child: Container(
+                                        height: 55,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 12),
+                                        alignment: Alignment.bottomLeft,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              color: Color(0xFFEAE6E6),
+                                              width: 1,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Hello World Hello World",
+                                              style: TextStyle(
+                                                fontFamily: "Lastik-test",
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w700,
+                                                color: APP_BLACK_COLOR,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : HeaderBar(title: "Account"),
+                              SizedBox(
+                                height: 10,
+                              ),
                               //Avatar
                               Row(
                                 children: [
