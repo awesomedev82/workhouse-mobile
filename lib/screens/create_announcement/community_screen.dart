@@ -273,15 +273,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                   horizontal: 1,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(0),
                                   color: Color(0xFFEDFDF4),
-                                  border: Border.all(
-                                    color: Color(0xFF014E53).withOpacity(0.1),
-                                    width: 1,
-                                  ),
+                                  // border: Border.all(
+                                  //   color: Color(0xFF014E53).withOpacity(0.1),
+                                  //   width: 1,
+                                  // ),
                                 ),
-                                width: 350,
-                                height: 750,
+                                width: 400,
+                                height: 700,
                                 child: Container(
                                   child: ListView.builder(
                                     padding: EdgeInsets.zero,

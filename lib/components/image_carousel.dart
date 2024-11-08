@@ -11,13 +11,37 @@ class ImageCarousel extends StatefulWidget {
 }
 
 class _ImageCarouselState extends State<ImageCarousel> {
-  final List<String> imageSources = [
-    'assets/images/carousel-1.png',
-    'assets/images/carousel-2.png',
-    'assets/images/carousel-3.png',
-    'assets/images/carousel-1.png',
-    'assets/images/carousel-2.png',
-    'assets/images/carousel-3.png',
+  final List<Map<String, String>> imageCards = [
+    {
+      'image': 'assets/images/carousel-1.png',
+      'url': 'https://digitalpark.studio/',
+      'title': 'WorkHouse'
+    },
+    {
+      'image': 'assets/images/carousel-2.png',
+      'url': 'https://tally.so/r/w5qAWd',
+      'title': 'WorkHouse'
+    },
+    {
+      'image': 'assets/images/carousel-3.png',
+      'url': 'https://tally.so/r/woVjXV',
+      'title': 'WorkHouse'
+    },
+    {
+      'image': 'assets/images/carousel-1.png',
+      'url': 'https://digitalpark.studio/',
+      'title': 'WorkHouse'
+    },
+    {
+      'image': 'assets/images/carousel-2.png',
+      'url': 'https://tally.so/r/w5qAWd',
+      'title': 'WorkHouse'
+    },
+    {
+      'image': 'assets/images/carousel-3.png',
+      'url': 'https://tally.so/r/woVjXV',
+      'title': 'WorkHouse'
+    },
   ];
 
   int _current = 0;
@@ -33,7 +57,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 height: 180.0,
                 aspectRatio: 1,
                 showIndicator: false,
-                slideIndicator: CircularSlideIndicator(),
                 autoPlay: true,
                 autoPlayInterval: Duration(seconds: 3),
                 disableCenter: true,
@@ -43,34 +66,31 @@ class _ImageCarouselState extends State<ImageCarousel> {
                   });
                 },
               ),
-              items: [0, 1, 2, 3, 4, 5].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to WebViewScreen when the image is tapped
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WebViewScreen(url: 'https://www.google.com'),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(imageSources[i]),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+              items: imageCards.map((card) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewScreen(
+                          url: card['url']!,
+                          title: card['title']!,
                         ),
                       ),
                     );
                   },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(card['image']!),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
                 );
               }).toList(),
             ),
@@ -78,21 +98,19 @@ class _ImageCarouselState extends State<ImageCarousel> {
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...[0, 1, 2, 3, 4, 5].map((val) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      height: 6,
-                      width: 6,
-                      decoration: BoxDecoration(
-                        color: val == _current
-                            ? Color(0xFFAAD130)
-                            : Color(0xFF4D4D4D),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    );
-                  }).toList(),
-                ],
+                children: List.generate(imageCards.length, (index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 3),
+                    height: 6,
+                    width: 6,
+                    decoration: BoxDecoration(
+                      color: index == _current
+                          ? Color(0xFFAAD130)
+                          : Color(0xFF4D4D4D),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  );
+                }),
               ),
             ),
           ],
@@ -101,7 +119,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           top: 20,
           right: 40,
           child: Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
               color: Color(0xFFAAD130),
               borderRadius: BorderRadius.circular(30),
@@ -113,12 +131,13 @@ class _ImageCarouselState extends State<ImageCarousel> {
           ),
         ),
         Positioned(
-            bottom: 40,
-            left: 40,
-            child: SvgPicture.asset(
-              "assets/images/logo.svg",
-              height: 25,
-            )),
+          bottom: 40,
+          left: 40,
+          child: SvgPicture.asset(
+            "assets/images/logo.svg",
+            height: 25,
+          ),
+        ),
       ],
     );
   }

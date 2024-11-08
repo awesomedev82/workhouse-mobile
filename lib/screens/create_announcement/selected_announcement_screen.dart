@@ -480,26 +480,65 @@ class _SelectedAnnouncementScreenState
                     SizedBox(
                       height: 48,
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      //width: double.infinity,
-                      margin:
-                          EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset("assets/images/arrow-left.svg"),
+                    // Back button
+                    Skeletonizer(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceEvenly, // Ensure the elements are spaced evenly
+                        children: [
+                          // Back button
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(25),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(
+                                      0xFFE9EAEC)), // Background color for the back button
+                              // SVG for the back arrow
+                            ),
+                          ),
+                          SizedBox(
+                            width: 190,
+                          ),
+                          // Menu button (ellipsis)
+                          GestureDetector(
+                            onTap: () {
+                              _showDeleteBottomSheet(
+                                  context); // Trigger the bottom sheet on tap
+                            },
+                            child: Container(
+                                height: 24,
+                                width:
+                                    24, // Specify width to avoid layout issues
+                                alignment: Alignment.center,
+                                child: Text("Icons-----------")),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
                       height: 12,
                     ),
+                    // Image Carousel or Skeleton Placeholder
+                    Skeletonizer(
+                      child: Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: getMediaData(widget.data["images"]).isNotEmpty
+                              ? AnnouncementCarousel(
+                                  height: 230,
+                                  data: getMediaData(widget.data["images"]),
+                                )
+                              : Container(), // Empty container if no images
+                        ),
+                      ),
+                    ),
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 24,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 24),
                       child: Column(
                         children: [
                           Container(
@@ -507,6 +546,7 @@ class _SelectedAnnouncementScreenState
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                // Profile Picture Skeleton
                                 Skeletonizer(
                                   child: Container(
                                     width: 48,
@@ -520,9 +560,8 @@ class _SelectedAnnouncementScreenState
                                             const AspectRatio(
                                           aspectRatio: 1.6,
                                           child: BlurHash(
-                                            hash:
-                                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                          ),
+                                              hash:
+                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj'),
                                         ),
                                       ),
                                     ),
@@ -531,66 +570,98 @@ class _SelectedAnnouncementScreenState
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Skeletonizer(
-                                            child: Container(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "Skeleton Text ------",
-                                                        style: TextStyle(
-                                                          fontSize: 24,
-                                                          height: 1.3,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontFamily:
-                                                              "Lastik-test",
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Skeletonizer(
-                                            child: Text(
-                                              "999 hours",
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                fontFamily: "SF-Pro-Display",
-                                                fontWeight: FontWeight.w400,
-                                                color: Color(0xFF9D9D9D),
-                                                fontSize: 16,
-                                                height: 1.3,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ],
                             ),
                           ),
                           SizedBox(
                             height: 18,
                           ),
+                          Skeletonizer(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                widget.data["role"] == "member"
+                                    ? Container(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "public_name",
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    height: 1.3,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: "Lastik-test",
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Container(
+                                                  width: 10,
+                                                  height: 2,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            11),
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  "business_name",
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    height: 1.3,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: "Lastik-test",
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(
+                                        child: Text(
+                                          "public name",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            height: 1.3,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: "Lastik-test",
+                                          ),
+                                        ),
+                                      ),
+                                // Text(
+                                //   timeDifference(
+                                //     widget.data["created_at"],
+                                //   ),
+                                //   textAlign: TextAlign.right,
+                                //   style: TextStyle(
+                                //     fontFamily: "SF-Pro-Display",
+                                //     fontWeight: FontWeight.w400,
+                                //     color: Color(0xFF9D9D9D),
+                                //     fontSize: 13,
+                                //     height: 1.4,
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 18,
+                          ),
+
+                          // Description Text Skeleton
                           Skeletonizer(
                             child: Container(
                               alignment: Alignment.centerLeft,
@@ -602,25 +673,6 @@ class _SelectedAnnouncementScreenState
                                   height: 1.6,
                                   fontWeight: FontWeight.w300,
                                 ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Skeletonizer(
-                            child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: getMediaData(widget.data["images"])
-                                        .isNotEmpty
-                                    ? AnnouncementCarousel(
-                                        height: 230,
-                                        data: getMediaData(
-                                          widget.data["images"],
-                                        ),
-                                      )
-                                    : Container(),
                               ),
                             ),
                           ),

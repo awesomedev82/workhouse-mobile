@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workhouse/utils/constant.dart';
 
@@ -10,7 +11,6 @@ class AnnouncementCreateScreen extends StatefulWidget {
   const AnnouncementCreateScreen({
     Key? key,
   }) : super(key: key);
-
 
   @override
   _AnnouncementCreateScreenState createState() =>
@@ -33,6 +33,22 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
             ),
             child: Column(
               children: <Widget>[
+                Container(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Color(0xFFEFEFF0),
+                      ),
+                      child: Image.asset("assets/images/x.png"),
+                    ),
+                  ),
+                ),
+                SvgPicture.asset("assets/images/announcement.svg"),
                 //MARK: Title
                 Container(
                   alignment: Alignment.centerLeft,
@@ -58,7 +74,7 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                     textStyle: TextStyle(
                       fontSize: 14,
                       height: 1.6,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                       color: Color(0xFF17181A),
                     ),
                   ),
@@ -67,6 +83,30 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                   ),
                 ),
                 SizedBox(height: 24),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset("assets/images/check.svg"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      DefaultTextStyle(
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          height: 1.31,
+                          color: Colors.black,
+                        ),
+                        child: Text("Benefits"),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 14,
+                ),
                 // MARK: Benefits
                 Container(
                   padding: EdgeInsets.all(20),
@@ -77,36 +117,12 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                   child: Column(
                     children: [
                       Container(
-                        alignment: Alignment.centerLeft,
-                        child: DefaultTextStyle(
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: "Lastik-test",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            height: 1.31,
-                            color: Colors.black,
-                          ),
-                          child: Text("Benefits"),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 14,
-                      ),
-                      Container(
                         child: Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 24,
-                                  height: 24,
-                                  child: Image.asset(
-                                    "assets/images/check.png",
-                                  ),
-                                ),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -131,13 +147,6 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 24,
-                                  height: 24,
-                                  child: Image.asset(
-                                    "assets/images/check.png",
-                                  ),
-                                ),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -162,13 +171,6 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 24,
-                                  height: 24,
-                                  child: Image.asset(
-                                    "assets/images/check.png",
-                                  ),
-                                ),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -233,21 +235,6 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                   height: 10,
                 ),
                 // MARK: X button
-                Container(
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Color(0xFFEFEFF0),
-                      ),
-                      child: Image.asset("assets/images/x.png"),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

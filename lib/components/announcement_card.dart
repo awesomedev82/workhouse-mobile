@@ -296,7 +296,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
     return Padding(
       padding: announcements[widget.idx]["role"] == "manager"
-          ? EdgeInsets.symmetric(horizontal: 6, vertical: 10)
+          ? EdgeInsets.symmetric(horizontal: 5, vertical: 10)
           : EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Container(
         // color: Colors.amber,
@@ -315,17 +315,21 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            announcements[widget.idx]["role"] == "manager"
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 3, left: 5),
-                    child: Text("Announcements",
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Color(0xFF014E53),
-                        )),
-                  )
-                : SizedBox.shrink(),
+            if (widget.idx == 0 &&
+                announcements[widget.idx]["role"] == "manager")
+              Padding(
+                padding: const EdgeInsets.only(top: 3, left: 5),
+                child: Text(
+                  "Announcements",
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                    color: Color(0xFF014E53),
+                  ),
+                ),
+              )
+            else
+              SizedBox(height: 26),
             SizedBox(
               height: 15,
             ),

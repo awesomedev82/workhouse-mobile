@@ -336,7 +336,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 4,
                         ),
                         AppControlInput(
-                          prefix: "assets/images/w.svg",
+                          prefix: "",
                           defaultText: website,
                           hintText: "",
                           validate: (val) {
@@ -494,7 +494,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
 
                         AppButton(
-                          text: "Save Changes",
+                          text: "Save",
                           onTapped: () {
                             onSave();
                           },
