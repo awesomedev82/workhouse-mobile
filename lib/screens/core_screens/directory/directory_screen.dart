@@ -31,6 +31,10 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
   late SupabaseClient supabase;
   late SharedPreferences prefs;
   bool _isLoading = true;
+  FocusNode _focusNode = FocusNode();
+
+  // Track the focus state
+  bool _isFocused = false;
 
   @override
   void initState() {
@@ -39,6 +43,11 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
       bool _isLoading = true;
     });
     init();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
   }
 
   void init() async {
@@ -166,17 +175,17 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                       height: 20,
                                     ),
                                     // MARK: Full Name
-                                    Text(
-                                      "Search",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          color: Color(0xFF17181A),
-                                          height: 1.6,
-                                        ),
-                                      ),
-                                    ),
+                                    // Text(
+                                    //   "Search",
+                                    //   style: GoogleFonts.inter(
+                                    //     textStyle: TextStyle(
+                                    //       fontWeight: FontWeight.w300,
+                                    //       fontSize: 14,
+                                    //       color: Color(0xFF17181A),
+                                    //       height: 1.6,
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     SizedBox(
                                       height: 4,
                                     ),
@@ -190,17 +199,18 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                       cursorHeight: 20,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
-                                        hintText:
-                                            "Search by services, business, or person",
+                                        hintText: "Search",
                                         hintStyle: GoogleFonts.inter(
                                           textStyle: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 14,
                                               color: Color(0xFF7D7E83)),
                                         ),
-                                        prefixIcon: Icon(
-                                          Ionicons.search_outline,
-                                          size: 24,
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SvgPicture.asset(
+                                            "assets/images/person_search.svg",
+                                          ),
                                         ),
                                         disabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -218,7 +228,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Colors.blue, width: 1),
+                                              color: Color(0xFFDEE0E3),
+                                              width: 1),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(12)),
                                         ),

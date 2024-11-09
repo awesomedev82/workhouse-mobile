@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:workhouse/utils/constant.dart';
-/**
- * MARK: App Input Widget Class
- */
 
 class AppControlInput extends StatefulWidget {
   const AppControlInput({
@@ -17,6 +13,7 @@ class AppControlInput extends StatefulWidget {
     this.isSeconderyIcon = false,
     this.maxLines = 1,
     this.maxHeight = 44,
+    this.prefix,
   }) : super(key: key);
 
   final String hintText;
@@ -27,6 +24,7 @@ class AppControlInput extends StatefulWidget {
   final bool isSeconderyIcon;
   final int maxLines;
   final double maxHeight;
+  final String? prefix;
 
   @override
   _AppControlInputState createState() => _AppControlInputState();
@@ -51,67 +49,100 @@ class _AppControlInputState extends State<AppControlInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          maxLines: widget.maxLines,
-          controller: controller,
-          showCursor: true,
-          cursorColor: Color.fromARGB(255, 71, 71, 71),
-          cursorWidth: 1,
-          cursorHeight: 20,
-          keyboardType: widget.inputType,
-          style: GoogleFonts.inter(
-            textStyle: TextStyle(
-              fontWeight: FontWeight.w300,
-              fontSize: 14,
-              color: APP_BLACK_COLOR,
-            ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Color(0xFFDEE0E3), width: 1),
           ),
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: GoogleFonts.inter(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: Color(0xFF7D7E83)),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            constraints: BoxConstraints(
-              maxHeight: widget.maxHeight,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          child: Row(
+            children: [
+              // Prefix icon with background color
+              if (widget.prefix != null)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFE3FAFF), // Light green background
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10.0, top: 18, bottom: 18),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/w.svg",
+                          height: 15,
+                        ),
+                        SizedBox(width: 4), // Space between icon and text
+                        Text(
+                          "www.",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Color(0xFF006766),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (widget.prefix != null)
+                // Vertical Divider
+                Container(
+                  width: 1,
+                  height: 55,
+                  color: Color(0xFFDEE0E3),
+                ),
+
+              // Text Field
+              Expanded(
+                child: TextField(
+                  maxLines: widget.maxLines,
+                  controller: controller,
+                  showCursor: true,
+                  cursorColor: Color.fromARGB(255, 71, 71, 71),
+                  cursorWidth: 1,
+                  cursorHeight: 20,
+                  keyboardType: widget.inputType,
+                  style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  decoration: InputDecoration(
+                    hintText: widget.hintText,
+                    hintStyle: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Color(0xFF7D7E83),
+                      ),
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      isTyping = value.isNotEmpty;
+                      widget.validate(value);
+                    });
+                  },
+                  onSubmitted: widget.validate,
+                  obscureText: isPasswordShow,
+                  enableSuggestions: !isPasswordShow,
+                  autocorrect: !isPasswordShow,
+                ),
+              ),
+            ],
           ),
-          // MARK: onChanged
-          onChanged: (value) {
-            if (value == "") {
-              setState(() {
-                isTyping = false;
-                widget.validate(value);
-              });
-            } else {
-              setState(() {
-                isTyping = true;
-                widget.validate(value);
-              });
-            }
-          },
-          // MARK: onSubmitted
-          onSubmitted: (value) {
-            widget.validate(value);
-          },
-          obscureText: isPasswordShow,
-          enableSuggestions: !isPasswordShow,
-          autocorrect: !isPasswordShow,
         ),
       ],
     );
