@@ -131,7 +131,7 @@ class _AppDropdownState extends State<AppDropdown> {
                                             horizontal: 24),
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? Color(0xFFDC6803)
+                                              ? Color(0xFFEDFDF4)
                                                   .withOpacity(0.39)
                                               : Colors.white,
                                           borderRadius:
@@ -148,13 +148,16 @@ class _AppDropdownState extends State<AppDropdown> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(option),
-                                            SizedBox(width: 16),
-                                            Icon(
-                                              Icons.check_circle,
-                                              color: isSelected
-                                                  ? Color(0xFFDC6803)
-                                                  : Colors.grey.withOpacity(0),
-                                              size: 24,
+                                          //  SizedBox(width: 16),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: isSelected
+                                                    ? Color(0xFF014E53)
+                                                    : Colors.grey.withOpacity(0),
+                                                size: 35,
+                                              ),
                                             ),
                                           ],
                                         ),

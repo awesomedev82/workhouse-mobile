@@ -24,7 +24,7 @@ class _LaunchSliderIndicatorState extends State<LaunchSliderIndicator> {
               width: val == widget.index ? 15 : 7.5,
               decoration: BoxDecoration(
                 color: val == widget.index
-                    ? Color(0xFF014E53)
+                    ? Colors.black
                     : Color(0xFF014E53).withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),

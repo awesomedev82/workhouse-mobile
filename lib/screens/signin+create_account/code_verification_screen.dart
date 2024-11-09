@@ -1,5 +1,6 @@
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
@@ -32,6 +33,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
   String _emailAddress = "";
   late SupabaseClient supabase;
   final _otpPinFieldController = GlobalKey<OtpPinFieldState>();
+  
+  TextEditingController _otpController = TextEditingController();
 
   void _onCodeChanged(String? newValue) {
     setState(() {
@@ -215,47 +218,130 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 4,
+                      height: 10,
                     ),
                     DefaultTextStyle(
                       style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: APP_MAIN_LABEL_COLOR,
-                          height: 1.6,
+                           fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF0F1324).withOpacity(0.6),
+                    height: 1.6,
                         ),
                       ),
                       child: Text(
-                        'Enter the passcode sent to your phone number.',
+                        'Enter the code sent to your email address',
                       ),
                     ),
-                    SizedBox(
-                      height: 24,
-                    ),
+                   SizedBox(
+                height: 16,
+              ),
+              // MARK: Email Address
+              Text(
+                "Verification code",
+                style: GoogleFonts.inter(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0xFF14151A),
+                    height: 1.6,
+                  ),
+                ),
+              ),    SizedBox(
+                height: 4,
+              ),
                     // MARK: OTP Input
-                    OtpPinField(
-                      key: _otpPinFieldController,
-                      autoFillEnable: false,
-                      textInputAction: TextInputAction.done,
-                      maxLength: 6,
-                      fieldWidth: 48,
-                      fieldHeight: 52,
-                      onSubmit: onSubmit,
-                      onChange: onChange,
-                      otpPinFieldDecoration:
-                          OtpPinFieldDecoration.defaultPinBoxDecoration,
-                      otpPinFieldStyle: OtpPinFieldStyle(
-                        fieldBorderWidth: 1,
-                        fieldPadding: 6,
-                        fieldBorderRadius: 16,
-                        activeFieldBorderColor: Colors.blue,
-                      ),
-                    ),
-                    // OtpInput(codeChanged: _onCodeChanged),
-                    SizedBox(
-                      height: 24,
-                    ),
+                    TextField(  cursorColor: Color.fromARGB(255, 71, 71, 71),
+  controller: _otpController, // Create a TextEditingController to manage input
+  keyboardType: TextInputType.number,
+  textInputAction: TextInputAction.done,
+  maxLength: 6,
+  decoration: InputDecoration(
+    counterText: '', // Hides the max length counter display
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
+    ),   disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+         
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+           
+         
+    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+     constraints: BoxConstraints(
+              maxHeight: 44,
+            ),hintText: "Paste verification code ",   hintStyle: GoogleFonts.inter(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: Color(0xFF7D7E83),),
+            ),
+  ),
+  style: TextStyle(
+    fontSize: 14,
+  ),
+  onChanged: (value) {
+    if (value.length == 6) {
+      // Call your onSubmit function here
+      onSubmit(value);
+    }
+    onChange(value); // Call onChange function with the current value
+  },
+), SizedBox(
+                height: 10,
+              ),
+             
+               Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Enter the code sent to your email address",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                       
+              SizedBox(
+                height: 16,
+              ),
+
+                    // // OtpPinField(
+                    // //   key: _otpPinFieldController,
+                    // //   autoFillEnable: false,
+                    // //   textInputAction: TextInputAction.done,
+                    // //   maxLength: 6,
+                    // //   fieldWidth: 48,
+                    // //   fieldHeight: 52,
+                    // //   onSubmit: onSubmit,
+                    // //   onChange: onChange,
+                    // //   otpPinFieldDecoration:
+                    // //       OtpPinFieldDecoration.defaultPinBoxDecoration,
+                    // //   otpPinFieldStyle: OtpPinFieldStyle(
+                    // //     fieldBorderWidth: 1,
+                    // //     fieldPadding: 6,
+                    // //     fieldBorderRadius: 16,
+                    // //     activeFieldBorderColor: Colors.blue,
+                    // //   ),
+                    // // ),
+                    // // // OtpInput(codeChanged: _onCodeChanged),
+                    // SizedBox(
+                    //   height: 24,
+                    // ),
                     // Container(
                     //   child: Row(
                     //     mainAxisAlignment: MainAxisAlignment.center,
@@ -294,7 +380,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                     //   height: 16,
                     // ),
                     AppButton(
-                      text: "Login",
+                      text: "Confirm email address",
                       onTapped: () {
                         verifyOTP(profileProvider);
                       },

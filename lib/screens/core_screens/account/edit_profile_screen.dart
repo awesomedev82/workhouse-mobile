@@ -214,34 +214,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           },
                           inputType: TextInputType.text,
                         ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        // MARK: Phone Number
-                        Text(
-                          "Phone Number",
-                          style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Color(0xFF14151A),
-                              height: 1.6,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        AppControlInput(
-                          defaultText: phonenumber,
-                          hintText: "123.123.1234",
-                          validate: (val) {
-                            setState(() {
-                              phonenumber = val;
-                            });
-                          },
-                          inputType: TextInputType.phone,
-                        ),
+                        // SizedBox(
+                        //   height: 16,
+                        // ),
+                        // // MARK: Phone Number
+                        // Text(
+                        //   "Phone Number",
+                        //   style: GoogleFonts.inter(
+                        //     textStyle: TextStyle(
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 14,
+                        //       color: Color(0xFF14151A),
+                        //       height: 1.6,
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 4,
+                        // ),
+                        // AppControlInput(
+                        //   defaultText: phonenumber,
+                        //   hintText: "123.123.1234",
+                        //   validate: (val) {
+                        //     setState(() {
+                        //       phonenumber = val;
+                        //     });
+                        //   },
+                        //   inputType: TextInputType.phone,
+                        // ),
                         SizedBox(
                           height: 16,
                         ),
@@ -596,7 +596,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                         ),
-                      ),
+                      ),Container(
+                              width: 80,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Handle onTap action here if needed
+                                },
+                                child: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Image.asset(
+                                      'assets/images/search.png', // Replace with the path to your static image
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

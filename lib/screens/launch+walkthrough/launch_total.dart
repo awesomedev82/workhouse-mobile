@@ -119,26 +119,37 @@ class _LaunchTotalState extends State<LaunchTotal> {
                   ],
                 ),
                 Positioned(
-                  bottom: 48,
+                  bottom: 55,
                   left: 0,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    child: Column(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        AppButton(
-                          text: "Get started",
-                          onTapped: () async {
-                            onNext();
-                          },
-                        ),
+                       
                         SizedBox(
                           height: 24,
                         ),
                         Container(
                           //Slider Indicator
                           child: LaunchSliderIndicator(index: _current),
+                        ),SizedBox(width: 230,),
+                        GestureDetector( onTap: () async {
+                                onNext();
+                              },
+                          child: Container(decoration: BoxDecoration(shape: BoxShape.circle,color: Color(0xFF014E53)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: SvgPicture.asset("assets/images/arrow-right-white.svg"),
+                            )
+                            // AppButton(
+                            //   text: "Get started",
+                            //   onTapped: () async {
+                            //     onNext();
+                            //   },
+                            // ),
+                          ),
                         ),
                       ],
                     ),

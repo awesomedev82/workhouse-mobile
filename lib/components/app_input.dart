@@ -59,18 +59,18 @@ class _AppInputState extends State<AppInput> {
               textStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
-                  color: Color(0xFF7D7E83)),
+                  color: Color(0xFF7D7E83),),
             ),
             disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
+              borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
+           border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide(color: Color(0xFFDEE0E3), width: 1),
+    ), 
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 1),
+              borderSide: BorderSide(color: Colors.black, width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             constraints: BoxConstraints(

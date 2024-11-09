@@ -127,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 27,
+            horizontal: 18,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +139,29 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  DefaultTextStyle(
+                   GestureDetector(
+                    onTap: () async {
+                      // exit(0);
+                      prefs = await SharedPreferences.getInstance();
+                      prefs.setBool("visited", false);
+                      Navigator.of(context).pushReplacementNamed('/');
+                    },
+                    child: Container(
+                       padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFFE9EAEC)),
+                      child: SvgPicture.asset("assets/images/arrow-left.svg")),
+                  ),
+
+                
+                 
+                ],
+              ),
+              SizedBox(
+                height: 24,
+              ),
+                DefaultTextStyle(
                     style: TextStyle(
                       fontFamily: "Lastik-test",
                       fontSize: 24,
@@ -151,31 +173,17 @@ class _SignInScreenState extends State<SignInScreen> {
                       'Sign in with email',
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      // exit(0);
-                      prefs = await SharedPreferences.getInstance();
-                      prefs.setBool("visited", false);
-                      Navigator.of(context).pushReplacementNamed('/');
-                    },
-                    child: SvgPicture.asset('assets/images/x.svg'),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 24,
-              ),
               DefaultTextStyle(
                 style: GoogleFonts.inter(
                   textStyle: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                    color: APP_MAIN_LABEL_COLOR,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF0F1324).withOpacity(0.6),
                     height: 1.6,
                   ),
                 ),
                 child: Text(
-                  'Enter the email address associated with your Workhouse invite. We’ll send a code to your email to confirm your account.',
+                 'Enter the email address associated with your Workhouse invite.',
                 ),
               ),
               SizedBox(
@@ -186,15 +194,15 @@ class _SignInScreenState extends State<SignInScreen> {
                 "Email Address",
                 style: GoogleFonts.inter(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w500,
                     fontSize: 14,
-                    color: Color(0xFF17181A),
+                    color: Color(0xFF14151A),
                     height: 1.6,
                   ),
                 ),
               ),
               SizedBox(
-                height: 4,
+                height: 10,
               ),
               AppInput(
                 hintText: "Enter your email",
@@ -204,12 +212,35 @@ class _SignInScreenState extends State<SignInScreen> {
                   });
                 },
                 inputType: TextInputType.emailAddress,
+              ), SizedBox(
+                height: 10,
               ),
+             
+               Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "We’ll send a code to your email to confirm your account",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                       
               SizedBox(
                 height: 16,
               ),
               AppButton(
-                text: "Login",
+                text: "Sign in",
                 onTapped: () async {
                   if (await validateemailAddress() == false) {
                     Navigator.of(context).pop();

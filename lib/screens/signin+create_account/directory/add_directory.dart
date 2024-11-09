@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workhouse/components/app_button.dart';
+import 'package:workhouse/components/app_control_input.dart';
 import 'package:workhouse/components/app_dropdown.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/components/app_toast.dart';
@@ -28,11 +30,12 @@ class AddDirectory extends StatefulWidget {
 class _AddDirectoryState extends State<AddDirectory> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
-  String fullname = "";
+ String fullname = "";
   String businessName = "";
+  String bio = "";
   String website = "";
   String publicName = "";
-  String industry = "";
+  String industry = "Architecture";
   String company = "None";
   String imgURL = "";
   late SupabaseClient supabase;
@@ -135,6 +138,7 @@ class _AddDirectoryState extends State<AddDirectory> {
           "public_name": publicName,
           "avatar_url": imgURL,
           "website": website,
+           "bio": bio,
           "industry": industry,
         }).eq("id", uid);
         prefs.setString("avatar", imgURL);
@@ -220,11 +224,12 @@ class _AddDirectoryState extends State<AddDirectory> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 27,
+                  horizontal: 25,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    
                     DefaultTextStyle(
                       style: TextStyle(
                         fontFamily: "Lastik-test",
@@ -242,9 +247,9 @@ class _AddDirectoryState extends State<AddDirectory> {
                     DefaultTextStyle(
                       style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: APP_MAIN_LABEL_COLOR,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF0F1324).withOpacity(0.6),
                           height: 1.6,
                         ),
                       ),
@@ -255,235 +260,574 @@ class _AddDirectoryState extends State<AddDirectory> {
                     SizedBox(
                       height: 16,
                     ),
+Row(
+  children: [
+    GestureDetector(
+      onTap: () {
+        _showPicker(context);
+      },
+      child: CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.grey[200],
+        child: _image != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.file(
+                  _image!,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: SvgPicture.asset("assets/images/profile.svg"),
+              ),
+      ),
+    ),
+    SizedBox(width: 10), // Space between avatar and message
+    if (_image == null) // Show message only if no profile image
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          "Add Profile Image",
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF17181A),
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ),
+  ],
+),
+
                     //MARK: Avatar Upload
-                    Text(
-                      "Add Profile Image",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _showPicker(context);
-                      },
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.grey[200],
-                        child: _image != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.file(
-                                  _image!,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(50)),
-                                width: 100,
-                                height: 100,
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                      ),
-                    ),
+                    // Row(
+                    //   children: [
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         _showPicker(context);
+                    //       },
+                    //       child: CircleAvatar(
+                    //         radius: 30,
+                    //         backgroundColor: Colors.grey[200],
+                    //         child: _image != null
+                    //             ? ClipRRect(
+                    //                 borderRadius: BorderRadius.circular(50),
+                    //                 child: Image.file(
+                    //                   _image!,
+                    //                   width: 100,
+                    //                   height: 100,
+                    //                   fit: BoxFit.cover,
+                    //                 ),
+                    //               )
+                    //             : Container(
+                    //                 decoration: BoxDecoration(
+                    //                     color: Colors.grey[200],
+                    //                     borderRadius: BorderRadius.circular(50)),
+                                    
+                    //                 child: SvgPicture.asset("assets/images/profile.svg")
+                    //               ),
+                    //       ),
+                    //     ),  SizedBox(
+                    //       width: 30,
+                    //     ), Tooltip(
+                    //          decoration: BoxDecoration(
+                    //               color: Colors.black.withOpacity(0.7),
+                    //               borderRadius: BorderRadius.circular(8),
+                    //             ),
+                    //       showDuration: Duration(milliseconds: 10),
+                    //      message:  "Add Profile Image",
+                    //       textStyle: TextStyle(
+                    //               fontSize: 14,
+                    //                 color: Color(0xFF17181A),
+                    //           height: 1.6,
+                    //               fontWeight: FontWeight.w300,
+                    //             ),
+                          
+                    //     ),
+                       
+                      
+                    //   ],
+                    // ),
+              
                     SizedBox(
                       height: 16,
                     ),
                     // MARK: Full Name
-                    Text(
-                      "Full Name",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
+                    // Text(
+                    //   "Full Name",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppInput(
+                    //   hintText: "Full Name",
+                    //   validate: (val) {
+                    //     setState(() {
+                    //       fullname = val;
+                    //     });
+                    //   },
+                    //   inputType: TextInputType.text,
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
+                    // // MARK: Business Name
+                    // Text(
+                    //   "Business Name",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppInput(
+                    //   hintText: "",
+                    //   validate: (val) {
+                    //     setState(() {
+                    //       businessName = val;
+                    //     });
+                    //   },
+                    //   inputType: TextInputType.text,
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
+                    // // MARK: Publick name
+                    // Text(
+                    //   "Public Username",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppInput(
+                    //   hintText: "Will show up as your public name on the app",
+                    //   validate: (val) {
+                    //     setState(() {
+                    //       publicName = val;
+                    //     });
+                    //   },
+                    //   inputType: TextInputType.text,
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
+                    // // MARK: Website
+                    // Text(
+                    //   "Website (optional)",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppInput(
+                    //   hintText: "",
+                    //   validate: (val) {
+                    //     setState(() {
+                    //       website = val;
+                    //     });
+                    //   },
+                    //   inputType: TextInputType.url,
+                    // ),
+                    // SizedBox(
+                    //   height: 16,
+                    // ),
+                    // // MARK: Industry
+                    // Text(
+                    //   "Industry",
+                    //   style: GoogleFonts.inter(
+                    //     textStyle: TextStyle(
+                    //       fontWeight: FontWeight.w300,
+                    //       fontSize: 14,
+                    //       color: Color(0xFF17181A),
+                    //       height: 1.6,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // AppDropdown(
+                    //   items: [
+                    //     '',
+                    //     'Architecture',
+                    //     'Advertising and Marketing',
+                    //     'Art and Illustration',
+                    //     'Audio Production',
+                    //     'Beauty and Cosmetics',
+                    //     'Blogging and Content Creation',
+                    //     'Brewing and Distilling',
+                    //     'Catering and Food Services',
+                    //     'Ceramics and Pottery',
+                    //     'Coaching and Consulting',
+                    //     'Commercial Photography',
+                    //     'Dance and Choreography',
+                    //     'E-commerce',
+                    //     'Event Planning and Management',
+                    //     'Fashion Design',
+                    //     'Film and Video Production',
+                    //     'Fitness and Wellness',
+                    //     'Floristry',
+                    //     'Freelancer',
+                    //     'Game Development',
+                    //     'Graphic Design',
+                    //     'Handmade Goods',
+                    //     'Interior Design',
+                    //     'Jewelry Making',
+                    //     'Landscape Design',
+                    //     'Music Production',
+                    //     'Painting and Fine Arts',
+                    //     'Personal Styling',
+                    //     'Pet Services',
+                    //     'Podcasting',
+                    //     'Print and Publishing',
+                    //     'Product Design',
+                    //     'Public Relations',
+                    //     'Real Estate',
+                    //     'Social Media Management',
+                    //     'Software Development',
+                    //     'Sustainable and Eco-friendly Products',
+                    //     'Tattoo and Body Art',
+                    //     'Theater and Performing Arts',
+                    //     'Translation and Interpretation',
+                    //     'UX/UI Design',
+                    //     'Web Development',
+                    //     'Professional  Services',
+                    //     'Woodworking and Carpentry',
+                    //     'Yoga and Meditation Instruction',
+                    //     'Other',
+                    //   ],
+                    //   initialValue: industry,
+                    //   onItemSelected: _onIndustrySelected,
+                    // ),
+                             Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // MARK: Full Name
+                        Text(
+                          "Full Name",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF14151A),
+                              height: 1.6,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppInput(
-                      hintText: "Full Name",
-                      validate: (val) {
-                        setState(() {
-                          fullname = val;
-                        });
-                      },
-                      inputType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    // MARK: Business Name
-                    Text(
-                      "Business Name",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
+                        SizedBox(
+                          height: 4,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppInput(
-                      hintText: "",
-                      validate: (val) {
-                        setState(() {
-                          businessName = val;
-                        });
-                      },
-                      inputType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    // MARK: Publick name
-                    Text(
-                      "Public Username",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
+                        AppControlInput(
+                          defaultText: fullname,
+                          hintText: "First and last Name",
+                          validate: (val) {
+                            setState(() {
+                              fullname = val;
+                            });
+                          },
+                          inputType: TextInputType.text,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppInput(
-                      hintText: "Will show up as your public name on the app",
-                      validate: (val) {
-                        setState(() {
-                          publicName = val;
-                        });
-                      },
-                      inputType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    // MARK: Website
-                    Text(
-                      "Website (optional)",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
+                        SizedBox(
+                          height: 16,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppInput(
-                      hintText: "",
-                      validate: (val) {
-                        setState(() {
-                          website = val;
-                        });
-                      },
-                      inputType: TextInputType.url,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    // MARK: Industry
-                    Text(
-                      "Industry",
-                      style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Color(0xFF17181A),
-                          height: 1.6,
+                        // MARK: Phone Number
+                     
+                        // MARK: Business Name
+                        Text(
+                          "Business Name",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF14151A),
+                              height: 1.6,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    AppDropdown(
-                      items: [
-                        '',
-                        'Architecture',
-                        'Advertising and Marketing',
-                        'Art and Illustration',
-                        'Audio Production',
-                        'Beauty and Cosmetics',
-                        'Blogging and Content Creation',
-                        'Brewing and Distilling',
-                        'Catering and Food Services',
-                        'Ceramics and Pottery',
-                        'Coaching and Consulting',
-                        'Commercial Photography',
-                        'Dance and Choreography',
-                        'E-commerce',
-                        'Event Planning and Management',
-                        'Fashion Design',
-                        'Film and Video Production',
-                        'Fitness and Wellness',
-                        'Floristry',
-                        'Freelancer',
-                        'Game Development',
-                        'Graphic Design',
-                        'Handmade Goods',
-                        'Interior Design',
-                        'Jewelry Making',
-                        'Landscape Design',
-                        'Music Production',
-                        'Painting and Fine Arts',
-                        'Personal Styling',
-                        'Pet Services',
-                        'Podcasting',
-                        'Print and Publishing',
-                        'Product Design',
-                        'Public Relations',
-                        'Real Estate',
-                        'Social Media Management',
-                        'Software Development',
-                        'Sustainable and Eco-friendly Products',
-                        'Tattoo and Body Art',
-                        'Theater and Performing Arts',
-                        'Translation and Interpretation',
-                        'UX/UI Design',
-                        'Web Development',
-                        'Professional  Services',
-                        'Woodworking and Carpentry',
-                        'Yoga and Meditation Instruction',
-                        'Other',
+                        SizedBox(
+                          height: 4,
+                        ),
+                        AppControlInput(
+                          defaultText: businessName,
+                          hintText: "Business Name",
+                          validate: (val) {
+                            setState(() {
+                              businessName = val;
+                            });
+                          },
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        // MARK: Bio
+                        Text(
+                          "Bio",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF14151A),
+                              height: 1.6,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        AppControlInput(maxHeight: 100,
+                          defaultText: bio,
+                          hintText: "Tell us a bit about yourself or business",
+                          validate: (val) {
+                            setState(() {
+                              bio = val;
+                            });
+                          },
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        // MARK: Website
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Website ",
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(
+                                        0xFF14151A), // Main color for "Website"
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                              TextSpan(
+                                text: "(optional)",
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(0xFF0D1126).withOpacity(
+                                        0.6), // Color with 0.6 opacity
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        AppControlInput(
+                          prefix: "",
+                          defaultText: website,
+                          hintText: "websitedomain.com",
+                          validate: (val) {
+                            setState(() {
+                              website = val;
+                            });
+                          },
+                          inputType: TextInputType.url,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        // MARK: Publick name
+                        Text(
+                          "Public Name",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF14151A),
+                              height: 1.6,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        AppControlInput(
+                          defaultText: publicName,
+                          hintText:
+                              "Public Name",
+                          validate: (val) {
+                            setState(() {
+                              publicName = val;
+                            });
+                          },
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Your user name will be visible on the app",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        // MARK: Industry
+                        Text(
+                          "Industry",
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF14151A),
+                              height: 1.6,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        AppDropdown(
+                          items: [
+                            'Architecture',
+                            'Advertising and Marketing',
+                            'Art and Illustration',
+                            'Audio Production',
+                            'Beauty and Cosmetics',
+                            'Blogging and Content Creation',
+                            'Brewing and Distilling',
+                            'Catering and Food Services',
+                            'Ceramics and Pottery',
+                            'Coaching and Consulting',
+                            'Commercial Photography',
+                            'Dance and Choreography',
+                            'E-commerce',
+                            'Event Planning and Management',
+                            'Fashion Design',
+                            'Film and Video Production',
+                            'Fitness and Wellness',
+                            'Floristry',
+                            'Freelancer',
+                            'Game Development',
+                            'Graphic Design',
+                            'Handmade Goods',
+                            'Interior Design',
+                            'Jewelry Making',
+                            'Landscape Design',
+                            'Music Production',
+                            'Painting and Fine Arts',
+                            'Personal Styling',
+                            'Pet Services',
+                            'Podcasting',
+                            'Print and Publishing',
+                            'Product Design',
+                            'Public Relations',
+                            'Real Estate',
+                            'Social Media Management',
+                            'Software Development',
+                            'Sustainable and Eco-friendly Products',
+                            'Tattoo and Body Art',
+                            'Theater and Performing Arts',
+                            'Translation and Interpretation',
+                            'UX/UI Design',
+                            'Web Development',
+                            'Professional  Services',
+                            'Woodworking and Carpentry',
+                            'Yoga and Meditation Instruction',
+                            'Other',
+                          ],
+                          initialValue: industry,
+                          onItemSelected: _onIndustrySelected,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset("assets/images/error.svg"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Select the industry that describes you ",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xFF0D1126).withOpacity(0.4),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                       
+                        SizedBox(
+                          height: 16,
+                        ),
+                      
                       ],
-                      initialValue: industry,
-                      onItemSelected: _onIndustrySelected,
                     ),
+           
                     SizedBox(
                       height: 16,
                     ),
                     AppButton(
-                      text: "Create Account",
+                      text: "Continue",
                       onTapped: () {
                         onNext(profileProvider);
                       },

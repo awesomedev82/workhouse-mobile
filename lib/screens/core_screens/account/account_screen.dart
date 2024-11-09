@@ -438,8 +438,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                               //MARK: Button group
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              
                                 children: [
                                   GestureDetector(
                                     onTap: () {
@@ -451,7 +450,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       height: 40,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                           color: Color(0xFFE2E2E2),
                                           width: 1,
@@ -469,7 +468,15 @@ class _AccountScreenState extends State<AccountScreen> {
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ),SizedBox(width: 10,),
+                                  Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(
+                                          color: Color(0xFFE2E2E2),
+                                          width: 1,
+                                        ),),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.mail_outline_rounded),
+                                  ),)
                                 ],
                               ),
                               SizedBox(

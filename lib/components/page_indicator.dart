@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ionicons/ionicons.dart';
 
 class PageIndicator extends StatefulWidget {
@@ -25,10 +26,14 @@ class _PageIndicatorState extends State<PageIndicator> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Image.asset(
-                    'assets/images/light-arrow-back.png',
-                    height: 24,
-                    width: 24,
+                  child: Container( padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFFE9EAEC)),
+                    child: SvgPicture.asset(
+                      'assets/images/arrow-left.svg',
+                      
+                    ),
                   ),
                 ),
             ],

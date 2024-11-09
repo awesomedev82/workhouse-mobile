@@ -10,7 +10,7 @@ class AppButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onTapped,
-    this.color = 0xFFDC6803,
+    this.color = 0xFF014E53,
   }) : super(key: key);
   final String text;
   final Function() onTapped;

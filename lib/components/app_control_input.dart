@@ -128,6 +128,7 @@ class _AppControlInputState extends State<AppControlInput> {
                     ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  constraints: BoxConstraints(maxHeight: widget.maxHeight)
                   ),
                   onChanged: (value) {
                     setState(() {
