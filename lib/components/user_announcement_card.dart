@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
@@ -215,6 +216,7 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
                     //MARK: On delete:
                     _showProgressModal(context);
                     try {
+                      log("Deleteee: ${widget.id}");
                       await supabase
                           .from("community_logs")
                           .delete()

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import 'package:workhouse/components/skeleton_component.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 
 class SelectedAnnouncementScreen extends StatefulWidget {
-  final String? id;
+  final int? id;
   final int? idx;
   const SelectedAnnouncementScreen({
     Key? key,
@@ -207,20 +208,33 @@ class _SelectedAnnouncementScreenState
 
                     _showProgressModal(context);
                     try {
+                      log("IssssssssssssssssssssssD: ${widget.data["id"]}");
+                      log("IsssssD: ${widget.id}");
+                      // await supabase.from("community_logs").update(
+                      //     {'hide': true}).eq("id", {widget.id.toString()});
                       await supabase
                           .from("community_logs")
-                          .update({'hide': true}).eq("id", widget.id ?? "");
+                          .update({'hide': true}).eq("id", widget.id!);
+
+                      log("IssswwwwwssD: ${widget.data["id"]}");
                       final announcementProvider =
-                          Provider.of<AnnouncementProvider>(context,
-                              listen: false);
+                          Provider.of<AnnouncementProvider>(
+                        context,
+                        listen: false,
+                      );
+                      log("provider1: ${announcementProvider.announcements.length}");
                       List<dynamic> announcements =
                           announcementProvider.announcements;
                       announcements.removeAt(widget.idx!);
+                      log("provider2: ${announcementProvider.announcements.length}");
 
                       Provider.of<AnnouncementProvider>(context, listen: false)
                           .setMyAnnouncements(announcements);
+                      log("provider3: ${announcementProvider.announcements.length}");
+
                       showAppToast(context, "Hidden successfully!");
                     } catch (e) {
+                      log("provider1: ${e.toString()}");
                       showAppToast(context, "Error occured!");
                     }
                     Navigator.of(context).pop();
@@ -298,24 +312,28 @@ class _SelectedAnnouncementScreenState
                           width: 190,
                         ),
                         // Menu button (ellipsis)
-                        if (announcements[widget.idx]["public_name"] != "" &&
-                            announcements[widget.idx]["business_name"] != "" &&
-                            announcements[widget.idx]["role"] != "manager")
-                          GestureDetector(
-                            onTap: () {
-                              print(widget.id);
-                              _showDeleteBottomSheet(context);
-                            },
-                            child: Container(
-                              height: 24,
-                              width: 24, // Specify width to avoid layout issues
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Ionicons.ellipsis_horizontal, // Three dots icon
-                                size: 24,
-                              ),
+                        // if (announcements[widget.idx]["public_name"] != "" &&
+                        //     announcements[widget.idx]["business_name"] != "" &&
+                        //     announcements[widget.idx]["role"] != "manager")
+                        GestureDetector(
+                          onTap: () {
+                            print(widget.id);
+                            log("ID: ${widget.idx}");
+                            log("ID: ${widget.id}");
+                            log("ID: ${widget.data["id"]}");
+                            log("ID: ${widget.data}");
+                            _showDeleteBottomSheet(context);
+                          },
+                          child: Container(
+                            height: 24,
+                            width: 24, // Specify width to avoid layout issues
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Ionicons.ellipsis_horizontal, // Three dots icon
+                              size: 24,
                             ),
                           ),
+                        ),
                       ],
                     ),
                     SizedBox(
