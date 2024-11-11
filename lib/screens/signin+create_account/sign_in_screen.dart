@@ -127,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 18,
+            horizontal: 15,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +139,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                   GestureDetector(
+                  GestureDetector(
                     onTap: () async {
                       // exit(0);
                       prefs = await SharedPreferences.getInstance();
@@ -147,32 +147,29 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.of(context).pushReplacementNamed('/');
                     },
                     child: Container(
-                       padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFFE9EAEC)),
-                      child: SvgPicture.asset("assets/images/arrow-left.svg")),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Color(0xFFE9EAEC)),
+                        child:
+                            SvgPicture.asset("assets/images/arrow-left.svg")),
                   ),
-
-                
-                 
                 ],
               ),
               SizedBox(
                 height: 24,
               ),
-                DefaultTextStyle(
-                    style: TextStyle(
-                      fontFamily: "Lastik-test",
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: APP_MAIN_LABEL_COLOR,
-                      height: 1.42,
-                    ),
-                    child: Text(
-                      'Sign in with email',
-                    ),
-                  ),
+              DefaultTextStyle(
+                style: TextStyle(
+                  fontFamily: "Lastik-test",
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: APP_MAIN_LABEL_COLOR,
+                  height: 1.42,
+                ),
+                child: Text(
+                  'Sign in with email',
+                ),
+              ),
               DefaultTextStyle(
                 style: GoogleFonts.inter(
                   textStyle: TextStyle(
@@ -183,7 +180,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 child: Text(
-                 'Enter the email address associated with your Workhouse invite.',
+                  'Enter the email address associated with your Workhouse invite.',
                 ),
               ),
               SizedBox(
@@ -212,30 +209,31 @@ class _SignInScreenState extends State<SignInScreen> {
                   });
                 },
                 inputType: TextInputType.emailAddress,
-              ), SizedBox(
+              ),
+              SizedBox(
                 height: 10,
               ),
-             
-               Row(
-                          children: [
-                            SvgPicture.asset("assets/images/error.svg"),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "We’ll send a code to your email to confirm your account",
-                              style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: Color(0xFF0D1126).withOpacity(0.4),
-                                  height: 1.6,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                       
+
+              Row(
+                children: [
+                  SvgPicture.asset("assets/images/error.svg"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "We’ll send a code to your email to confirm your account",
+                    style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: Color(0xFF0D1126).withOpacity(0.4),
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               SizedBox(
                 height: 16,
               ),

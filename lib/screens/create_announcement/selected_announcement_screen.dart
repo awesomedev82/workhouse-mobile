@@ -18,11 +18,14 @@ import 'package:workhouse/components/skeleton_component.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 
 class SelectedAnnouncementScreen extends StatefulWidget {
-  final id;
-  final idx;
-  const SelectedAnnouncementScreen(
-      {Key? key, required this.data, this.id, this.idx})
-      : super(key: key);
+  final String? id;
+  final int? idx;
+  const SelectedAnnouncementScreen({
+    Key? key,
+    required this.data,
+    this.id,
+    this.idx,
+  }) : super(key: key);
 
   final dynamic data;
 
@@ -66,8 +69,11 @@ class _SelectedAnnouncementScreenState
     supabase = Supabase.instance.client;
     prefs = await SharedPreferences.getInstance();
     communityID = prefs.getString("communityID")!;
-    dynamic temp =
-        await supabase.from("community_logs").select().eq("id", widget.id);
+
+    dynamic temp = await supabase
+        .from("community_logs")
+        .select()
+        .eq("id", widget.id ?? "");
     final data = temp[0];
     temp = await supabase.from("members").select().eq("id", data["sender"]);
     dynamic userInfo;
@@ -203,13 +209,13 @@ class _SelectedAnnouncementScreenState
                     try {
                       await supabase
                           .from("community_logs")
-                          .update({'hide': true}).eq("id", widget.id);
+                          .update({'hide': true}).eq("id", widget.id ?? "");
                       final announcementProvider =
                           Provider.of<AnnouncementProvider>(context,
                               listen: false);
                       List<dynamic> announcements =
                           announcementProvider.announcements;
-                      announcements.removeAt(widget.idx);
+                      announcements.removeAt(widget.idx!);
 
                       Provider.of<AnnouncementProvider>(context, listen: false)
                           .setMyAnnouncements(announcements);
@@ -256,6 +262,9 @@ class _SelectedAnnouncementScreenState
 
   @override
   Widget build(BuildContext context) {
+    final announcementProvider = Provider.of<AnnouncementProvider>(context);
+    dynamic announcements = announcementProvider.announcements;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -289,21 +298,24 @@ class _SelectedAnnouncementScreenState
                           width: 190,
                         ),
                         // Menu button (ellipsis)
-                        GestureDetector(
-                          onTap: () {
-                            _showDeleteBottomSheet(
-                                context); // Trigger the bottom sheet on tap
-                          },
-                          child: Container(
-                            height: 24,
-                            width: 24, // Specify width to avoid layout issues
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Ionicons.ellipsis_horizontal, // Three dots icon
-                              size: 24,
+                        if (announcements[widget.idx]["public_name"] != "" &&
+                            announcements[widget.idx]["business_name"] != "" &&
+                            announcements[widget.idx]["role"] != "manager")
+                          GestureDetector(
+                            onTap: () {
+                              print(widget.id);
+                              _showDeleteBottomSheet(context);
+                            },
+                            child: Container(
+                              height: 24,
+                              width: 24, // Specify width to avoid layout issues
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Ionicons.ellipsis_horizontal, // Three dots icon
+                                size: 24,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                     SizedBox(

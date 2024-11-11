@@ -302,7 +302,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
-                           
+
                               SizedBox(
                                 height: 14,
                               ),
@@ -438,7 +438,6 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                               //MARK: Button group
                               Row(
-                              
                                 children: [
                                   GestureDetector(
                                     onTap: () {
@@ -468,15 +467,23 @@ class _AccountScreenState extends State<AccountScreen> {
                                         ),
                                       ),
                                     ),
-                                  ),SizedBox(width: 10,),
-                                  Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(
-                                          color: Color(0xFFE2E2E2),
-                                          width: 1,
-                                        ),),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.mail_outline_rounded),
-                                  ),)
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Color(0xFFE2E2E2),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.mail_outline_rounded),
+                                    ),
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -504,255 +511,543 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                   ),
                 )
-              : Container(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 90,
-                        ),
-                        //User Info
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Color(0xFFF5F0F0),
-                                width: 1,
-                              ),
+              : _isLoding
+                  ? Skeletonizer(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _isLoding
-                                  ? Skeletonizer(
-                                      child: Container(
-                                        height: 55,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 12),
-                                        alignment: Alignment.bottomLeft,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: Color(0xFFEAE6E6),
-                                              width: 1,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Hello World Hello World",
-                                              style: TextStyle(
-                                                fontFamily: "Lastik-test",
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.w700,
-                                                color: APP_BLACK_COLOR,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : HeaderBar(title: "Account"),
-                              SizedBox(
-                                height: 10,
+                            //MARK: User Info
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Color(0xFFF5F0F0),
+                                    width: 1,
+                                  ),
+                                ),
                               ),
-                              //Avatar
-                              Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Stack(
+                                  HeaderBar(title: "Account"),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+
+                                  //MARK: Avatar
+                                  Row(
                                     children: [
-                                      Skeletonizer(
-                                        child: Container(
-                                          width: 80,
-                                          child: SizedBox(
+                                      Stack(
+                                        children: [
+                                          // HeaderBar(title: "Account"),
+                                          Container(
                                             width: 80,
-                                            height: 80,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              child: CachedNetworkImage(
-                                                imageUrl: _avatar,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    const AspectRatio(
-                                                  aspectRatio: 1.6,
-                                                  child: BlurHash(
-                                                    hash:
-                                                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                                  ),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                _showPicker(
+                                                    context, profileProvider);
+                                              },
+                                              child: SizedBox(
+                                                width: 80,
+                                                height: 80,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40),
+                                                  child: _avatar == ""
+                                                      ? Container(
+                                                          color: Colors.white,
+                                                          child: AspectRatio(
+                                                            aspectRatio: 1.6,
+                                                            child: BlurHash(
+                                                              hash:
+                                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : CachedNetworkImage(
+                                                          imageUrl: _avatar,
+                                                          fit: BoxFit.cover,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              const AspectRatio(
+                                                            aspectRatio: 1.6,
+                                                            child: BlurHash(
+                                                              hash:
+                                                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                                            ),
+                                                          ),
+                                                        ),
                                                 ),
                                               ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  //MARK: userinfo-public name
+                                  Text(
+                                    "_pname",
+                                    style: TextStyle(
+                                      fontFamily: "Lastik-test",
+                                      fontSize: 24,
+                                      height: 1.42,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF101010),
+                                    ),
+                                  ),
+                                  // SizedBox(
+                                  //   height: 10,
+                                  // ),
+                                  // Text(
+                                  //   "Company",
+                                  //   style: GoogleFonts.inter(
+                                  //     textStyle: TextStyle(
+                                  //       fontWeight: FontWeight.w300,
+                                  //       fontSize: 14,
+                                  //       height: 1.47,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  // MARK: userinfo-business name
+                                  Row(
+                                    children: [
+                                      if (_bname.isNotEmpty)
+                                        Icon(
+                                          Ionicons.briefcase_outline,
+                                          size: 14,
+                                          color: Color(0xFF898A8D),
+                                        ),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        "WorkHouse",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 100,
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 14,
+                                            height: 1.47,
+                                            color: APP_BLACK_COLOR,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  // MARK: userinfo-community name
+                                  Row(
+                                    children: [
+                                      if (_cname.isNotEmpty)
+                                        Icon(
+                                          Ionicons.location_outline,
+                                          size: 14,
+                                          color: Color(0xFF898A8D),
+                                        ),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        "brooklyn",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 14,
+                                            height: 1.47,
+                                            color: APP_BLACK_COLOR,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  // MARK: userinfo-website
+                                  Row(
+                                    children: [
+                                      if (true)
+                                        Icon(
+                                          Ionicons.link,
+                                          size: 14,
+                                          color: Color(0xFF898A8D),
+                                        ),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          if (await canLaunchUrl(
+                                            Uri.parse(
+                                                "https://${_website.replaceAll("https://", "")}"),
+                                          )) {
+                                            await launchUrl(
+                                              Uri.parse(
+                                                "https://${_website.replaceAll("https://", "")}",
+                                              ),
+                                            );
+                                          } else {
+                                            showAppToast(context,
+                                                "Link format is invalid");
+                                          }
+                                        },
+                                        child: Text(
+                                          _website,
+                                          style: GoogleFonts.inter(
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 14,
+                                              height: 1.47,
+                                              color: Color(0xFFAAD130),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              //userinfo-public name
-                              Skeletonizer(
-                                child: Text(
-                                  "Hello world hello world !!!",
-                                  style: TextStyle(
-                                    fontFamily: "Lastik-test",
-                                    fontSize: 24,
-                                    height: 1.42,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF101010),
+                                  SizedBox(
+                                    height: 14,
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Skeletonizer(
-                                child: Text(
-                                  "Hello world hello world Hello world hello world",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14,
-                                      height: 1.47,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              // userinfo-business name
-                              Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Hello world hello world Hello world hello world",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 100,
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          height: 1.47,
-                                          color: APP_BLACK_COLOR,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              // userinfo-community name
-                              Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Hello world hello world Hello world hello world",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          height: 1.47,
-                                          color: APP_BLACK_COLOR,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              // userinfo-website
-                              Skeletonizer(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Hello world hello world Hello world hello world",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          height: 1.47,
-                                          color: Color(0xFFAAD130),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 0,
-                              ),
-                              //Button group
-                              Skeletonizer(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context)
-                                            .pushNamed('/edit-profile');
-                                      },
-                                      child: Text(
-                                        "Edit Profile",
-                                        style: GoogleFonts.inter(
-                                          textStyle: TextStyle(
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.w300,
-                                            height: 1.6,
-                                            color: APP_MAIN_LABEL_COLOR,
+                                  //MARK: Button group
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .pushNamed('/edit-profile');
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Color(0xFFE2E2E2),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "Edit Profile",
+                                            style: GoogleFonts.inter(
+                                              textStyle: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w300,
+                                                height: 1.6,
+                                                color: APP_MAIN_LABEL_COLOR,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Color(0xFFE2E2E2),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child:
+                                              Icon(Icons.mail_outline_rounded),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                            ],
-                          ),
+                            ),
+                            //MARK: Announcement List
+                            ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  announcementProvider.myAnnouncements.length,
+                              itemBuilder: (context, index) {
+                                return UserAnnouncementCard(
+                                  id: announcementProvider
+                                      .myAnnouncements[index]["id"],
+                                  index: index,
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        Skeletonizer(
-                          child: AccountAnnouncementCardSkeleton(
-                            role: "member",
-                          ),
-                        ),
-                        //Announcement List
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount:
-                              announcementProvider.myAnnouncements.length,
-                          itemBuilder: (context, index) {
-                            return Skeletonizer(
-                              child: AccountAnnouncementCardSkeleton(
-                                role: "member",
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                        // Column(
+                        //   // crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     SizedBox(
+                        //       height: 90,
+                        //     ),
+                        //     //User Info
+                        //     Container(
+                        //       padding: EdgeInsets.symmetric(horizontal: 16),
+                        //       width: double.infinity,
+                        //       decoration: BoxDecoration(
+                        //         border: Border(
+                        //           bottom: BorderSide(
+                        //             color: Color(0xFFF5F0F0),
+                        //             width: 1,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           _isLoding
+                        //               ? Skeletonizer(
+                        //                   child: Container(
+                        //                     height: 55,
+                        //                     padding: EdgeInsets.symmetric(
+                        //                         horizontal: 12, vertical: 12),
+                        //                     alignment: Alignment.bottomLeft,
+                        //                     decoration: BoxDecoration(
+                        //                       color: Colors.white,
+                        //                       border: Border(
+                        //                         bottom: BorderSide(
+                        //                           color: Color(0xFFEAE6E6),
+                        //                           width: 1,
+                        //                         ),
+                        //                       ),
+                        //                     ),
+                        //                     child: Row(
+                        //                       crossAxisAlignment:
+                        //                           CrossAxisAlignment.center,
+                        //                       children: [
+                        //                         Text(
+                        //                           "Hello World Hello World",
+                        //                           style: TextStyle(
+                        //                             fontFamily: "Lastik-test",
+                        //                             fontSize: 24,
+                        //                             fontWeight: FontWeight.w700,
+                        //                             color: APP_BLACK_COLOR,
+                        //                           ),
+                        //                         ),
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                 )
+                        //               : HeaderBar(title: "Account"),
+                        //           SizedBox(
+                        //             height: 10,
+                        //           ),
+                        //           //Avatar
+                        //           Row(
+                        //             children: [
+                        //               Stack(
+                        //                 children: [
+                        //                   Skeletonizer(
+                        //                     child: Container(
+                        //                       width: 80,
+                        //                       child: SizedBox(
+                        //                         width: 80,
+                        //                         height: 80,
+                        //                         child: ClipRRect(
+                        //                           borderRadius:
+                        //                               BorderRadius.circular(40),
+                        //                           child: CachedNetworkImage(
+                        //                             imageUrl: _avatar,
+                        //                             fit: BoxFit.cover,
+                        //                             placeholder: (context, url) =>
+                        //                                 const AspectRatio(
+                        //                               aspectRatio: 1.6,
+                        //                               child: BlurHash(
+                        //                                 hash:
+                        //                                     'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                        //                               ),
+                        //                             ),
+                        //                           ),
+                        //                         ),
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //           ),
+                        //           SizedBox(
+                        //             height: 14,
+                        //           ),
+                        //           //userinfo-public name
+                        //           Skeletonizer(
+                        //             child: Text(
+                        //               "Hello world hello world !!!",
+                        //               style: TextStyle(
+                        //                 fontFamily: "Lastik-test",
+                        //                 fontSize: 24,
+                        //                 height: 1.42,
+                        //                 fontWeight: FontWeight.w700,
+                        //                 color: Color(0xFF101010),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 10,
+                        //           ),
+                        //           Skeletonizer(
+                        //             child: Text(
+                        //               "Hello world hello world Hello world hello world",
+                        //               style: GoogleFonts.inter(
+                        //                 textStyle: TextStyle(
+                        //                   fontWeight: FontWeight.w300,
+                        //                   fontSize: 14,
+                        //                   height: 1.47,
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 6,
+                        //           ),
+                        //           // userinfo-business name
+                        //           Skeletonizer(
+                        //             child: Row(
+                        //               children: [
+                        //                 Text(
+                        //                   "Hello world hello world Hello world hello world",
+                        //                   overflow: TextOverflow.ellipsis,
+                        //                   maxLines: 100,
+                        //                   style: GoogleFonts.inter(
+                        //                     textStyle: TextStyle(
+                        //                       fontWeight: FontWeight.w300,
+                        //                       fontSize: 14,
+                        //                       height: 1.47,
+                        //                       color: APP_BLACK_COLOR,
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 6,
+                        //           ),
+                        //           // userinfo-community name
+                        //           Skeletonizer(
+                        //             child: Row(
+                        //               children: [
+                        //                 Text(
+                        //                   "Hello world hello world Hello world hello world",
+                        //                   style: GoogleFonts.inter(
+                        //                     textStyle: TextStyle(
+                        //                       fontWeight: FontWeight.w300,
+                        //                       fontSize: 14,
+                        //                       height: 1.47,
+                        //                       color: APP_BLACK_COLOR,
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 6,
+                        //           ),
+                        //           // userinfo-website
+                        //           Skeletonizer(
+                        //             child: Row(
+                        //               children: [
+                        //                 Text(
+                        //                   "Hello world hello world Hello world hello world",
+                        //                   style: GoogleFonts.inter(
+                        //                     textStyle: TextStyle(
+                        //                       fontWeight: FontWeight.w300,
+                        //                       fontSize: 14,
+                        //                       height: 1.47,
+                        //                       color: Color(0xFFAAD130),
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 0,
+                        //           ),
+                        //           //Button group
+                        //           Skeletonizer(
+                        //             child: Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceBetween,
+                        //               children: [
+                        //                 GestureDetector(
+                        //                   onTap: () {
+                        //                     Navigator.of(context)
+                        //                         .pushNamed('/edit-profile');
+                        //                   },
+                        //                   child: Text(
+                        //                     "Edit Profile",
+                        //                     style: GoogleFonts.inter(
+                        //                       textStyle: TextStyle(
+                        //                         fontSize: 36,
+                        //                         fontWeight: FontWeight.w300,
+                        //                         height: 1.6,
+                        //                         color: APP_MAIN_LABEL_COLOR,
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 16,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //     Skeletonizer(
+                        //       child: AccountAnnouncementCardSkeleton(
+                        //         role: "member",
+                        //       ),
+                        //     ),
+                        //     //Announcement List
+                        //     ListView.builder(
+                        //       padding: EdgeInsets.zero,
+                        //       shrinkWrap: true,
+                        //       physics: NeverScrollableScrollPhysics(),
+                        //       itemCount:
+                        //           announcementProvider.myAnnouncements.length,
+                        //       itemBuilder: (context, index) {
+                        //         return Skeletonizer(
+                        //           child: AccountAnnouncementCardSkeleton(
+                        //             role: "member",
+                        //           ),
+                        //         );
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
+                      ),
+                    )
+                  : Container();
         },
       ),
       bottomNavigationBar: AppBottomNavbar(

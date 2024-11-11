@@ -21,7 +21,6 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -108,106 +107,97 @@ class _AnnouncementCreateScreenState extends State<AnnouncementCreateScreen> {
                   height: 14,
                 ),
                 // MARK: Benefits
-                Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFD8ECE4),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: DefaultTextStyle(
-                                    style: GoogleFonts.inter(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300,
-                                        height: 1.6,
-                                        color: APP_BLACK_COLOR,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Targeted and focused on your local community.",
-                                    ),
-                                  ),
-                                ),
-                              ],
+                Column(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 450,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFD8ECE4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DefaultTextStyle(
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                height: 1.6,
+                                color: APP_BLACK_COLOR,
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: DefaultTextStyle(
-                                    style: GoogleFonts.inter(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300,
-                                        height: 1.6,
-                                        color: APP_BLACK_COLOR,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Announcement sent to all members of the community.",
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              "Targeted and focused to your local community",
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: DefaultTextStyle(
-                                    style: GoogleFonts.inter(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300,
-                                        height: 1.6,
-                                        color: APP_BLACK_COLOR,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "One time low cost of \$2 for each announcement.",
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 450,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFD8ECE4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DefaultTextStyle(
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                height: 1.6,
+                                color: APP_BLACK_COLOR,
+                              ),
+                            ),
+                            child: Text(
+                              "Sent to all members of the community",
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 450,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFD8ECE4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DefaultTextStyle(
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                height: 1.6,
+                                color: APP_BLACK_COLOR,
+                              ),
+                            ),
+                            child: Text(
+                              "One time fee of \$2 for each announcement.",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 12,
                 ),
                 // MARK: Create announcement button
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 48,
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
-                        APP_BLACK_COLOR,
+                        Color(0xFF014E53),
                       ),
                       shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

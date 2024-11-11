@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +18,7 @@ import 'package:workhouse/components/app_dropdown.dart';
 import 'package:workhouse/components/app_input.dart';
 import 'package:workhouse/utils/announcement_provider.dart';
 import 'package:workhouse/utils/constant.dart';
+import 'package:workhouse/utils/profile_provider.dart';
 
 /**
  * MARK: Edit Profile Screen UI Widget Class
@@ -30,6 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String fullname = "";
   String phonenumber = "";
   String businessName = "";
+  String _avatar = "";
   String bio = "";
   String website = "";
   String publicName = "";
@@ -37,8 +43,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String validateText = "";
   String userID = "";
   bool isLoading = false;
+  final ImagePicker _picker = ImagePicker();
   late SharedPreferences prefs;
   late SupabaseClient supabase;
+  String prefixURL =
+      "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/";
 
   @override
   void initState() {
@@ -55,6 +64,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
     supabase = Supabase.instance.client;
     prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _avatar = prefixURL + prefs.getString("avatar")!;
+    });
+
     userID = prefs.getString("userID")!;
     final userData =
         await supabase.from("members").select().eq("id", userID).single();
@@ -108,8 +121,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void _pickImage(ImageSource source, ProfileProvider profileProvider) async {
+    prefs = await SharedPreferences.getInstance();
+    final pickedFile = await _picker.pickImage(source: source);
+    _showProgressModal(context);
+    supabase = Supabase.instance.client;
+    if (pickedFile != null) {
+      final image = File(pickedFile.path);
+      final String fullPath = await supabase.storage.from('avatars').upload(
+            "${DateTime.now().microsecondsSinceEpoch}",
+            image,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+          );
+
+      await supabase.from('members').update(
+        {"avatar_url": fullPath},
+      ).eq("id", prefs.getString("userID")!);
+      // print("donwload url:\n$fullPath");
+      profileProvider.avatar = fullPath;
+      prefs.setString("avatar", fullPath);
+      setState(() {
+        _avatar = prefixURL + fullPath;
+      });
+      Navigator.of(context).pop();
+    } else {
+      print('No image selected.');
+    }
+  }
+
+  void _showPicker(context, profileProvider) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: Icon(Icons.photo_library),
+                  title: Text('Photo Library'),
+                  onTap: () {
+                    _pickImage(ImageSource.gallery, profileProvider);
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera, profileProvider);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context);
+    if (profileProvider.avatar != "") {
+      _avatar = prefixURL + profileProvider.avatar;
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -167,17 +242,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               width: 80,
                               child: GestureDetector(
                                 onTap: () {
-                                  // Handle onTap action here if needed
+                                  _showPicker(context, profileProvider);
                                 },
                                 child: SizedBox(
                                   width: 80,
                                   height: 80,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(40),
-                                    child: Image.asset(
-                                      'assets/images/search.png', // Replace with the path to your static image
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: _avatar == ""
+                                        ? Container(
+                                            color: Colors.white,
+                                            child: AspectRatio(
+                                              aspectRatio: 1.6,
+                                              child: BlurHash(
+                                                hash:
+                                                    'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                              ),
+                                            ),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: _avatar,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                const AspectRatio(
+                                              aspectRatio: 1.6,
+                                              child: BlurHash(
+                                                hash:
+                                                    'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -185,6 +279,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ],
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -596,25 +693,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                         ),
-                      ),Container(
-                              width: 80,
-                              child: GestureDetector(
-                                onTap: () {
-                                  // Handle onTap action here if needed
-                                },
-                                child: SizedBox(
-                                  width: 80,
-                                  height: 80,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: Image.asset(
-                                      'assets/images/search.png', // Replace with the path to your static image
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
+                      ),
+                      Container(
+                        width: 80,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Handle onTap action here if needed
+                          },
+                          child: SizedBox(
+                            width: 80,
+                            height: 80,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(40),
+                              child: Image.asset(
+                                'assets/images/search.png', // Replace with the path to your static image
+                                fit: BoxFit.cover,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

@@ -131,14 +131,14 @@ class _AppDropdownState extends State<AppDropdown> {
                                             horizontal: 24),
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? Color(0xFFEDFDF4)
+                                              ? Color(0xFFDEE0E3)
                                                   .withOpacity(0.39)
                                               : Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           border: Border(
                                             bottom: BorderSide(
-                                              color: Color(0xFFF2F2F2),
+                                              color: Color(0xFFDEE0E3),
                                               width: 1,
                                             ),
                                           ),
@@ -148,14 +148,16 @@ class _AppDropdownState extends State<AppDropdown> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(option),
-                                          //  SizedBox(width: 16),
+                                            //  SizedBox(width: 16),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Icon(
                                                 Icons.check_circle,
                                                 color: isSelected
                                                     ? Color(0xFF014E53)
-                                                    : Colors.grey.withOpacity(0),
+                                                    : Colors.grey
+                                                        .withOpacity(0),
                                                 size: 35,
                                               ),
                                             ),

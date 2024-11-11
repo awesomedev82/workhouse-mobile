@@ -50,6 +50,7 @@ class _AppControlInputState extends State<AppControlInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          height: 44,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -60,6 +61,7 @@ class _AppControlInputState extends State<AppControlInput> {
               // Prefix icon with background color
               if (widget.prefix != null)
                 Container(
+                  height: 44,
                   decoration: BoxDecoration(
                     color: Color(0xFFE3FAFF), // Light green background
                     borderRadius: BorderRadius.only(
@@ -67,15 +69,14 @@ class _AppControlInputState extends State<AppControlInput> {
                       bottomLeft: Radius.circular(12),
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  // padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10.0, top: 18, bottom: 18),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         SvgPicture.asset(
                           "assets/images/w.svg",
-                          height: 15,
+                          //height: 15,
                         ),
                         SizedBox(width: 4), // Space between icon and text
                         Text(
@@ -118,18 +119,17 @@ class _AppControlInputState extends State<AppControlInput> {
                     ),
                   ),
                   decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    hintStyle: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF7D7E83),
+                      hintText: widget.hintText,
+                      hintStyle: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Color(0xFF7D7E83),
+                        ),
                       ),
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  constraints: BoxConstraints(maxHeight: widget.maxHeight)
-                  ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      constraints: BoxConstraints(maxHeight: widget.maxHeight)),
                   onChanged: (value) {
                     setState(() {
                       isTyping = value.isNotEmpty;

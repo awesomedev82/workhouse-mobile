@@ -590,6 +590,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
             //     ],
             //   ),
             // ),
+       
           ],
         ),
       ),
