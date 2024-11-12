@@ -337,7 +337,7 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
                                 ),
                                 maxLines: 4, // Limit to 3 lines
                                 overflow: TextOverflow.ellipsis,
-                              ),
+                            ),
                             ),
                           ),
 

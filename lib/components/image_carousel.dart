@@ -116,22 +116,22 @@ class _ImageCarouselState extends State<ImageCarousel> {
           ],
         ),
 
-        ///if (_current == 2 || _current == 5)
-        Positioned(
-          top: 20,
-          right: 33,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-            decoration: BoxDecoration(
-              color: Color(0xFFAAD130),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Text(
-              'Ad',
-              style: TextStyle(color: Colors.white, fontSize: 12),
+        if (_current == 2 || _current == 5)
+          Positioned(
+            top: 20,
+            right: 33,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              decoration: BoxDecoration(
+                color: Color(0xFFAAD130),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                'Ad',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
           ),
-        ),
         // Positioned(
         //   bottom: 40,
         //   left: 40,
