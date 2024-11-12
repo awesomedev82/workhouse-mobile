@@ -80,15 +80,16 @@ class _ImageCarouselState extends State<ImageCarousel> {
                     );
                   },
                   child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     clipBehavior: Clip
                         .hardEdge, // Ensures rounded corners apply to the SVG image
                     child: SvgPicture.asset(
                       card['image']!,
                       fit: BoxFit.cover,
-                      width: double.infinity,
+                      width: 50,
                       height: double.infinity,
                     ),
                   ),
