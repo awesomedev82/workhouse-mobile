@@ -330,11 +330,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                   fontSize: 24,
                                   height: 1.42,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF101010),
+                                  color: Color(0xFF14151A),
                                 ),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Text(
                                 _bio,
@@ -348,17 +348,14 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: 6,
+                                height: 13,
                               ),
                               // MARK: userinfo-business name
                               Row(
                                 children: [
                                   if (_bname.isNotEmpty)
-                                    Icon(
-                                      Ionicons.briefcase_outline,
-                                      size: 24,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset(
+                                        "assets/images/breifcase.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),
@@ -384,11 +381,8 @@ class _AccountScreenState extends State<AccountScreen> {
                               Row(
                                 children: [
                                   if (_cname.isNotEmpty)
-                                    Icon(
-                                      Ionicons.location_outline,
-                                      size: 24,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset(
+                                        "assets/images/location.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),
@@ -412,11 +406,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Row(
                                 children: [
                                   if (true)
-                                    Icon(
-                                      Ionicons.link,
-                                      size: 24,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset("assets/images/link.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),

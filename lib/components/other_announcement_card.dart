@@ -287,6 +287,12 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.otherAnnouncements;
+    String truncateText(String text, int maxChars) {
+      if (text.length > maxChars) {
+        return text.substring(0, maxChars) + '...';
+      }
+      return text;
+    }
 
     return isLoading == false
         ? Container(
@@ -309,38 +315,52 @@ class _OtherAnnouncementCardState extends State<OtherAnnouncementCard> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        // width: MediaQuery.of(context).size.width,
-                        height: 24,
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            _showDeleteBottomSheet(context);
-                          },
-                          child: Icon(
-                            Ionicons.ellipsis_horizontal,
-                            size: 24,
+                      SizedBox(
+                        height: 19,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Description text with truncation
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                truncateText(
+                                    announcements[widget.idx]["description"],
+                                    120), // Adjust maxChars
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  height: 1.6,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF17181A),
+                                ),
+                                maxLines: 4, // Limit to 3 lines
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          SizedBox(width: 8), // Space between text and icon
+
+                          // Icon button aligned with the first line of text
+                          Container(
+                            padding: EdgeInsets.only(
+                                top: 0), // Adjust for top alignment with text
+                            child: GestureDetector(
+                              onTap: () {
+                                _showDeleteBottomSheet(context);
+                              },
+                              child: Icon(
+                                Ionicons.ellipsis_horizontal,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
-                        height: 32,
-                      ),
-                      //MARK:
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          announcements[widget.idx]["description"],
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            height: 1.6,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
+                        height: 15,
                       ),
                       Container(
                         child: ClipRRect(

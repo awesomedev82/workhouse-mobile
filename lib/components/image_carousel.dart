@@ -132,14 +132,14 @@ class _ImageCarouselState extends State<ImageCarousel> {
             ),
           ),
         ),
-        Positioned(
-          bottom: 40,
-          left: 40,
-          child: SvgPicture.asset(
-            "assets/images/logo.svg",
-            height: 25,
-          ),
-        ),
+        // Positioned(
+        //   bottom: 40,
+        //   left: 40,
+        //   child: SvgPicture.asset(
+        //     "assets/images/logo.svg",
+        //     height: 25,
+        //   ),
+        // ),
       ],
     );
   }

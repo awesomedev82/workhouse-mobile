@@ -359,15 +359,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         SizedBox(
                           height: 4,
                         ),
-                        AppControlInput(
-                          defaultText: businessName,
-                          hintText: "",
-                          validate: (val) {
-                            setState(() {
-                              businessName = val;
-                            });
-                          },
-                          inputType: TextInputType.text,
+                        SizedBox(
+                          child: AppControlInput(
+                            defaultText: businessName,
+                            hintText: "",
+                            validate: (val) {
+                              setState(() {
+                                businessName = val;
+                              });
+                            },
+                            inputType: TextInputType.text,
+                          ),
                         ),
                         SizedBox(
                           height: 16,

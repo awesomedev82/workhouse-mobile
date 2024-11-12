@@ -165,28 +165,33 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
         builder: (context, announcementProvider, child) {
           return _isLoding == false
               ? Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2,
+                  ),
                   child: SingleChildScrollView(
                     child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 16,
+                          height: 30,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 16),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 20),
-                            alignment: Alignment.centerLeft,
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 25,
+                            vertical: 15,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
                             child: Container(
-                              width: 24,
-                              height: 24,
-                              child: SvgPicture.asset(
-                                  "assets/images/arrow-left.svg"),
-                            ),
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFFE9EAEC)),
+                                child: SvgPicture.asset(
+                                    "assets/images/arrow-left.svg")),
                           ),
                         ),
                         //MARK: User Info
@@ -259,34 +264,32 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                                   fontSize: 24,
                                   height: 1.42,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF101010),
+                                  color: Color(0xFF14151A),
                                 ),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Text(
                                 _bio,
                                 style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 14,
                                     height: 1.47,
+                                    color: Color(0xFF14151A),
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                height: 6,
+                                height: 13,
                               ),
                               // MARK: userinfo-business name
                               Row(
                                 children: [
                                   if (_bname.isNotEmpty)
-                                    Icon(
-                                      Ionicons.briefcase_outline,
-                                      size: 14,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset(
+                                        "assets/images/breifcase.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),
@@ -296,10 +299,10 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                                     maxLines: 100,
                                     style: GoogleFonts.inter(
                                       textStyle: TextStyle(
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                         height: 1.47,
-                                        color: APP_BLACK_COLOR,
+                                        color: Color(0xFF14151A),
                                       ),
                                     ),
                                   ),
@@ -312,11 +315,8 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                               Row(
                                 children: [
                                   if (_cname.isNotEmpty)
-                                    Icon(
-                                      Ionicons.location_outline,
-                                      size: 14,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset(
+                                        "assets/images/location.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),
@@ -324,10 +324,10 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                                     _cname,
                                     style: GoogleFonts.inter(
                                       textStyle: TextStyle(
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                         height: 1.47,
-                                        color: APP_BLACK_COLOR,
+                                        color: Color(0xFF14151A),
                                       ),
                                     ),
                                   ),
@@ -340,11 +340,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                               Row(
                                 children: [
                                   if (true)
-                                    Icon(
-                                      Ionicons.link,
-                                      size: 14,
-                                      color: Color(0xFF898A8D),
-                                    ),
+                                    SvgPicture.asset("assets/images/link.svg"),
                                   SizedBox(
                                     width: 6,
                                   ),
@@ -368,10 +364,10 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                                       _website,
                                       style: GoogleFonts.inter(
                                         textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                           height: 1.47,
-                                          color: Color(0xFFAAD130),
+                                          color: Color(0xFF014E53),
                                         ),
                                       ),
                                     ),
@@ -463,21 +459,23 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
                           height: 16,
                         ),
                         Skeleton.ignore(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 16),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 20),
-                              alignment: Alignment.centerLeft,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 25,
+                              vertical: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
                               child: Container(
-                                width: 24,
-                                height: 24,
-                                child: SvgPicture.asset(
-                                    "assets/images/arrow-left.svg"),
-                              ),
+                                  padding: const EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xFFE9EAEC)),
+                                  child: SvgPicture.asset(
+                                      "assets/images/arrow-left.svg")),
                             ),
                           ),
                         ),
