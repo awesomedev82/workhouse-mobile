@@ -440,10 +440,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                       _website,
                                       style: GoogleFonts.inter(
                                         textStyle: TextStyle(
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                           height: 1.47,
-                                          color: Color(0xFFAAD130),
+                                          color: Color(0xFF014E53),
                                         ),
                                       ),
                                     ),
@@ -458,7 +458,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      getData(); // Call getData separately
+                                      //   getData(); // Call getData separately
 // developer.log('Called getData');
 
                                       Navigator.of(context)

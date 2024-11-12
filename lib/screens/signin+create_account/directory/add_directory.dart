@@ -30,7 +30,7 @@ class AddDirectory extends StatefulWidget {
 class _AddDirectoryState extends State<AddDirectory> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
- String fullname = "";
+  String fullname = "";
   String businessName = "";
   String bio = "";
   String website = "";
@@ -138,7 +138,7 @@ class _AddDirectoryState extends State<AddDirectory> {
           "public_name": publicName,
           "avatar_url": imgURL,
           "website": website,
-           "bio": bio,
+          "bio": bio,
           "industry": industry,
         }).eq("id", uid);
         prefs.setString("avatar", imgURL);
@@ -229,7 +229,6 @@ class _AddDirectoryState extends State<AddDirectory> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
                     DefaultTextStyle(
                       style: TextStyle(
                         fontFamily: "Lastik-test",
@@ -260,54 +259,58 @@ class _AddDirectoryState extends State<AddDirectory> {
                     SizedBox(
                       height: 16,
                     ),
-Row(
-  children: [
-    GestureDetector(
-      onTap: () {
-        _showPicker(context);
-      },
-      child: CircleAvatar(
-        radius: 30,
-        backgroundColor: Colors.grey[200],
-        child: _image != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image.file(
-                  _image!,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: SvgPicture.asset("assets/images/profile.svg"),
-              ),
-      ),
-    ),
-    SizedBox(width: 10), // Space between avatar and message
-    if (_image == null) // Show message only if no profile image
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          "Add Profile Image",
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF17181A),
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-      ),
-  ],
-),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showPicker(context);
+                          },
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey[200],
+                            child: _image != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.file(
+                                      _image!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: SvgPicture.asset(
+                                        "assets/images/profile.svg"),
+                                  ),
+                          ),
+                        ),
+                        SizedBox(width: 10), // Space between avatar and message
+                        if (_image ==
+                            null) // Show message only if no profile image
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey.withOpacity(0.5)),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "Add Profile Image",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF17181A),
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
 
                     //MARK: Avatar Upload
                     // Row(
@@ -333,7 +336,7 @@ Row(
                     //                 decoration: BoxDecoration(
                     //                     color: Colors.grey[200],
                     //                     borderRadius: BorderRadius.circular(50)),
-                                    
+
                     //                 child: SvgPicture.asset("assets/images/profile.svg")
                     //               ),
                     //       ),
@@ -352,13 +355,12 @@ Row(
                     //           height: 1.6,
                     //               fontWeight: FontWeight.w300,
                     //             ),
-                          
+
                     //     ),
-                       
-                      
+
                     //   ],
                     // ),
-              
+
                     SizedBox(
                       height: 16,
                     ),
@@ -538,7 +540,7 @@ Row(
                     //   initialValue: industry,
                     //   onItemSelected: _onIndustrySelected,
                     // ),
-                             Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // MARK: Full Name
@@ -570,7 +572,7 @@ Row(
                           height: 16,
                         ),
                         // MARK: Phone Number
-                     
+
                         // MARK: Business Name
                         Text(
                           "Business Name",
@@ -614,7 +616,8 @@ Row(
                         SizedBox(
                           height: 4,
                         ),
-                        AppControlInput(maxHeight: 100,
+                        AppControlInput(
+                          maxHeight: 100,
                           defaultText: bio,
                           hintText: "Tell us a bit about yourself or business",
                           validate: (val) {
@@ -692,8 +695,7 @@ Row(
                         ),
                         AppControlInput(
                           defaultText: publicName,
-                          hintText:
-                              "Public Name",
+                          hintText: "Public Name",
                           validate: (val) {
                             setState(() {
                               publicName = val;
@@ -815,14 +817,13 @@ Row(
                             ),
                           ],
                         ),
-                       
+
                         SizedBox(
                           height: 16,
                         ),
-                      
                       ],
                     ),
-           
+
                     SizedBox(
                       height: 16,
                     ),

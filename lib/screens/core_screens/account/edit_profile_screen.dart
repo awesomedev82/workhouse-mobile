@@ -78,6 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       phonenumber = userData["phone"] ?? "";
       businessName = userData["business_name"];
       publicName = userData["public_name"];
+      // _avatar = userData["avatar_url"];
       website = userData["website"];
       industry = userData["industry"] ?? "Architecture";
       bio = userData["bio"] ?? "";
@@ -103,6 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "website": website,
       "public_name": publicName,
       "business_name": businessName,
+      "avatar_url": _avatar,
       "bio": bio,
       "industry": industry,
     }).eq("id", userID);
