@@ -80,12 +80,12 @@ class _ImageCarouselState extends State<ImageCarousel> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6),
+                    padding: EdgeInsets.symmetric(horizontal: 3),
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(card['image']!),
-                          fit: BoxFit.cover,
+                          // fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -115,22 +115,23 @@ class _ImageCarouselState extends State<ImageCarousel> {
             ),
           ],
         ),
-        if (_current == 2 || _current == 5)
-          Positioned(
-            top: 10,
-            right: 30,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-              decoration: BoxDecoration(
-                color: Color(0xFFAAD130),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Text(
-                'Ad',
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
+
+        ///if (_current == 2 || _current == 5)
+        Positioned(
+          top: 20,
+          right: 33,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: BoxDecoration(
+              color: Color(0xFFAAD130),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Text(
+              'Ad',
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
+        ),
         Positioned(
           bottom: 40,
           left: 40,
