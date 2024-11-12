@@ -13,32 +13,32 @@ class ImageCarousel extends StatefulWidget {
 class _ImageCarouselState extends State<ImageCarousel> {
   final List<Map<String, String>> imageCards = [
     {
-      'image': 'assets/images/carousel-1.png',
+      'image': 'assets/images/card1.svg',
       'url': 'https://digitalpark.studio/',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/carousel-2.png',
+      'image': 'assets/images/card2.svg',
       'url': 'https://tally.so/r/w5qAWd',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/carousel-3.png',
+      'image': 'assets/images/card3.svg',
       'url': 'https://tally.so/r/woVjXV',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/carousel-1.png',
+      'image': 'assets/images/card1.svg',
       'url': 'https://digitalpark.studio/',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/carousel-2.png',
+      'image': 'assets/images/card2.svg',
       'url': 'https://tally.so/r/w5qAWd',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/carousel-3.png',
+      'image': 'assets/images/card3.svg',
       'url': 'https://tally.so/r/woVjXV',
       'title': 'WorkHouse'
     },
@@ -80,15 +80,16 @@ class _ImageCarouselState extends State<ImageCarousel> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(card['image']!),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    clipBehavior: Clip
+                        .hardEdge, // Ensures rounded corners apply to the SVG image
+                    child: SvgPicture.asset(
+                      card['image']!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
                   ),
                 );
@@ -115,21 +116,22 @@ class _ImageCarouselState extends State<ImageCarousel> {
             ),
           ],
         ),
-        Positioned(
-          top: 20,
-          right: 40,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            decoration: BoxDecoration(
-              color: Color(0xFFAAD130),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Text(
-              'Ad',
-              style: TextStyle(color: Colors.white, fontSize: 15),
+        if (_current == 2 || _current == 5)
+          Positioned(
+            top: 10,
+            right: 30,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+              decoration: BoxDecoration(
+                color: Color(0xFFAAD130),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                'Ad',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
           ),
-        ),
         Positioned(
           bottom: 40,
           left: 40,

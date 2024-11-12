@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -46,6 +47,7 @@ class _AccountScreenState extends State<AccountScreen> {
   String _bio = "";
   String _website = "";
   String _cname = "";
+  late String _email;
   bool _isLoding = true;
   List<dynamic> announcements = <dynamic>[];
 
@@ -91,6 +93,7 @@ class _AccountScreenState extends State<AccountScreen> {
       _pname = userdata[0]["public_name"] ?? "";
       _website = userdata[0]["website"] ?? "";
       _cname = userdata[0]["community_name"] ?? "";
+      _email = userdata[0]["email"] ?? "";
       _isLoding = false;
     });
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -217,6 +220,19 @@ class _AccountScreenState extends State<AccountScreen> {
     Navigator.of(context).pop();
   }
 
+  void _launchEmail(String email) async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      print('Could not launch $emailUri');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
@@ -324,9 +340,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                 _bio,
                                 style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 14,
                                     height: 1.47,
+                                    color: Color(0xFF14151A),
                                   ),
                                 ),
                               ),
@@ -339,7 +356,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   if (_bname.isNotEmpty)
                                     Icon(
                                       Ionicons.briefcase_outline,
-                                      size: 14,
+                                      size: 24,
                                       color: Color(0xFF898A8D),
                                     ),
                                   SizedBox(
@@ -351,10 +368,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                     maxLines: 100,
                                     style: GoogleFonts.inter(
                                       textStyle: TextStyle(
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                         height: 1.47,
-                                        color: APP_BLACK_COLOR,
+                                        color: Color(0xFF14151A),
                                       ),
                                     ),
                                   ),
@@ -369,7 +386,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   if (_cname.isNotEmpty)
                                     Icon(
                                       Ionicons.location_outline,
-                                      size: 14,
+                                      size: 24,
                                       color: Color(0xFF898A8D),
                                     ),
                                   SizedBox(
@@ -379,10 +396,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                     _cname,
                                     style: GoogleFonts.inter(
                                       textStyle: TextStyle(
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                         height: 1.47,
-                                        color: APP_BLACK_COLOR,
+                                        color: Color(0xFF14151A),
                                       ),
                                     ),
                                   ),
@@ -397,7 +414,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   if (true)
                                     Icon(
                                       Ionicons.link,
-                                      size: 14,
+                                      size: 24,
                                       color: Color(0xFF898A8D),
                                     ),
                                   SizedBox(
@@ -441,6 +458,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      getData(); // Call getData separately
+// developer.log('Called getData');
+
                                       Navigator.of(context)
                                           .pushNamed('/edit-profile');
                                     },
@@ -460,7 +480,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                         style: GoogleFonts.inter(
                                           textStyle: TextStyle(
                                             fontSize: 14,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w400,
                                             height: 1.6,
                                             color: APP_MAIN_LABEL_COLOR,
                                           ),
@@ -479,9 +499,14 @@ class _AccountScreenState extends State<AccountScreen> {
                                         width: 1,
                                       ),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.mail_outline_rounded),
+                                    child: InkWell(
+                                      onTap: () => _launchEmail(
+                                          _email), // replace with actual email
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SvgPicture.asset(
+                                            "assets/images/mail.svg"),
+                                      ),
                                     ),
                                   )
                                 ],
@@ -628,7 +653,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       if (_bname.isNotEmpty)
                                         Icon(
                                           Ionicons.briefcase_outline,
-                                          size: 14,
+                                          size: 24,
                                           color: Color(0xFF898A8D),
                                         ),
                                       SizedBox(
@@ -658,7 +683,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       if (_cname.isNotEmpty)
                                         Icon(
                                           Ionicons.location_outline,
-                                          size: 14,
+                                          size: 24,
                                           color: Color(0xFF898A8D),
                                         ),
                                       SizedBox(
@@ -686,7 +711,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       if (true)
                                         Icon(
                                           Ionicons.link,
-                                          size: 14,
+                                          size: 24,
                                           color: Color(0xFF898A8D),
                                         ),
                                       SizedBox(
