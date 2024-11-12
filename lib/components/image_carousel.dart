@@ -13,32 +13,32 @@ class ImageCarousel extends StatefulWidget {
 class _ImageCarouselState extends State<ImageCarousel> {
   final List<Map<String, String>> imageCards = [
     {
-      'image': 'assets/images/card1.svg',
+      'image': 'assets/images/carousel-4.png',
       'url': 'https://digitalpark.studio/',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/card2.svg',
+      'image': 'assets/images/carousel-5.png',
       'url': 'https://tally.so/r/w5qAWd',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/card3.svg',
+      'image': 'assets/images/carousel-6.png',
       'url': 'https://tally.so/r/woVjXV',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/card1.svg',
+      'image': 'assets/images/carousel-4.png',
       'url': 'https://digitalpark.studio/',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/card2.svg',
+      'image': 'assets/images/carousel-5.png',
       'url': 'https://tally.so/r/w5qAWd',
       'title': 'WorkHouse'
     },
     {
-      'image': 'assets/images/card3.svg',
+      'image': 'assets/images/carousel-6.png',
       'url': 'https://tally.so/r/woVjXV',
       'title': 'WorkHouse'
     },
@@ -80,17 +80,15 @@ class _ImageCarouselState extends State<ImageCarousel> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    clipBehavior: Clip
-                        .hardEdge, // Ensures rounded corners apply to the SVG image
-                    child: SvgPicture.asset(
-                      card['image']!,
-                      fit: BoxFit.cover,
-                      width: 50,
-                      height: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 6),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(card['image']!),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 );
