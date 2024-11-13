@@ -260,7 +260,6 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         // Send the upload request
         final uploadResponse = await uploadRequest.send();
         if (uploadResponse.statusCode == 204) {
-        
           return file.path;
         } else {
           print(
@@ -303,6 +302,9 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         });
       }
     }
+    supabase = Supabase.instance.client;
+
+    log("dataaaaa ${data}");
 
     // Insert into your database
     try {
@@ -316,6 +318,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
       Navigator.pushNamed(context, '/community');
     } catch (e) {
       Navigator.of(context).pop();
+      log("error in supabase upload ${e.toString()}");
       showAppToast(context, "Error occurred, please try again!");
     }
   }
