@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -144,38 +146,165 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
     });
   }
 
-  // MARK: Continue
-  void createAnnouncement() async {
-    // Navigator.of(context).pushNamed('/share-payment');
+  // Future<String> uploadToDigitalOcean(File file) async {
+  //   print("file.pathsdsdsdsdsdsdds");
+  //   print(file.path);
+  //   var headers = {'Content-Type': 'application/json'};
+  //   var request = http.Request('POST',
+  //       Uri.parse('https://admin-workhouse-jade.vercel.app/api/upload'));
+  //   request.body = json.encode({
+  //     "fileName": "c0e2d701-8f76-4b5d-946d-77a040cefb8a2231632587207869156.jpg"
+  //   });
+  //   request.headers.addAll(headers);
+  //   http.StreamedResponse response1 = await request.send();
+  //   print("log${response1}");
 
+  //   log(await response1.stream.bytesToString());
+
+  //   // Step 1: Request the pre-signed URL from your backend
+  //   // final body = {"fileName": file.path.split('/').last};
+  //   // print("BODYYYYYYYY${body}");
+  //   // final response = await http.post(
+  //   //   Uri.parse('https://admin-workhouse-jade.vercel.app/api/upload'),
+  //   //   headers: {"Content-Type": "application/json"},
+  //   //   body: body.toString(),
+  //   // );
+
+  //   print("RESPONSEEE ${response1.statusCode}");
+  //   print("RESPONSEEE ${response1.request}");
+
+  //   if (response1.statusCode >= 200 && response1.statusCode < 300) {
+  //     final Map<String, dynamic> responseData = jsonDecode(request1.body);
+  //     final url = responseData['url'];
+  //     final fields = responseData['fields'];
+  //     log('Pre-signed URL: $url');
+  //     log('Upload fields: $fields');
+
+  //     // Step 2: Create a Multipart request to upload the file
+  //     final request = http.MultipartRequest('POST', Uri.parse(url));
+  //     fields.forEach((key, value) {
+  //       request.fields[key] = value;
+  //     });
+
+  //     // Add the file to the request
+  //     request.files.add(await http.MultipartFile.fromPath(
+  //       'file',
+  //       file.path,
+  //       contentType: MediaType.parse(
+  //           lookupMimeType(file.path) ?? 'application/octet-stream'),
+  //     ));
+
+  //     // Send the request
+  //     final uploadResponse = await request.send();
+  //     print('Uploadingggggggggg ${uploadResponse}');
+
+  //     if (uploadResponse.statusCode == 204) {
+  //       print('File uploaded successfully!');
+  //       print('File path: ${file.path}');
+  //       return file.path;
+  //     } else {
+  //       print(
+  //           'Failed to upload file. Status code: ${uploadResponse.statusCode}');
+  //       return "";
+  //     }
+  //   } else {
+  //     print('Failed to get pre-signed URL: ${response.statusCode}');
+  //     return "";
+  //   }
+  // }
+  Future<String> uploadToDigitalOcean(File file) async {
+    try {
+      // Step 1: Request the pre-signed URL from your backend
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request(
+        'POST',
+        Uri.parse('https://admin-workhouse-jade.vercel.app/api/upload'),
+      );
+
+      // Sending file name in request body
+      request.body = json.encode({
+        "fileName":
+            file.path.split('/').last, // get the file name from the file path
+      });
+      request.headers.addAll(headers);
+
+      // Send the request and receive the pre-signed URL response
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Parse the JSON response
+        final Map<String, dynamic> responseData =
+            jsonDecode(await response.stream.bytesToString());
+        final url = responseData['url'];
+        final fields = Map<String, String>.from(responseData['fields']);
+        log('Pre-signed URL: $url');
+        log('Upload fields: $fields');
+
+        // Step 2: Create a Multipart request to upload the file
+        final uploadRequest = http.MultipartRequest('POST', Uri.parse(url));
+
+        // Add the fields received from the pre-signed URL response
+        fields.forEach((key, value) {
+          uploadRequest.fields[key] = value;
+        });
+
+        // Add the file to the request
+        uploadRequest.files.add(await http.MultipartFile.fromPath(
+          'file', // field name in the form data
+          file.path,
+          contentType: MediaType.parse(
+            lookupMimeType(file.path) ?? 'application/octet-stream',
+          ),
+        ));
+
+        // Send the upload request
+        final uploadResponse = await uploadRequest.send();
+        if (uploadResponse.statusCode == 204) {
+        
+          return file.path;
+        } else {
+          print(
+              'Failed to upload file. Status code: ${uploadResponse.statusCode}');
+          return "";
+        }
+      } else {
+        print('Failed to get pre-signed URL: ${response.statusCode}');
+        return "";
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+      return "";
+    }
+  }
+
+  void createAnnouncement() async {
     _showProgressModal(context);
     prefs = await SharedPreferences.getInstance();
-    supabase = Supabase.instance.client;
-    String prefixURL =
-        "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/";
 
-    List<dynamic> data = <dynamic>[];
-    String uploadPath = "";
+    List<Map<String, String>> data = [];
     for (File media in imagefiles) {
-      uploadPath = await supabase.storage.from('community').upload(
-            "${DateTime.now().microsecondsSinceEpoch}",
-            media,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
-          );
+      // Upload each file to DigitalOcean Spaces
+      await uploadToDigitalOcean(media);
+
+      // Assuming you store URLs in `fields['key']`, add it to the data list
+      final url =
+          'https://nyc3.digitaloceanspaces.com/workhouse/uploads/${media.path.split('/').last}';
       if (lookupMimeType(media.path).toString().startsWith("image")) {
-        //image
+        // image
         data.add({
           "type": "image",
-          "url": prefixURL + uploadPath,
+          "url": url,
         });
       } else {
-        //video
+        // video
         data.add({
           "type": "video",
-          "url": prefixURL + uploadPath,
+          "url": url,
         });
       }
     }
+
+    // Insert into your database
     try {
       await supabase.from("community_logs").insert({
         "sender": prefs.getString("userID"),
@@ -183,16 +312,62 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         "community_id": prefs.getString("communityID"),
         "description": _description,
       });
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      // showAppToast(context, "Created successfully!");
       Navigator.pushNamed(context, '/community');
     } catch (e) {
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      showAppToast(context, "Error occured, please try again!");
+      showAppToast(context, "Error occurred, please try again!");
     }
   }
+// MARK: Continue
+  // void createAnnouncement() async {
+  //   // Navigator.of(context).pushNamed('/share-payment');
+
+  //   _showProgressModal(context);
+  //   prefs = await SharedPreferences.getInstance();
+  //   supabase = Supabase.instance.client;
+  //   String prefixURL =
+  //       "https://lgkqpwmgwwexlxfnvoyp.supabase.co/storage/v1/object/public/";
+
+  //   List<dynamic> data = <dynamic>[];
+  //   String uploadPath = "";
+  //   for (File media in imagefiles) {
+  //     uploadPath = await supabase.storage.from('community').upload(
+  //           "${DateTime.now().microsecondsSinceEpoch}",
+  //           media,
+  //           fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+  //         );
+  //     if (lookupMimeType(media.path).toString().startsWith("image")) {
+  //       //image
+  //       data.add({
+  //         "type": "image",
+  //         "url": prefixURL + uploadPath,
+  //       });
+  //     } else {
+  //       //video
+  //       data.add({
+  //         "type": "video",
+  //         "url": prefixURL + uploadPath,
+  //       });
+  //     }
+  //   }
+  //   try {
+  //     await supabase.from("community_logs").insert({
+  //       "sender": prefs.getString("userID"),
+  //       "images": data,
+  //       "community_id": prefs.getString("communityID"),
+  //       "description": _description,
+  //     });
+  //     // ignore: use_build_context_synchronously
+  //     Navigator.of(context).pop();
+  //     // showAppToast(context, "Created successfully!");
+  //     Navigator.pushNamed(context, '/community');
+  //   } catch (e) {
+  //     // ignore: use_build_context_synchronously
+  //     Navigator.of(context).pop();
+  //     showAppToast(context, "Error occured, please try again!");
+  //   }
+  // }
 
   // MARK: Custom Keyboard
   KeyboardActionsConfig _buildConfig(BuildContext context) {

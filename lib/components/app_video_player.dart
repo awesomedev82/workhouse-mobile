@@ -64,16 +64,17 @@ class _AppVideoPlayerState extends State<AppVideoPlayer> {
     }
 
     _controller.setLooping(true);
+    flickManager.flickVideoManager!.videoPlayerController!.setVolume(0.0);
 
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

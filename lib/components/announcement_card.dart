@@ -377,22 +377,22 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       if (announcements[widget.idx]["public_name"] != "" &&
                           announcements[widget.idx]["business_name"] != "" &&
                           announcements[widget.idx]["role"] != "manager")
-                        Container(
-                          width: 2,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1),
-                            color: Colors.black,
-                          ),
+                        // Container(
+                        //   width: 2,
+                        //   height: 2,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(1),
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
+                        SizedBox(
+                          width: 4,
                         ),
-                      SizedBox(
-                        width: 4,
-                      ),
                       //MARK: Business name
                       if (announcements[widget.idx]["role"] == "member")
                         Expanded(
                           child: Text(
-                            announcements[widget.idx]["business_name"],
+                            "",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: GoogleFonts.inter(
@@ -408,6 +408,9 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       if (announcements[widget.idx]["public_name"] != "" &&
                           announcements[widget.idx]["business_name"] != "" &&
                           announcements[widget.idx]["role"] != "manager")
+                        // SizedBox(
+                        //   width: 100,
+                        // ),
                         GestureDetector(
                           onTap: () {
                             print(widget.id);

@@ -75,6 +75,7 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                             : AppVideoPlayer(
                                 type: "url",
                                 source: widget.data[i]["url"],
+                                
                               ),
                       ),
                     ),

@@ -420,23 +420,23 @@ class _SelectedAnnouncementScreenState
                                                   fontFamily: "Lastik-test",
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              Container(
-                                                width: 10,
-                                                height: 2,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(11),
-                                                  color: Colors.black,
-                                                ),
-                                              ),
+                                              // SizedBox(
+                                              //   width: 4,
+                                              // ),
+                                              // Container(
+                                              //   width: 10,
+                                              //   height: 2,
+                                              //   decoration: BoxDecoration(
+                                              //     borderRadius:
+                                              //         BorderRadius.circular(11),
+                                              //     color: Colors.black,
+                                              //   ),
+                                              // ),
                                               SizedBox(
                                                 width: 4,
                                               ),
                                               Text(
-                                                widget.data["business_name"],
+                                                "",
                                                 style: TextStyle(
                                                   fontSize: 24,
                                                   height: 1.3,

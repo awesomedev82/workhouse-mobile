@@ -27,21 +27,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
       'url': 'https://tally.so/r/woVjXV',
       'title': 'WorkHouse'
     },
-    {
-      'image': 'assets/images/carousel-4.png',
-      'url': 'https://digitalpark.studio/',
-      'title': 'WorkHouse'
-    },
-    {
-      'image': 'assets/images/carousel-5.png',
-      'url': 'https://tally.so/r/w5qAWd',
-      'title': 'WorkHouse'
-    },
-    {
-      'image': 'assets/images/carousel-6.png',
-      'url': 'https://tally.so/r/woVjXV',
-      'title': 'WorkHouse'
-    },
   ];
 
   int _current = 0;
