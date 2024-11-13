@@ -295,7 +295,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
     dynamic announcements = announcementProvider.announcements;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+      padding: announcements[widget.idx]["role"] == "manager" ?  EdgeInsets.symmetric(horizontal: 24, vertical: 30):EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
         color: announcements[widget.idx]["role"] == "manager"
             ? Color(0xFF349B6F).withOpacity(0.19)

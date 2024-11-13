@@ -48,7 +48,8 @@ class _SelectedAnnouncementScreenState
   late String description = "";
   late String createdAt = "";
   late String communityName = "";
-
+  String _searchValue = "";
+  List<dynamic> _searchResult = <dynamic>[];
   bool _isLoading = true;
   List<dynamic> medias = <dynamic>[];
 
@@ -274,6 +275,14 @@ class _SelectedAnnouncementScreenState
     );
   }
 
+
+  void selectMember(id) async {
+    print(id);
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("selectedMemberID", id);
+    Navigator.of(context).pushNamed('/selected-member');
+  }
   @override
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
@@ -368,16 +377,21 @@ class _SelectedAnnouncementScreenState
                                 Container(
                                   width: 48,
                                   height: 48,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(24),
-                                    child: CachedNetworkImage(
-                                      imageUrl: widget.data["avatar_url"],
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const AspectRatio(
-                                        aspectRatio: 1.6,
-                                        child: BlurHash(
-                                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                  child: GestureDetector( onTap: ()
+                                   {
+                                             //   selectMember(["id"]);
+                                              },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: CachedNetworkImage(
+                                        imageUrl: widget.data["avatar_url"],
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const AspectRatio(
+                                          aspectRatio: 1.6,
+                                          child: BlurHash(
+                                            hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                          ),
                                         ),
                                       ),
                                     ),
