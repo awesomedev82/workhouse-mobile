@@ -52,6 +52,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   @override
   void initState() {
     super.initState();
+     supabase = Supabase.instance.client;
   }
 
   @override
@@ -302,7 +303,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         });
       }
     }
-    supabase = Supabase.instance.client;
+   
 
     log("dataaaaa ${data}");
 

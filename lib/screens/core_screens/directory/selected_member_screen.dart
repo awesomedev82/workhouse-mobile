@@ -41,6 +41,7 @@ class _SelectedMemberScreenState extends State<SelectedMemberScreen> {
   String _cname = "";
   bool _isLoding = true;
   String _email = "";
+  
   List<dynamic> announcements = <dynamic>[];
 
   String prefixURL =
