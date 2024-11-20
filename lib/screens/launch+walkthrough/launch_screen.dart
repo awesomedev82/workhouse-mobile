@@ -50,16 +50,20 @@ class _LaunchScreenState extends State<LaunchScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DefaultTextStyle(
-                        style: TextStyle(
-                          fontFamily: "Lastik-test",
-                          fontSize: 60,
-                          fontWeight: FontWeight.w700,
-                          color: APP_BLACK_COLOR,
-                        ),
-                        child: Text(
-                          'Workhouse',
-                        ),
+                      // DefaultTextStyle(
+                      //   style: TextStyle(
+                      //     fontFamily: "Lastik-test",
+                      //     fontSize: 60,
+                      //     fontWeight: FontWeight.w700,
+                      //     color: APP_BLACK_COLOR,
+                      //   ),
+                      //   child: Text(
+                      //     'Workhouse',
+                      //   ),
+                      // ),
+                      SvgPicture.asset("assets/images/logos.svg"),
+                      SizedBox(
+                        height: 10,
                       ),
                       DefaultTextStyle(
                         style: GoogleFonts.inter(
