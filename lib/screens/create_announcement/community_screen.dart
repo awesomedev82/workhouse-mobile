@@ -94,6 +94,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         .order("created_at", ascending: false);
 
     print(data.length);
+    print("ANNOUNCEMENTS");
+    log(data.toString());
 
     // Update announcements in provider
     Provider.of<AnnouncementProvider>(context, listen: false)
