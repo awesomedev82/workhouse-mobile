@@ -50,6 +50,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late SupabaseClient supabase;
   String communityID = "";
   int? selectedAnnouncementId;
+  int selectedId = -1;
 
   late SupabaseClient supabaseIns;
   bool _isLoading = true;
@@ -94,8 +95,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
         .order("created_at", ascending: false);
 
     print(data.length);
-    print("ANNOUNCEMENTS");
-    log(data.toString());
 
     // Update announcements in provider
     Provider.of<AnnouncementProvider>(context, listen: false)
@@ -443,9 +442,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                 child:
                                                     AnnouncementCardDescription(
                                                   id: announcement["id"],
-                                                  idx: announcementProvider
-                                                      .announcements
-                                                      .indexOf(announcement),
+                                                  idx: selectedId == -1
+                                                      ? 0
+                                                      : announcementProvider
+                                                          .announcements
+                                                          .indexWhere(
+                                                              (announcent) =>
+                                                                  announcent[
+                                                                      "id"] ==
+                                                                  selectedId,),
                                                 ),
                                               ),
                                             );
@@ -572,8 +577,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                             .announcements[
                                                         currentIndex]["id"];
                                                 log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
-                                                
-                                                setState(() {});
+
+                                                setState(() {
+                                                  selectedId =
+                                                      selectedAnnouncementId ??
+                                                          -1;
+                                                });
                                               }
 
                                               // Handle when the scroll is near the end, ensuring the last item is considered
@@ -602,6 +611,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                             itemCount: announcementProvider
                                                 .announcements.length,
                                             itemBuilder: (context, index) {
+                                              log("Current Announcement index: $index");
                                               final announcement =
                                                   announcementProvider
                                                       .announcements[index];
