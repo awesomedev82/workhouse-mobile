@@ -429,7 +429,7 @@ class _SelectedAnnouncementScreenState
                                           Row(
                                             children: [
                                               Text(
-                                                widget.data["title"],
+                                                widget.data["title"].toString(),
                                                 style: TextStyle(
                                                   fontSize: 24,
                                                   height: 1.3,
@@ -470,7 +470,7 @@ class _SelectedAnnouncementScreenState
                                     )
                                   : Container(
                                       child: Text(
-                                        widget.data["title"],
+                                        widget.data["title"].toString(),
                                         style: TextStyle(
                                           fontSize: 24,
                                           height: 1.3,

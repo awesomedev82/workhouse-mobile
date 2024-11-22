@@ -103,7 +103,7 @@ class _AnnouncementCardDescriptionState
             role == "member" ? userInfo["public_name"] : userInfo["full_name"];
         businessName = role == "member" ? userInfo["business_name"] : "Manager";
         description = data["description"];
-        title = data["title"] ?? "abc";
+        title = data["title"];
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
         // print(
