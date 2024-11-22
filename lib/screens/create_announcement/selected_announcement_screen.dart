@@ -116,7 +116,7 @@ class _SelectedAnnouncementScreenState
         description = data["description"];
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
-        title = data["title"] != null ? data["title"].toString() : "-";
+        title = data["title"] != null ? data["title"].toString() : "";
         print(
             "---------------------------------><---------------------------------");
       } catch (e) {
@@ -433,64 +433,34 @@ class _SelectedAnnouncementScreenState
                             children: [
                               widget.data["role"] == "member"
                                   ? Container(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                widget.data["title"] != null
-                                                    ? widget.data["title"]
-                                                        .toString()
-                                                    : "-",
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  height: 1.3,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Lastik-test",
-                                                ),
-                                              ),
-                                              // SizedBox(
-                                              //   width: 4,
-                                              // ),
-                                              // Container(
-                                              //   width: 10,
-                                              //   height: 2,
-                                              //   decoration: BoxDecoration(
-                                              //     borderRadius:
-                                              //         BorderRadius.circular(11),
-                                              //     color: Colors.black,
-                                              //   ),
-                                              // ),
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              Text(
-                                                "",
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  height: 1.3,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Lastik-test",
-                                                ),
-                                              ),
-                                            ],
+                                      child: Expanded(
+                                        child: Text(
+                                          widget.data["title"] != null
+                                              ? widget.data["title"].toString()
+                                              : "",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            height: 1.3,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: "Lastik-test",
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     )
                                   : Container(
-                                      child: Text(
-                                        widget.data["title"] != null
-                                            ? widget.data["title"].toString()
-                                            : "-",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          height: 1.3,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontFamily: "Lastik-test",
+                                      child: Expanded(
+                                        child: Text(
+                                          widget.data["title"] != null
+                                              ? widget.data["title"].toString()
+                                              : "",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            height: 1.3,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Lastik-test",
+                                          ),
                                         ),
                                       ),
                                     ),

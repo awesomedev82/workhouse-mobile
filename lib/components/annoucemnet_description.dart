@@ -67,11 +67,6 @@ class _AnnouncementCardDescriptionState
     communityID = prefs.getString("communityID")!;
     dynamic temp =
         await supabase.from("community_logs").select().eq("id", widget.id);
-    print("TEMP DAATAAAA");
-    log(temp.toString());
-    print("IDDDDDDDDDDDDD$widget.id");
-    print(temp[0]["title"]);
-    print(temp[0]["id"]);
     final data = temp[0];
     temp = await supabase.from("members").select().eq("id", data["sender"]);
     dynamic userInfo;
@@ -479,7 +474,7 @@ class _AnnouncementCardDescriptionState
                   child: Text(
                     announcements[widget.idx]["title"] != null
                         ? announcements[widget.idx]["title"].toString()
-                        : "-",
+                        : "",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.inter(
                       fontSize: 14,
