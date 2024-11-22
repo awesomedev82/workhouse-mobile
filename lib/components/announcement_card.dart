@@ -271,7 +271,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                     // color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: LoadingAnimationWidget.hexagonDots(
+                  child: LoadingAnimationWidget.hexagonDots(                                                                                                                 
                       color: Colors.blue, size: 32),
                 ),
               ),
