@@ -109,7 +109,7 @@ class _AnnouncementCardDescriptionState
             role == "member" ? userInfo["public_name"] : userInfo["full_name"];
         businessName = role == "member" ? userInfo["business_name"] : "Manager";
         description = data["description"];
-        title = data["title"];
+        title = data["title"] != null ? data["title"].toString() : "-";
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
         // print(
@@ -477,7 +477,9 @@ class _AnnouncementCardDescriptionState
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    announcements[widget.idx]["title"].toString(),
+                    announcements[widget.idx]["title"] != null
+                        ? announcements[widget.idx]["title"].toString()
+                        : "-",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.inter(
                       fontSize: 14,

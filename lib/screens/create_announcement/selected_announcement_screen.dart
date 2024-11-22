@@ -95,7 +95,6 @@ class _SelectedAnnouncementScreenState
     if (temp.length == 1) {
       dynamic cdata =
           await supabase.from("communities").select().eq("id", communityID);
-      print("communityData:\n${cdata[0]["logo_url"]}");
       setState(() {
         role = "manager";
         avatarURL = cdata[0]["logo_url"];
@@ -117,7 +116,7 @@ class _SelectedAnnouncementScreenState
         description = data["description"];
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
-        title = data["title"];
+        title = data["title"] != null ? data["title"].toString() : "-";
         print(
             "---------------------------------><---------------------------------");
       } catch (e) {
@@ -439,7 +438,10 @@ class _SelectedAnnouncementScreenState
                                           Row(
                                             children: [
                                               Text(
-                                                widget.data["title"].toString(),
+                                                widget.data["title"] != null
+                                                    ? widget.data["title"]
+                                                        .toString()
+                                                    : "-",
                                                 style: TextStyle(
                                                   fontSize: 24,
                                                   height: 1.3,
@@ -480,7 +482,9 @@ class _SelectedAnnouncementScreenState
                                     )
                                   : Container(
                                       child: Text(
-                                        widget.data["title"].toString(),
+                                        widget.data["title"] != null
+                                            ? widget.data["title"].toString()
+                                            : "-",
                                         style: TextStyle(
                                           fontSize: 24,
                                           height: 1.3,
