@@ -376,6 +376,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                   //:
                                                   GestureDetector(
                                                 onTap: () {
+                                                  print("iaddasd");
+                                                  print(announcement);
                                                   onSelectAnnouncement(
                                                     announcement,
                                                     //idx: index,
@@ -447,10 +449,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       : announcementProvider
                                                           .announcements
                                                           .indexWhere(
-                                                              (announcent) =>
-                                                                  announcent[
-                                                                      "id"] ==
-                                                                  selectedId,),
+                                                          (announcent) =>
+                                                              announcent[
+                                                                  "id"] ==
+                                                              selectedId,
+                                                        ),
                                                 ),
                                               ),
                                             );
@@ -576,7 +579,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                     announcementProvider
                                                             .announcements[
                                                         currentIndex]["id"];
-                                                log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
+                                                // log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
 
                                                 setState(() {
                                                   selectedId =
@@ -611,7 +614,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                             itemCount: announcementProvider
                                                 .announcements.length,
                                             itemBuilder: (context, index) {
-                                              log("Current Announcement index: $index");
+                                              // log("Current Announcement index: $index");
                                               final announcement =
                                                   announcementProvider
                                                       .announcements[index];
@@ -633,6 +636,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                   : GestureDetector(
                                                       onTap: () {
                                                         log("Selected Announcement ID: ${announcement["id"]}");
+                                                        print(announcement);
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -648,8 +652,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                         );
                                                       },
                                                       child: Container(
-                                                        width:
-                                                            400, // Width of each item
+                                                        width: MediaQuery.of(
+                                                          context,
+                                                        )
+                                                            .size
+                                                            .width, // Width of each item
                                                         child:
                                                             AnnouncementCardHorizontal(
                                                           id: announcement[

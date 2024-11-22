@@ -59,6 +59,7 @@ class _AnnouncementCardDescriptionState
     communityID = prefs.getString("communityID")!;
     dynamic temp =
         await supabase.from("community_logs").select().eq("id", widget.id);
+    print(temp.toString());
     print("IDDDDDDDDDDDDD$widget.id");
     final data = temp[0];
     temp = await supabase.from("members").select().eq("id", data["sender"]);

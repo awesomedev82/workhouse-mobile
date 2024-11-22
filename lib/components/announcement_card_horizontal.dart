@@ -298,6 +298,7 @@ class _AnnouncementCardHorizontalState
     dynamic announcements = announcementProvider.announcements;
 
     return Container(
+      
       padding: announcements[widget.idx]["role"] == "manager"
           ? EdgeInsets.symmetric(horizontal: 10, vertical: 0)
           : EdgeInsets.symmetric(horizontal: 24, vertical: 30),
