@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -119,6 +120,12 @@ class _SelectedAnnouncementScreenState
         print(e);
       }
     });
+  }
+
+  String _parseHtmlString(String htmlString) {
+    final document = parse(htmlString); // Parse the HTML
+    final String parsedString = document.body?.text ?? ""; // Extract plain text
+    return parsedString.trim(); // Trim extra spaces or newlines
   }
 
   String timeDifference(dynamic targetTime) {
@@ -287,6 +294,8 @@ class _SelectedAnnouncementScreenState
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
+    final String plainTextDescription =
+        _parseHtmlString(announcements[widget.idx]["description"]);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -498,7 +507,7 @@ class _SelectedAnnouncementScreenState
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.data["description"],
+                              plainTextDescription,
                               textAlign: TextAlign.left,
                               style: GoogleFonts.inter(
                                   fontSize: 16,
