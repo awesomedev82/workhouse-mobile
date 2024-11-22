@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -123,6 +125,12 @@ class _SelectedAnnouncementScreenState
       }
     });
   }
+
+  // String _parseHtmlString(String htmlString) {
+  //   final document = parse(htmlString); // Parse the HTML
+  //   final String parsedString = document.body?.text ?? ""; // Extract plain text
+  //   return parsedString.trim(); // Trim extra spaces or newlines
+  // }
 
   String timeDifference(dynamic targetTime) {
     DateTime now = DateTime.now();
@@ -290,6 +298,8 @@ class _SelectedAnnouncementScreenState
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
+    // final String plainTextDescription =
+    //     _parseHtmlString(announcements[widget.idx]["description"]);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -499,17 +509,20 @@ class _SelectedAnnouncementScreenState
                             height: 18,
                           ),
                           Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.data["description"],
-                              textAlign: TextAlign.left,
-                              style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  height: 1.6,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF0F1324).withOpacity(0.5)),
-                            ),
-                          ),
+                              alignment: Alignment.centerLeft,
+                              child: Html(
+                                data: announcements[widget.idx]["description"],
+                              )
+                              // Text(
+                              //   "plainTextDescription",
+                              //   textAlign: TextAlign.left,
+                              //   style: GoogleFonts.inter(
+                              //       fontSize: 16,
+                              //       height: 1.6,
+                              //       fontWeight: FontWeight.w400,
+                              //       color: Color(0xFF0F1324).withOpacity(0.5)),
+                              // ),
+                              ),
                           SizedBox(
                             height: 12,
                           ),

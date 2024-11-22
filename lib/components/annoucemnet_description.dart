@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:html/parser.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,11 @@ class _AnnouncementCardDescriptionState
     extends State<AnnouncementCardDescription> {
   late SharedPreferences prefs;
   late SupabaseClient supabase;
+  String _parseHtmlString(String htmlString) {
+    final document = parse(htmlString); // Parse the HTML
+    final String parsedString = document.body?.text ?? ""; // Extract plain text
+    return parsedString.trim(); // Trim extra spaces or newlines
+  }
 
   String communityID = "";
   late String senderID = "";
@@ -308,8 +314,8 @@ class _AnnouncementCardDescriptionState
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
-    // print("announcements[widget.idx]");
-    // print(announcements[widget.idx]);
+    final String plainTextDescription =
+        _parseHtmlString(announcements[widget.idx]["description"]);
     // final selectedAnnouncement = announcements.firstWhere(
     //   (announcement) => announcement["id"] == widget.id,
     //   orElse: () => null, // Return null if not found
@@ -461,9 +467,7 @@ class _AnnouncementCardDescriptionState
                             child: Icon(Ionicons.ellipsis_horizontal),
                           ),
                         ),
-                      SizedBox(
-                        width: 4,
-                      ),
+                      SizedBox(width: 4),
                     ],
                   ),
                 ),
