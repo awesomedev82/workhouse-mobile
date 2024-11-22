@@ -95,11 +95,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
         .order('role', ascending: true)
         .order("created_at", ascending: false);
 
-    print(data.length);
+    // print(data.length);
+    // print("community DATA");
+    // log(data.toString());
+    int title = 1;
+    final updatedData = data.map((entry) {
+      // Generate a random title
+      final randomTitle = "title ${title}";
+      title++;
+      return {
+        ...entry,
+        'title': randomTitle, // Add the new 'title' field
+      };
+    }).toList();
 
     // Update announcements in provider
+    // Provider.of<AnnouncementProvider>(context, listen: false)
+    //     .setAnnouncements(data); CHANGEEEEE
     Provider.of<AnnouncementProvider>(context, listen: false)
-        .setAnnouncements(data);
+        .setAnnouncements(updatedData);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pop();
@@ -596,6 +610,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       notification) {
                                                 if (notification
                                                     is ScrollUpdateNotification) {
+                                                  // print(":fskdhfjks");
                                                   final scrollPosition =
                                                       notification
                                                           .metrics.pixels;
@@ -627,6 +642,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       selectedId =
                                                           selectedAnnouncementId ??
                                                               -1;
+                                                      // print("selectedId");
+                                                      // print(selectedId);
+                                                      // print(announcementProvider
+                                                      //         .announcements[
+                                                      //     currentIndex]);
                                                     });
                                                   }
 
@@ -681,7 +701,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                           onTap: () {
                                                             log("Selected Announcement ID: ${announcement["id"]}");
                                                             // print(announcement);
-                                                            log(announcement);
+                                                            // log(announcement);
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(

@@ -48,6 +48,7 @@ class _SelectedAnnouncementScreenState
   late String description = "";
   late String createdAt = "";
   late String communityName = "";
+  late String title = "";
   String _searchValue = "";
   List<dynamic> _searchResult = <dynamic>[];
   bool _isLoading = true;
@@ -107,12 +108,14 @@ class _SelectedAnnouncementScreenState
 
     setState(() {
       try {
+        log(data['description']);
         publicName =
             role == "member" ? userInfo["public_name"] : userInfo["full_name"];
         businessName = role == "member" ? userInfo["business_name"] : "Manager";
         description = data["description"];
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
+        title = data["title"];
         print(
             "---------------------------------><---------------------------------");
       } catch (e) {
@@ -426,7 +429,7 @@ class _SelectedAnnouncementScreenState
                                           Row(
                                             children: [
                                               Text(
-                                                widget.data["public_name"],
+                                                widget.data["title"],
                                                 style: TextStyle(
                                                   fontSize: 24,
                                                   height: 1.3,
@@ -467,12 +470,12 @@ class _SelectedAnnouncementScreenState
                                     )
                                   : Container(
                                       child: Text(
-                                        widget.data["public_name"],
+                                        widget.data["title"],
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 24,
                                           height: 1.3,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w700,
                                           fontFamily: "Lastik-test",
                                         ),
                                       ),
@@ -503,7 +506,7 @@ class _SelectedAnnouncementScreenState
                               style: GoogleFonts.inter(
                                   fontSize: 16,
                                   height: 1.6,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w400,
                                   color: Color(0xFF0F1324).withOpacity(0.5)),
                             ),
                           ),

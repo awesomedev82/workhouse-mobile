@@ -64,6 +64,8 @@ class _AnnouncementCardDescriptionState
     print("TEMP DAATAAAA");
     log(temp.toString());
     print("IDDDDDDDDDDDDD$widget.id");
+    print(temp[0]["title"]);
+    print(temp[0]["id"]);
     final data = temp[0];
     temp = await supabase.from("members").select().eq("id", data["sender"]);
     dynamic userInfo;
@@ -80,7 +82,7 @@ class _AnnouncementCardDescriptionState
     if (temp.length == 1) {
       dynamic cdata =
           await supabase.from("communities").select().eq("id", communityID);
-      print("communityData:\n${cdata[0]["logo_url"]}");
+      // print("communityData:\n${cdata[0]["logo_url"]}");
       setState(() {
         role = "manager";
         avatarURL = cdata[0]["logo_url"];
@@ -95,15 +97,17 @@ class _AnnouncementCardDescriptionState
 
     setState(() {
       try {
+        // print(data["description"]);
+        // print(data["title"]);
         publicName =
             role == "member" ? userInfo["public_name"] : userInfo["full_name"];
         businessName = role == "member" ? userInfo["business_name"] : "Manager";
         description = data["description"];
-        title = data["title"];
+        title = data["title"] ?? "abc";
         createdAt = timeDifference(data["created_at"]);
         medias = mediasTemp;
-        print(
-            "---------------------------------><---------------------------------");
+        // print(
+        //     "---------------------------------><---------------------------------");
       } catch (e) {
         print(e);
       }
@@ -304,6 +308,8 @@ class _AnnouncementCardDescriptionState
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
+    // print("announcements[widget.idx]");
+    // print(announcements[widget.idx]);
     // final selectedAnnouncement = announcements.firstWhere(
     //   (announcement) => announcement["id"] == widget.id,
     //   orElse: () => null, // Return null if not found
@@ -385,7 +391,7 @@ class _AnnouncementCardDescriptionState
                   child: Row(
                     children: [
                       Text(
-                        announcements[widget.idx]["title"] ?? "",
+                        announcements[widget.idx]["public_name"].toString(),
                         style: TextStyle(
                           fontSize: 16,
                           height: 1.3,
@@ -432,7 +438,7 @@ class _AnnouncementCardDescriptionState
                               textStyle: TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF17181A),
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w400,
                                 height: 1.6,
                               ),
                             ),
@@ -467,12 +473,12 @@ class _AnnouncementCardDescriptionState
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    announcements[widget.idx]["description"],
+                    announcements[widget.idx]["title"].toString(),
                     textAlign: TextAlign.left,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       height: 1.6,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
