@@ -275,7 +275,6 @@ class _SelectedAnnouncementScreenState
     );
   }
 
-
   void selectMember(id) async {
     print(id);
 
@@ -283,6 +282,7 @@ class _SelectedAnnouncementScreenState
     prefs.setString("selectedMemberID", id);
     Navigator.of(context).pushNamed('/selected-member');
   }
+
   @override
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
@@ -377,10 +377,10 @@ class _SelectedAnnouncementScreenState
                                 Container(
                                   width: 48,
                                   height: 48,
-                                  child: GestureDetector( onTap: ()
-                                   {
-                                             //   selectMember(["id"]);
-                                              },
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      //   selectMember(["id"]);
+                                    },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(24),
                                       child: CachedNetworkImage(
@@ -390,7 +390,8 @@ class _SelectedAnnouncementScreenState
                                             const AspectRatio(
                                           aspectRatio: 1.6,
                                           child: BlurHash(
-                                            hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                            hash:
+                                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
                                           ),
                                         ),
                                       ),
@@ -580,6 +581,9 @@ class _SelectedAnnouncementScreenState
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(horizontal: 24),
@@ -644,29 +648,29 @@ class _SelectedAnnouncementScreenState
                                                 SizedBox(
                                                   width: 4,
                                                 ),
-                                                Container(
-                                                  width: 10,
-                                                  height: 2,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            11),
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 4,
-                                                ),
-                                                Text(
-                                                  "business_name",
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                    height: 1.3,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: "Lastik-test",
-                                                  ),
-                                                ),
+                                                // Container(
+                                                //   width: 10,
+                                                //   height: 2,
+                                                //   decoration: BoxDecoration(
+                                                //     borderRadius:
+                                                //         BorderRadius.circular(
+                                                //             11),
+                                                //     color: Colors.black,
+                                                //   ),
+                                                // ),
+                                                // SizedBox(
+                                                //   width: 4,
+                                                // ),
+                                                // Text(
+                                                //   "business_name",
+                                                //   style: TextStyle(
+                                                //     fontSize: 24,
+                                                //     height: 1.3,
+                                                //     color: Colors.black,
+                                                //     fontWeight: FontWeight.w600,
+                                                //     fontFamily: "Lastik-test",
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                           ],

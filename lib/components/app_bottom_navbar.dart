@@ -68,7 +68,13 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
                 height: 44,
                 width: 44,
                 child: widget.index == 0
-                    ? SvgPicture.asset('assets/images/home2.svg')
+                    ? SvgPicture.asset(
+                        'assets/images/home2.svg',
+                        colorFilter: ColorFilter.mode(
+                          Color(0xFF014E53),
+                          BlendMode.srcIn,
+                        ),
+                      )
                     : SvgPicture.asset('assets/images/home.svg'),
               ),
             ),
@@ -80,7 +86,13 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
                 height: 44,
                 width: 44,
                 child: widget.index == 1
-                    ? SvgPicture.asset('assets/images/search2.svg')
+                    ? SvgPicture.asset(
+                        'assets/images/search2.svg',
+                        colorFilter: ColorFilter.mode(
+                          Color(0xFF014E53),
+                          BlendMode.srcIn,
+                        ),
+                      )
                     : SvgPicture.asset('assets/images/search.svg'),
               ),
             ),
@@ -101,7 +113,7 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
                           color: Color(0xFF898A8D),
                           border: Border.all(
                             width: 1,
-                            color: Color(0xFFDC6803),
+                            color: Color(0xFF014E53),
                           ),
                         ),
                         child: AspectRatio(

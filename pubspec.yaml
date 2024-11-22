@@ -78,6 +78,7 @@ dependencies:
   webview_flutter: ^4.10.0
   share_plus: ^10.1.2
   http_parser: ^4.0.2
+  html: ^0.15.5
 
 dev_dependencies:
   flutter_test:
