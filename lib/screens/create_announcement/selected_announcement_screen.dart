@@ -435,8 +435,8 @@ class _SelectedAnnouncementScreenState
                                   ? Container(
                                       child: Expanded(
                                         child: Text(
-                                          widget.data["title"] != null
-                                              ? widget.data["title"].toString()
+                                          widget.data["public_name"] != null
+                                              ? widget.data["public_name"].toString()
                                               : "",
                                           style: TextStyle(
                                             fontSize: 24,
