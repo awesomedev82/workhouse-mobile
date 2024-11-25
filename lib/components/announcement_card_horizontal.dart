@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -74,11 +75,11 @@ class _AnnouncementCardHorizontalState
       dynamic cdata =
           await supabase.from("communities").select().eq("id", communityID);
       print("communityData:\n${cdata[0]["logo_url"]}");
-      setState(() {
-        role = "manager";
-        avatarURL = cdata[0]["logo_url"];
-        communityName = cdata[0]["name"];
-      });
+      // setState(() {
+      //   role = "manager";
+      //   avatarURL = cdata[0]["logo_url"];
+      //   communityName = cdata[0]["name"];
+      // });
       userInfo = temp[0];
     }
     List<dynamic> mediasTemp = <dynamic>[];
@@ -155,7 +156,7 @@ class _AnnouncementCardHorizontalState
             ),
             child: Column(
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: 30,
                   // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
 
@@ -296,15 +297,15 @@ class _AnnouncementCardHorizontalState
   Widget build(BuildContext context) {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
-
     return Container(
       padding: announcements[widget.idx]["role"] == "manager"
-          ? EdgeInsets.symmetric(horizontal: 10, vertical: 0)
+          ? EdgeInsets.symmetric(horizontal: 20, vertical: 10)
           : EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
         color: announcements[widget.idx]["role"] == "manager"
             ? Color(0xFF349B6F).withOpacity(0.19)
             : Color(0xFF349B6F).withOpacity(0.19),
+        borderRadius: BorderRadius.circular(12),
         border: Border(
           bottom: BorderSide(
             color: Color(0xFFF5F0F0),
@@ -315,140 +316,209 @@ class _AnnouncementCardHorizontalState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Container(
-          //   width: 48,
-          //   height: 48,
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.circular(24),
-          //     child: announcements[widget.idx]["avatar_url"] != null
-          //         ? CachedNetworkImage(
-          //             imageUrl: announcements[widget.idx]["avatar_url"],
-          //             fit: BoxFit.cover,
-          //             placeholder: (context, url) => const AspectRatio(
-          //               aspectRatio: 1.6,
-          //               child: BlurHash(
-          //                 hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-          //               ),
-          //             ),
-          //           )
-          //         : Container(
-          //             color: Colors.white,
-          //           ),
-          //   ),
-          // ),
-
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: announcements[widget.idx]["avatar_url"] != null
+                  ? CachedNetworkImage(
+                      imageUrl: announcements[widget.idx]["avatar_url"],
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const AspectRatio(
+                        aspectRatio: 1.6,
+                        child: BlurHash(
+                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                        ),
+                      ),
+                    )
+                  : Container(
+                      color: Colors.white,
+                    ),
+            ),
+          ),
           SizedBox(
             width: 10,
           ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Container(
-                //   // width: MediaQuery.of(context).size.width,
-                //   height: 18,
-                //   alignment: Alignment.topRight,
-                //   child: Text(
-                //     timeDifference(announcements[widget.idx]["created_at"]),
-                //     textAlign: TextAlign.right,
-                //     style: TextStyle(
-                //       fontFamily: "SF-Pro-Display",
-                //       fontWeight: FontWeight.w400,
-                //       color: Color(0xFF9D9D9D),
-                //       fontSize: 13,
-                //       height: 1.4,
-                //     ),
-                //   ),
-                // ),
+                Container(
+                  // width: MediaQuery.of(context).size.width,
+                  height: 18,
+                  alignment: Alignment.topRight,
+                  child: Text(
+                    timeDifference(announcements[widget.idx]["created_at"]),
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: "SF-Pro-Display",
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF9D9D9D),
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                //MARK: Public name
+                Row(
+                  children: [
+                    Text(
+                      announcements[widget.idx]["public_name"] ?? "",
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.3,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Lastik-test",
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    if (announcements[widget.idx]["public_name"] != "" &&
+                        announcements[widget.idx]["business_name"] != "" &&
+                        announcements[widget.idx]["role"] != "manager")
+                      // Container(
+                      //   width: 2,
+                      //   height: 2,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(1),
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                    //MARK: Business name
+                    if (announcements[widget.idx]["role"] == "member")
+                      Expanded(
+                        child: Text(
+                          "",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF17181A),
+                              fontWeight: FontWeight.w300,
+                              height: 1.6,
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (announcements[widget.idx]["public_name"] != "" &&
+                        announcements[widget.idx]["business_name"] != "" &&
+                        announcements[widget.idx]["role"] != "manager")
+                      // SizedBox(
+                      //   width: 100,
+                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          print(widget.id);
+                          _showDeleteBottomSheet(context);
+                        },
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Icon(Ionicons.ellipsis_horizontal),
+                        ),
+                      ),
+                    // SizedBox(
+                    //   width: 4,
+                    // ),
+                  ],
+                ),
                 // SizedBox(
                 //   height: 4,
                 // ),
-                // //MARK: Public name
                 // Container(
-                //   child: Row(
-                //     children: [
-                //       Text(
-                //         announcements[widget.idx]["public_name"] ?? "",
-                //         style: TextStyle(
-                //           fontSize: 16,
-                //           height: 1.3,
-                //           color: Colors.black,
-                //           fontWeight: FontWeight.w600,
-                //           fontFamily: "Lastik-test",
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         width: 4,
-                //       ),
-                //       if (announcements[widget.idx]["public_name"] != "" &&
-                //           announcements[widget.idx]["business_name"] != "" &&
-                //           announcements[widget.idx]["role"] != "manager")
-                //         // Container(
-                //         //   width: 2,
-                //         //   height: 2,
-                //         //   decoration: BoxDecoration(
-                //         //     borderRadius: BorderRadius.circular(1),
-                //         //     color: Colors.black,
-                //         //   ),
-                //         // ),
-                //         SizedBox(
-                //           width: 4,
-                //         ),
-                //       //MARK: Business name
-                //       if (announcements[widget.idx]["role"] == "member")
-                //         Expanded(
-                //           child: Text(
-                //             "",
-                //             overflow: TextOverflow.ellipsis,
-                //             maxLines: 1,
-                //             style: GoogleFonts.inter(
-                //               textStyle: TextStyle(
-                //                 fontSize: 14,
-                //                 color: Color(0xFF17181A),
-                //                 fontWeight: FontWeight.w300,
-                //                 height: 1.6,
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       if (announcements[widget.idx]["public_name"] != "" &&
-                //           announcements[widget.idx]["business_name"] != "" &&
-                //           announcements[widget.idx]["role"] != "manager")
-                //         // SizedBox(
-                //         //   width: 100,
-                //         // ),
-                //         GestureDetector(
-                //           onTap: () {
-                //             print(widget.id);
-                //             _showDeleteBottomSheet(context);
-                //           },
-                //           child: Container(
-                //             width: 24,
-                //             height: 24,
-                //             child: Icon(Ionicons.ellipsis_horizontal),
-                //           ),
-                //         ),
-                //       SizedBox(
-                //         width: 4,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 4,
-                // ),
-                // Container(
-                //   alignment: Alignment.centerLeft,
-                //   child: Text(
-                //     announcements[widget.idx]["description"],
-                //     textAlign: TextAlign.left,
-                //     style: GoogleFonts.inter(
-                //       fontSize: 14,
-                //       height: 1.6,
-                //       fontWeight: FontWeight.w300,
+                //     alignment: Alignment.centerLeft,
+                //     child:  htmlPackage.Html(
+                //       data:
+                //           announcements[widget.idx]["title"]?.toString() ??
+                //               "",
+                //     )
+
+                //     //  Text(
+                //     //   announcements[widget.idx]["description"],
+                //     //   textAlign: TextAlign.left,
+                //     //   style: GoogleFonts.inter(
+                //     //     fontSize: 14,
+                //     //     height: 1.6,
+                //     //     fontWeight: FontWeight.w300,
+                //     //   ),
+                //     // ),
                 //     ),
+                // Container(
+                //     alignment: Alignment.centerLeft,
+                //     child:  htmlPackage.Html(
+                //       data: announcements[widget.idx]["description"]
+                //               ?.toString() ??
+                //           "",
+                //     )
+
+                //  Text(
+                //   announcements[widget.idx]["description"],
+                //   textAlign: TextAlign.left,
+                //   style: GoogleFonts.inter(
+                //     fontSize: 14,
+                //     height: 1.6,
+                //     fontWeight: FontWeight.w300,
                 //   ),
                 // ),
+                // ),
+                if (announcements[widget.idx]["title"] != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: Text(
+                      textAlign: TextAlign.start,
+                      announcements[widget.idx]["title"]?.toString() ?? "",
+                    ),
+                    // Html(
+                    //   data:
+                    //       announcements[widget.idx]["title"]?.toString() ?? "",
+                    // ),
+                  )
+                // Text(
+                //   announcements[widget.idx]["title"]?.toString() ?? "",
+                //   style: GoogleFonts.inter(
+                //     fontSize: 14,
+                //     height: 1.6,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                //   // overflow: TextOverflow.ellipsis,
+                // )
+                ,
+
+                // Description
+                announcements[widget.idx]["description"]?.toString() != null &&
+                        announcements[widget.idx]["description"]!
+                            .toString()
+                            .isNotEmpty
+                    ? SingleChildScrollView(
+                        child: SizedBox(
+                          height: 50,
+                          child: Html(
+                            data: announcements[widget.idx]["description"],
+                            // style: {
+                            //   "body": htmlPackage.Style(
+                            //     fontSize: htmlPackage.FontSize(14),
+                            //     color: Colors.black,
+                            //     height: htmlPackage.Height(
+                            //         1.4), // Adjust line height for content
+                            //     fontWeight: FontWeight.w400,
+                            //   ),
+                            // },
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+
                 SizedBox(
                   height: 12,
                 ),

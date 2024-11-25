@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:html/parser.dart';
@@ -340,6 +341,7 @@ class _AnnouncementCardDescriptionState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Avatar Container
           Container(
             width: 48,
             height: 48,
@@ -361,80 +363,62 @@ class _AnnouncementCardDescriptionState
                     ),
             ),
           ),
-          SizedBox(
-            width: 10,
-          ),
+          SizedBox(width: 10),
+          // Content Section
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  // width: MediaQuery.of(context).size.width,
-                  height: 18,
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    timeDifference(announcements[widget.idx]["created_at"]),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontFamily: "SF-Pro-Display",
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF9D9D9D),
-                      fontSize: 13,
-                      height: 1.4,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // Time Difference
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      timeDifference(
+                          announcements[widget.idx]["created_at"] ?? ""),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontFamily: "SF-Pro-Display",
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF9D9D9D),
+                        fontSize: 13,
+                        height: 1.4,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                //MARK: Public name
-                Container(
-                  child: Row(
+                  SizedBox(height: 4),
+                  // Public Name and Business Name
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        announcements[widget.idx]["public_name"].toString(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.3,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "Lastik-test",
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          announcements[widget.idx]["public_name"]
+                                  ?.toString() ??
+                              "",
+                          style: TextStyle(
+                            fontSize: 16,
+                            height: 1.3,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Lastik-test",
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
-                      // Text(
-                      //   announcements[widget.idx]["public_name"] ?? "",
-                      //   style: TextStyle(
-                      //     fontSize: 16,
-                      //     height: 1.3,
-                      //     color: Colors.black,
-                      //     fontWeight: FontWeight.w600,
-                      //     fontFamily: "Lastik-test",
-                      //   ),
-                      // ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      if (announcements[widget.idx]["public_name"] != "" &&
-                          announcements[widget.idx]["business_name"] != "" &&
-                          announcements[widget.idx]["role"] != "manager")
-                        // Container(
-                        //   width: 2,
-                        //   height: 2,
-                        //   decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(1),
-                        //     color: Colors.black,
-                        //   ),
-                        // ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                      //MARK: Business name
+                      SizedBox(width: 4),
                       if (announcements[widget.idx]["role"] == "member")
                         Expanded(
+                          flex: 4,
                           child: Text(
-                            "",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                            announcements[widget.idx]["business_name"]
+                                    ?.toString() ??
+                                "",
                             style: GoogleFonts.inter(
                               textStyle: TextStyle(
                                 fontSize: 14,
@@ -443,14 +427,13 @@ class _AnnouncementCardDescriptionState
                                 height: 1.6,
                               ),
                             ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
-                      if (announcements[widget.idx]["public_name"] != "" &&
-                          announcements[widget.idx]["business_name"] != "" &&
-                          announcements[widget.idx]["role"] != "manager")
-                        // SizedBox(
-                        //   width: 100,
-                        // ),
+                      if (announcements[widget.idx]["role"] != "manager" &&
+                          announcements[widget.idx]["public_name"] != "" &&
+                          announcements[widget.idx]["business_name"] != "")
                         GestureDetector(
                           onTap: () {
                             print(widget.id);
@@ -462,28 +445,54 @@ class _AnnouncementCardDescriptionState
                             child: Icon(Ionicons.ellipsis_horizontal),
                           ),
                         ),
-                      SizedBox(width: 4),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    announcements[widget.idx]["title"] != null
-                        ? announcements[widget.idx]["title"].toString()
-                        : "",
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      height: 1.6,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
+                  // SizedBox(height: 4),
+                  // Title
+                  if (announcements[widget.idx]["title"] != null)
+                    Html(
+                      data:
+                          announcements[widget.idx]["title"]?.toString() ?? "",
+                    )
+                  // Text(
+                  //   announcements[widget.idx]["title"]?.toString() ?? "",
+                  //   style: GoogleFonts.inter(
+                  //     fontSize: 14,
+                  //     height: 1.6,
+                  //     fontWeight: FontWeight.w400,
+                  //   ),
+                  //   // overflow: TextOverflow.ellipsis,
+                  // )
+                  ,
+
+                  // Description
+                  announcements[widget.idx]["description"]?.toString() !=
+                              null &&
+                          announcements[widget.idx]["description"]!
+                              .toString()
+                              .isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 0),
+                          child: Html(
+                            data: announcements[widget.idx]["description"]
+                                    ?.toString() ??
+                                "",
+                          )
+                          // Text(
+                          //   announcements[widget.idx]["description"]
+                          //           ?.toString() ??
+                          //       "",
+                          //   style: GoogleFonts.inter(
+                          //     fontSize: 14,
+                          //     height: 1.6,
+                          //     fontWeight: FontWeight.w400,
+                          //   ),
+                          //   // overflow: TextOverflow.ellipsis,
+                          // ),
+                          )
+                      : SizedBox.shrink(),
+                ],
+              ),
             ),
           ),
         ],
