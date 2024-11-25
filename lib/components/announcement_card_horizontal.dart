@@ -367,14 +367,18 @@ class _AnnouncementCardHorizontalState
                 //MARK: Public name
                 Row(
                   children: [
-                    Text(
-                      announcements[widget.idx]["public_name"] ?? "",
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 1.3,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: "Lastik-test",
+                    Expanded(
+                      child: Text(
+                        announcements[widget.idx]["title"]?.toString() ?? "",
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 1.3,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Lastik-test",
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     SizedBox(
@@ -391,26 +395,26 @@ class _AnnouncementCardHorizontalState
                       //     color: Colors.black,
                       //   ),
                       // ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    //MARK: Business name
-                    if (announcements[widget.idx]["role"] == "member")
-                      Expanded(
-                        child: Text(
-                          "",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF17181A),
-                              fontWeight: FontWeight.w300,
-                              height: 1.6,
+                      // SizedBox(
+                      //   width: 4,
+                      // ),
+                      //MARK: Business name
+                      if (announcements[widget.idx]["role"] == "member")
+                        Expanded(
+                          child: Text(
+                            "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF17181A),
+                                fontWeight: FontWeight.w300,
+                                height: 1.6,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                     if (announcements[widget.idx]["public_name"] != "" &&
                         announcements[widget.idx]["business_name"] != "" &&
                         announcements[widget.idx]["role"] != "manager")
@@ -472,18 +476,18 @@ class _AnnouncementCardHorizontalState
                 //   ),
                 // ),
                 // ),
-                if (announcements[widget.idx]["title"] != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Text(
-                      textAlign: TextAlign.start,
-                      announcements[widget.idx]["title"]?.toString() ?? "",
-                    ),
-                    // Html(
-                    //   data:
-                    //       announcements[widget.idx]["title"]?.toString() ?? "",
-                    // ),
-                  )
+                // if (announcements[widget.idx]["title"] != null)
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 2),
+                //   child: Text(
+                //     textAlign: TextAlign.start,
+                //     announcements[widget.idx]["title"]?.toString() ?? "",
+                //   ),
+                //   // Html(
+                //   //   data:
+                //   //       announcements[widget.idx]["title"]?.toString() ?? "",
+                //   // ),
+                // )
                 // Text(
                 //   announcements[widget.idx]["title"]?.toString() ?? "",
                 //   style: GoogleFonts.inter(
@@ -493,7 +497,7 @@ class _AnnouncementCardHorizontalState
                 //   ),
                 //   // overflow: TextOverflow.ellipsis,
                 // )
-                ,
+                // ,
 
                 // Description
                 announcements[widget.idx]["description"]?.toString() != null &&

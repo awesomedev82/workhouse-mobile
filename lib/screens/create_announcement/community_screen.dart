@@ -253,7 +253,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 15),
+                        vertical: 20, horizontal: 18),
                     child: Row(
                       children: [
                         SvgPicture.asset(
@@ -521,15 +521,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                     //       ),
                                     //     ),
                                     //   ),
-                                    announcementProvider.announcements
-                                            .where(
-                                              (announcement) =>
-                                                  announcement["role"] ==
-                                                  "manager",
-                                            )
-                                            .toList()
-                                            .isEmpty
-                                        ? SizedBox.shrink()
+                                    !_isLoading &&
+                                            announcementProvider.announcements
+                                                .where(
+                                                  (announcement) =>
+                                                      announcement["role"] ==
+                                                      "manager",
+                                                )
+                                                .toList()
+                                                .isEmpty
+                                        ? SvgPicture.asset(
+                                            width: 500,
+                                            height: 500,
+                                            "assets/images/empty_announcements.svg")
                                         : _isLoading
                                             ? Skeletonizer(
                                                 child: Container(
@@ -799,6 +803,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                               // Check your condition, for example, when role is 'manager'
                                               if (announcement["role"] ==
                                                   "manager") {
+                                                print("index  $index");
                                                 // If the condition matches, return an empty widget or skip the card
                                                 return SizedBox
                                                     .shrink(); // This will render nothing
