@@ -103,8 +103,18 @@ class _SelectedAnnouncementScreenState
       userInfo = temp[0];
     }
     List<dynamic> mediasTemp = <dynamic>[];
-    for (var media in json.decode(data["images"])) {
-      mediasTemp.add({"type": media["type"], "url": media["url"]});
+    print(data["images"].toString());
+
+    if (data["images"] != null &&
+        data["images"].toString().isNotEmpty &&
+        data["images"].toString() != '[""]') {
+      try {
+        for (var media in json.decode(data["images"])) {
+          mediasTemp.add({"type": media["type"], "url": media["url"]});
+        }
+      } catch (e) {
+        print("Error decoding JSON: $e");
+      }
     }
 
     setState(() {
@@ -161,11 +171,21 @@ class _SelectedAnnouncementScreenState
     }
   }
 
-  List<dynamic> getMediaData(data) {
+  List<dynamic> getMediaData(String? data) {
     List<dynamic> mediasData = <dynamic>[];
-    for (var media in json.decode(data)) {
-      mediasData.add({"type": media["type"], "url": media["url"]});
+    print("data");
+    print(data);
+
+    if (data != null && data.isNotEmpty && data != '[""]') {
+      try {
+        for (var media in json.decode(data)) {
+          mediasData.add({"type": media["type"], "url": media["url"]});
+        }
+      } catch (e) {
+        print("Error decoding JSON: $e");
+      }
     }
+
     return mediasData;
   }
 
@@ -174,112 +194,117 @@ class _SelectedAnnouncementScreenState
       context: context,
       builder: (BuildContext bc) {
         return SafeArea(
-          child: Container(
-            height: 102,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0), // TL: Top Left
-                topRight: Radius.circular(30.0), // TR: Top Right
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: 30,
-                  // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
-
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 140,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF2F2F2).withOpacity(1),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Card(
+            color: Colors.white,
+            borderOnForeground: false,
+            child: Container(
+              height: 102,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.0), // TL: Top Left
+                  topRight: Radius.circular(30.0), // TR: Top Right
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    //MARK: On delete:
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 30,
+                    // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
 
-                    _showProgressModal(context);
-                    try {
-                      log("IssssssssssssssssssssssD: ${widget.data["id"]}");
-                      log("IsssssD: ${widget.id}");
-                      // await supabase.from("community_logs").update(
-                      //     {'hide': true}).eq("id", {widget.id.toString()});
-                      await supabase
-                          .from("community_logs")
-                          .update({'hide': true}).eq("id", widget.id!);
-
-                      log("IssswwwwwssD: ${widget.data["id"]}");
-                      final announcementProvider =
-                          Provider.of<AnnouncementProvider>(
-                        context,
-                        listen: false,
-                      );
-                      log("provider1: ${announcementProvider.announcements.length}");
-                      List<dynamic> announcements =
-                          announcementProvider.announcements;
-                      announcements.removeAt(widget.idx!);
-                      log("provider2: ${announcementProvider.announcements.length}");
-
-                      Provider.of<AnnouncementProvider>(context, listen: false)
-                          .setMyAnnouncements(announcements);
-                      log("provider3: ${announcementProvider.announcements.length}");
-
-                      showAppToast(context, "Hidden successfully!");
-                    } catch (e) {
-                      log("provider1: ${e.toString()}");
-                      showAppToast(context, "Error occured!");
-                    }
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    height: 70,
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color(0xFFF2F2F2),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    child: Stack(
                       children: [
-                        Text("Hide Announcement",
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF17181A),
-                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 25),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
+                                children: [
+                                  Container(
+                                    width: 140,
+                                    height: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF2F2F2).withOpacity(1),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () async {
+                      //MARK: On delete:
+
+                      _showProgressModal(context);
+                      try {
+                        log("IssssssssssssssssssssssD: ${widget.data["id"]}");
+                        log("IsssssD: ${widget.id}");
+                        // await supabase.from("community_logs").update(
+                        //     {'hide': true}).eq("id", {widget.id.toString()});
+                        await supabase
+                            .from("community_logs")
+                            .update({'hide': true}).eq("id", widget.id!);
+
+                        log("IssswwwwwssD: ${widget.data["id"]}");
+                        final announcementProvider =
+                            Provider.of<AnnouncementProvider>(
+                          context,
+                          listen: false,
+                        );
+                        log("provider1: ${announcementProvider.announcements.length}");
+                        List<dynamic> announcements =
+                            announcementProvider.announcements;
+                        announcements.removeAt(widget.idx!);
+                        log("provider2: ${announcementProvider.announcements.length}");
+
+                        Provider.of<AnnouncementProvider>(context,
+                                listen: false)
+                            .setMyAnnouncements(announcements);
+                        log("provider3: ${announcementProvider.announcements.length}");
+
+                        showAppToast(context, "Hidden successfully!");
+                      } catch (e) {
+                        log("provider1: ${e.toString()}");
+                        showAppToast(context, "Error occured!");
+                      }
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      height: 70,
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.white,
+                      //   borderRadius: BorderRadius.circular(8),
+                      //   border: Border(
+                      //     bottom: BorderSide(
+                      //       color: Color(0xFFF2F2F2),
+                      //       width: 1,
+                      //     ),
+                      //   ),
+                      // ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Hide Announcement",
+                              style: GoogleFonts.inter(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF17181A),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

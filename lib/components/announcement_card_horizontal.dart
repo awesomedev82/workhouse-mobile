@@ -82,10 +82,20 @@ class _AnnouncementCardHorizontalState
       // });
       userInfo = temp[0];
     }
+    
     List<dynamic> mediasTemp = <dynamic>[];
+print(data["images"].toString());
+
+if (data["images"] != null && data["images"].toString().isNotEmpty && data["images"].toString() != '[""]') {
+  try {
     for (var media in json.decode(data["images"])) {
       mediasTemp.add({"type": media["type"], "url": media["url"]});
     }
+  } catch (e) {
+    print("Error decoding JSON: $e");
+  }
+}
+
 
     setState(() {
       try {
@@ -131,11 +141,21 @@ class _AnnouncementCardHorizontalState
     }
   }
 
-  List<dynamic> getMediaData(data) {
+  List<dynamic> getMediaData(String? data) {
     List<dynamic> mediasData = <dynamic>[];
-    for (var media in json.decode(data)) {
-      mediasData.add({"type": media["type"], "url": media["url"]});
+    print("data");
+    print(data);
+
+    if (data != null && data.isNotEmpty && data != '[""]') {
+      try {
+        for (var media in json.decode(data)) {
+          mediasData.add({"type": media["type"], "url": media["url"]});
+        }
+      } catch (e) {
+        print("Error decoding JSON: $e");
+      }
     }
+
     return mediasData;
   }
 
@@ -145,102 +165,107 @@ class _AnnouncementCardHorizontalState
       context: context,
       builder: (BuildContext bc) {
         return SafeArea(
-          child: Container(
-            height: 102,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0), // TL: Top Left
-                topRight: Radius.circular(30.0), // TR: Top Right
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 30,
-                  // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
-
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF2F2F2).withOpacity(1),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Card(
+            color: Colors.white,
+            borderOnForeground: false,
+            child: Container(
+              height: 102,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.0), // TL: Top Left
+                  topRight: Radius.circular(30.0), // TR: Top Right
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    //MARK: On delete:
+              ),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 30,
+                    // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
 
-                    _showProgressModal(context);
-                    try {
-                      await supabase
-                          .from("community_logs")
-                          .update({'hide': true}).eq("id", widget.id);
-                      final announcementProvider =
-                          Provider.of<AnnouncementProvider>(context,
-                              listen: false);
-                      List<dynamic> announcements =
-                          announcementProvider.announcements;
-                      announcements.removeAt(widget.idx);
-
-                      Provider.of<AnnouncementProvider>(context, listen: false)
-                          .setMyAnnouncements(announcements);
-                      showAppToast(context, "Hidden successfully!");
-                    } catch (e) {
-                      showAppToast(context, "Error occured!");
-                    }
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    height: 70,
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color(0xFFF2F2F2),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    child: Stack(
                       children: [
-                        SvgPicture.asset(
-                          width: 30,
-                          height: 30,
-                          'assets/images/hide_announcement_icon.svg',
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF2F2F2).withOpacity(1),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text("Hide Announcement"),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () async {
+                      //MARK: On delete:
+
+                      _showProgressModal(context);
+                      try {
+                        await supabase
+                            .from("community_logs")
+                            .update({'hide': true}).eq("id", widget.id);
+                        final announcementProvider =
+                            Provider.of<AnnouncementProvider>(context,
+                                listen: false);
+                        List<dynamic> announcements =
+                            announcementProvider.announcements;
+                        announcements.removeAt(widget.idx);
+
+                        Provider.of<AnnouncementProvider>(context,
+                                listen: false)
+                            .setMyAnnouncements(announcements);
+                        showAppToast(context, "Hidden successfully!");
+                      } catch (e) {
+                        showAppToast(context, "Error occured!");
+                      }
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      height: 70,
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.white,
+                      //   borderRadius: BorderRadius.circular(8),
+                      //   border: Border(
+                      //     bottom: BorderSide(
+                      //       color: Color(0xFFF2F2F2),
+                      //       width: 1,
+                      //     ),
+                      //   ),
+                      // ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            width: 30,
+                            height: 30,
+                            'assets/images/hide_announcement_icon.svg',
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text("Hide Announcement"),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

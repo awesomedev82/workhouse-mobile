@@ -52,7 +52,7 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
   @override
   void initState() {
     super.initState();
-     supabase = Supabase.instance.client;
+    supabase = Supabase.instance.client;
   }
 
   @override
@@ -303,7 +303,6 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
         });
       }
     }
-   
 
     log("dataaaaa ${data}");
 
@@ -715,119 +714,124 @@ class _ShareFirstScreenState extends State<ShareFirstScreen> {
               ],
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // MARK: screen-description
-                      SizedBox(
-                        height: 4,
-                      ),
-                      TextField(
-                        maxLines: 10,
-                        minLines: 3,
-                        keyboardType: TextInputType.multiline,
-                        // focusNode: _nodeText,
-                        decoration: InputDecoration(
-                          hintText: "Share your announcement.",
-                          hintStyle: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                              color: Color(0xFFCBCBCB),
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16,
-                              height: 1.47,
-                            ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // MARK: screen-description
+                    SizedBox(
+                      height: 4,
+                    ),
+                    TextField(
+                      maxLines: 10,
+                      minLines: 3,
+                      keyboardType: TextInputType.multiline,
+                      // focusNode: _nodeText,
+                      decoration: InputDecoration(
+                        hintText: "Share your announcement.",
+                        hintStyle: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                            color: Color(0xFFCBCBCB),
+                            fontWeight: FontWeight.w300,
+                            fontSize: 16,
+                            height: 1.47,
                           ),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            _description = value;
-                          });
-                        },
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
                       ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      //MARK: screen-media
-                      Container(
+                      onChanged: (value) {
+                        setState(() {
+                          _description = value;
+                        });
+                      },
+                    ),
+                    // SizedBox(
+                    //   height: 12,
+                    // ),
+                    //MARK: screen-media
+                    Expanded(
+                      child: Container(
                         padding: EdgeInsets.zero,
                         margin: EdgeInsets.zero,
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: imagefiles.length,
+                          physics: AlwaysScrollableScrollPhysics(),
+                          itemCount: imagefiles.length + 1,
                           itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                lookupMimeType(imagefiles[index].path)
-                                        .toString()
-                                        .startsWith("image")
-                                    ? Container(
-                                        height: 200,
-                                        width: double.infinity,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 5),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: Image.file(
-                                            imagefiles[index],
-                                            fit: BoxFit.cover,
+                            return index == imagefiles.length
+                                ? SizedBox(
+                                    height: 250,
+                                  )
+                                : Stack(
+                                    children: [
+                                      lookupMimeType(imagefiles[index].path)
+                                              .toString()
+                                              .startsWith("image")
+                                          ? Container(
+                                              height: 200,
+                                              width: double.infinity,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.file(
+                                                  imagefiles[index],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              height: 200,
+                                              width: double.infinity,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: AppVideoPlayer(
+                                                  type: "file",
+                                                  source: imagefiles[index],
+                                                ),
+                                              ),
+                                            ),
+                                      Positioned(
+                                        left: 12,
+                                        top: 12,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              imagefiles.removeAt(index);
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 34,
+                                            height: 34,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF2D2D2D)
+                                                  .withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(17),
+                                            ),
+                                            child: Icon(
+                                              Ionicons.close,
+                                              color: Colors.white,
+                                              size: 24,
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    : Container(
-                                        height: 200,
-                                        width: double.infinity,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 5),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: AppVideoPlayer(
-                                            type: "file",
-                                            source: imagefiles[index],
-                                          ),
-                                        ),
                                       ),
-                                Positioned(
-                                  left: 12,
-                                  top: 12,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        imagefiles.removeAt(index);
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 34,
-                                      height: 34,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Color(0xFF2D2D2D).withOpacity(0.5),
-                                        borderRadius: BorderRadius.circular(17),
-                                      ),
-                                      child: Icon(
-                                        Ionicons.close,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
+                                    ],
+                                  );
                           },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

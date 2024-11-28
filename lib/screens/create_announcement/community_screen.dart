@@ -732,7 +732,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                             : GestureDetector(
                                                                 onTap: () {
                                                                   log("Selected Announcement ID: ${announcement["id"]}");
-                                                                  // print(announcement);
+                                                                  log(announcement
+                                                                      .toString());
                                                                   // log(announcement);
                                                                   Navigator
                                                                       .push(
