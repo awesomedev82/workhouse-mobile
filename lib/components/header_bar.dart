@@ -24,7 +24,7 @@ class _HeaderBarState extends State<HeaderBar> {
         border: Border(
           bottom: BorderSide(
             color: Color(0xFFEAE6E6),
-            width: 1,
+            width:  1,
           ),
         ),
       ),

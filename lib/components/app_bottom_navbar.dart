@@ -47,7 +47,8 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
       avatar = prefixURL + profileProvider.avatar;
     }
     return Container(
-      height: 80,
+      color: Colors.white,
+      height: 70,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 6),
         decoration: BoxDecoration(

@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: Colors.white, // Set to white
+        // systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            Brightness.dark, // Set the icon brightness to dark
+        systemNavigationBarIconBrightness:
+            Brightness.dark, // Adjust navigation bar icons // Adjust icons
+      ),
+    );
   }
 
   @override

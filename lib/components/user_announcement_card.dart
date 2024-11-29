@@ -81,19 +81,20 @@ class _UserAnnouncementCardState extends State<UserAnnouncementCard> {
       });
       userInfo = temp[0];
     }
-   List<dynamic> mediasTemp = <dynamic>[];
-print(data["images"].toString());
+    List<dynamic> mediasTemp = <dynamic>[];
+    print(data["images"].toString());
 
-if (data["images"] != null && data["images"].toString().isNotEmpty && data["images"].toString() != '[""]') {
-  try {
-    for (var media in json.decode(data["images"])) {
-      mediasTemp.add({"type": media["type"], "url": media["url"]});
+    if (data["images"] != null &&
+        data["images"].toString().isNotEmpty &&
+        data["images"].toString() != '[""]') {
+      try {
+        for (var media in json.decode(data["images"])) {
+          mediasTemp.add({"type": media["type"], "url": media["url"]});
+        }
+      } catch (e) {
+        print("Error decoding JSON: $e");
+      }
     }
-  } catch (e) {
-    print("Error decoding JSON: $e");
-  }
-}
-
 
     setState(() {
       publicName =
@@ -134,165 +135,260 @@ if (data["images"] != null && data["images"].toString().isNotEmpty && data["imag
     }
   }
 
- List<dynamic> getMediaData(String? data) {
-  List<dynamic> mediasData = <dynamic>[];
-  print("data");
-  print(data);
+  List<dynamic> getMediaData(String? data) {
+    List<dynamic> mediasData = <dynamic>[];
 
-  if (data != null && data.isNotEmpty && data != '[""]') {
-    try {
-      for (var media in json.decode(data)) {
-        mediasData.add({"type": media["type"], "url": media["url"]});
+    if (data != null && data.isNotEmpty && data != '[""]') {
+      try {
+        for (var media in json.decode(data)) {
+          mediasData.add({"type": media["type"], "url": media["url"]});
+        }
+      } catch (e) {
+        print("Error decoding JSON: $e");
       }
-    } catch (e) {
-      print("Error decoding JSON: $e");
     }
+
+    return mediasData;
   }
 
-  return mediasData;
-}
-
-  //MARK: Show delete button
   void _showDeleteBottomSheet(context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
-        return SafeArea(
-          child: Card(
+        return Container(
+          height: 102,
+          decoration: BoxDecoration(
             color: Colors.white,
-            borderOnForeground: false,
-            child: Container(
-              height: 142,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0), // TL: Top Left
-                  topRight: Radius.circular(30.0), // TR: Top Right
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: 70,
-                    padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
-                    // decoration: BoxDecoration(
-                    //   border: Border(
-                    //     bottom: BorderSide(
-                    //       color: Color(0xFFF2F2F2),
-                    //       width: 1,
-                    //     ),
-                    //   ),
-                    // ),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), // TL: Top Left
+              topRight: Radius.circular(30.0), // TR: Top Right
+            ),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 30,
+                // padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
                             children: [
-                              Stack(
-                                children: [
-                                  Container(
-                                    width: 140,
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF2F2F2).withOpacity(1),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                ],
+                              Container(
+                                width: 140,
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF2F2F2).withOpacity(1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        // Positioned(
-                        //   right: 0,
-                        //   child: Row(
-                        //     children: [
-                        //       GestureDetector(
-                        //         onTap: () {
-                        //           setState(() {});
-                        //           Navigator.pop(context);
-                        //         },
-                        //         child: Text(
-                        //           "Close",
-                        //           style: GoogleFonts.inter(
-                        //             textStyle: TextStyle(
-                        //               fontSize: 14,
-                        //               height: 1.6,
-                        //               fontWeight: FontWeight.w300,
-                        //               color: Color(0xFF17181A),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      //MARK: On delete:
-                      _showProgressModal(context);
-                      try {
-                        log("Deleteee: ${widget.id}");
-                        await supabase
-                            .from("community_logs")
-                            .delete()
-                            .eq("id", widget.id);
-                        final announcementProvider =
-                            Provider.of<AnnouncementProvider>(context,
-                                listen: false);
-                        List<dynamic> myAnnouncements =
-                            announcementProvider.myAnnouncements;
-                        myAnnouncements.removeAt(widget.index);
-            
-                        Provider.of<AnnouncementProvider>(context, listen: false)
-                            .setMyAnnouncements(myAnnouncements);
-                        showAppToast(context, "Deleted successfully!");
-                      } catch (e) {
-                        showAppToast(context, "Error occured!");
-                      }
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      height: 70,
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      // decoration: BoxDecoration(
-                      //   color: Colors.white,
-                      //   borderRadius: BorderRadius.circular(8),
-                      //   border: Border(
-                      //     bottom: BorderSide(
-                      //       color: Color(0xFFF2F2F2),
-                      //       width: 1,
-                      //     ),
-                      //   ),
-                      // ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Delete Announcement",
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF17181A),
-                              )),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () async {
+                  //MARK: On delete:
+                  _showProgressModal(context);
+                  try {
+                    log("Deleteee: ${widget.id}");
+                    await supabase
+                        .from("community_logs")
+                        .delete()
+                        .eq("id", widget.id);
+                    final announcementProvider =
+                        Provider.of<AnnouncementProvider>(context,
+                            listen: false);
+                    List<dynamic> myAnnouncements =
+                        announcementProvider.myAnnouncements;
+                    myAnnouncements.removeAt(widget.index);
+
+                    Provider.of<AnnouncementProvider>(context, listen: false)
+                        .setMyAnnouncements(myAnnouncements);
+                    showAppToast(context, "Deleted successfully!");
+                  } catch (e) {
+                    showAppToast(context, "Error occured!");
+                  }
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  height: 70,
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   border: Border(
+                  //     bottom: BorderSide(
+                  //       color: Color(0xFFF2F2F2),
+                  //       width: 1,
+                  //     ),
+                  //   ),
+                  // ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Delete Announcement",
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF17181A),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+  //MARK: Show delete button
+  // void _showDeleteBottomSheet(context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext bc) {
+  //       return Container(
+  //         height: 130,
+  //         decoration: BoxDecoration(
+  //           // color: Colors.white,
+  //           borderRadius: BorderRadius.only(
+  //             topLeft: Radius.circular(30.0), // TL: Top Left
+  //             topRight: Radius.circular(30.0), // TR: Top Right
+  //           ),
+  //         ),
+  //         child: Column(
+  //           children: <Widget>[
+  //             Container(
+  //               height: 30,
+  //               padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+  //               // decoration: BoxDecoration(
+  //               //   border: Border(
+  //               //     bottom: BorderSide(
+  //               //       color: Color(0xFFF2F2F2),
+  //               //       width: 1,
+  //               //     ),
+  //               //   ),
+  //               // ),
+  //               child: Stack(
+  //                 children: [
+  //                   Padding(
+  //                     padding: EdgeInsets.symmetric(vertical: 10),
+  //                     child: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Stack(
+  //                           children: [
+  //                             Container(
+  //                               width: 140,
+  //                               height: 5,
+  //                               decoration: BoxDecoration(
+  //                                 color: Color(0xFFF2F2F2).withOpacity(1),
+  //                                 borderRadius: BorderRadius.circular(4),
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   // Positioned(
+  //                   //   right: 0,
+  //                   //   child: Row(
+  //                   //     children: [
+  //                   //       GestureDetector(
+  //                   //         onTap: () {
+  //                   //           setState(() {});
+  //                   //           Navigator.pop(context);
+  //                   //         },
+  //                   //         child: Text(
+  //                   //           "Close",
+  //                   //           style: GoogleFonts.inter(
+  //                   //             textStyle: TextStyle(
+  //                   //               fontSize: 14,
+  //                   //               height: 1.6,
+  //                   //               fontWeight: FontWeight.w300,
+  //                   //               color: Color(0xFF17181A),
+  //                   //             ),
+  //                   //           ),
+  //                   //         ),
+  //                   //       ),
+  //                   //     ],
+  //                   //   ),
+  //                   // ),
+  //                 ],
+  //               ),
+  //             ),
+  //             GestureDetector(
+  //               onTap: () async {
+  //                 //MARK: On delete:
+  //                 _showProgressModal(context);
+  //                 try {
+  //                   log("Deleteee: ${widget.id}");
+  //                   await supabase
+  //                       .from("community_logs")
+  //                       .delete()
+  //                       .eq("id", widget.id);
+  //                   final announcementProvider =
+  //                       Provider.of<AnnouncementProvider>(context,
+  //                           listen: false);
+  //                   List<dynamic> myAnnouncements =
+  //                       announcementProvider.myAnnouncements;
+  //                   myAnnouncements.removeAt(widget.index);
+
+  //                   Provider.of<AnnouncementProvider>(context, listen: false)
+  //                       .setMyAnnouncements(myAnnouncements);
+  //                   showAppToast(context, "Deleted successfully!");
+  //                 } catch (e) {
+  //                   showAppToast(context, "Error occured!");
+  //                 }
+  //                 Navigator.of(context).pop();
+  //                 Navigator.of(context).pop();
+  //               },
+  //               child: Container(
+  //                 height: 70,
+  //                 padding: EdgeInsets.symmetric(horizontal: 24),
+  //                 // decoration: BoxDecoration(
+  //                 //   color: Colors.white,
+  //                 //   borderRadius: BorderRadius.circular(8),
+  //                 //   border: Border(
+  //                 //     bottom: BorderSide(
+  //                 //       color: Color(0xFFF2F2F2),
+  //                 //       width: 1,
+  //                 //     ),
+  //                 //   ),
+  //                 // ),
+  //                 child: Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Text("Delete Announcement",
+  //                         style: GoogleFonts.inter(
+  //                           fontSize: 14,
+  //                           fontWeight: FontWeight.w400,
+  //                           color: Color(0xFF17181A),
+  //                         )),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   // MARK: Loading Progress Animation
   void _showProgressModal(BuildContext context) {

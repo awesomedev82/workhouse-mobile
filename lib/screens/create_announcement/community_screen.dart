@@ -52,6 +52,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   String communityID = "";
   int? selectedAnnouncementId;
   int selectedId = -1;
+  int selectedIndex = 0;
 
   late SupabaseClient supabaseIns;
   bool _isLoading = true;
@@ -240,6 +241,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     dynamic announcements = announcementProvider.announcements;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Consumer<AnnouncementProvider>(
         builder: (context, announcementProvider, child) {
           return Container(
@@ -284,9 +286,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 //     ],
                 //   ),
                 // ),
-                SizedBox(
-                  height: 10,
-                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
                 HeaderBar(title: "Workhouse"),
                 SizedBox(
                   height: 10,
@@ -588,6 +590,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                           //:
                                                           GestureDetector(
                                                         onTap: () {
+                                                          print(":fbjfkbsdkfs");
                                                           onSelectAnnouncement(
                                                             announcement,
                                                             //idx: index,
@@ -666,9 +669,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                         // log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
 
                                                         setState(() {
+                                                          selectedIndex =
+                                                              currentIndex;
                                                           selectedId =
                                                               selectedAnnouncementId ??
                                                                   -1;
+                                                          // print(
+                                                          //     "selectedIndex");
+                                                          // print(selectedIndex);
                                                           // print("selectedId");
                                                           // print(selectedId);
                                                           // print(announcementProvider
@@ -779,6 +787,31 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                 ),
                                               ),
                                             ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(
+                                          announcementProvider
+                                                  .announcements.length -
+                                              1, (index) {
+                                        return Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 3),
+                                          height: 6,
+                                          width: 6,
+                                          decoration: BoxDecoration(
+                                            color: index == selectedIndex
+                                                ? Color(0xFFAAD130)
+                                                : Color(0xFF4D4D4D),
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ),
                                 ],
                               ),
 
