@@ -239,603 +239,554 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final announcementProvider = Provider.of<AnnouncementProvider>(context);
     dynamic announcements = announcementProvider.announcements;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Consumer<AnnouncementProvider>(
-          builder: (context, announcementProvider, child) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                color: APP_WHITE_COLOR,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 18),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/logos.svg",
-                          height: 35,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF014E53),
-                            borderRadius: BorderRadius.circular(9),
-                          ),
-                          child: Text(
-                            "BETA",
-                            style: TextStyle(
-                              // fontFamily: "Lastik-test",
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFFF5F5F5),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  announcementProvider.announcements.isEmpty
-                      ? CommunityEmptyScreen()
-                      : Expanded(
-                          child: FlutterPullUpDownRefresh(
-                            scrollController: ScrollController(),
-                            showRefreshIndicator: true,
-                            refreshIndicatorColor: Color(0xFFDC6803),
-                            isLoading: false,
-                            loadingColor: Colors.red,
-                            loadingBgColor: Colors.grey.withAlpha(100),
-                            isBootomLoading: false,
-                            bottomLoadingColor: Colors.green,
-                            scaleBottomLoading: 0.6,
-                            onRefresh: () async {
-                              _showProgressModal(context);
-                              await getData();
-                              // End refresh
-                            },
-                            onAtBottom: (status) {},
-                            onAtTop: (status) {
-                              if (kDebugMode) {
-                                print("Scroll at Top");
-                              }
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  child: Text(
-                                    "Sponsored",
-                                    textAlign: TextAlign.left,
-                                    style: GoogleFonts.inter(
-                                      color: APP_BLACK_COLOR,
-                                      fontSize: 14,
-                                      height: 1.6,
-                                      fontWeight: FontWeight.w300,
-                                    ),
+    return Scaffold(
+      body: Consumer<AnnouncementProvider>(
+        builder: (context, announcementProvider, child) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: APP_WHITE_COLOR,
+            ),
+            child: Column(
+              children: [
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(
+                //       vertical: 20, horizontal: 18),
+                //   child: Row(
+                //     children: [
+                //       SvgPicture.asset(
+                //         "assets/images/logos.svg",
+                //         height: 35,
+                //       ),
+                //       SizedBox(
+                //         width: 10,
+                //       ),
+                //       Container(
+                //         padding: EdgeInsets.symmetric(
+                //           vertical: 8,
+                //           horizontal: 12,
+                //         ),
+                //         decoration: BoxDecoration(
+                //           color: Color(0xFF014E53),
+                //           borderRadius: BorderRadius.circular(9),
+                //         ),
+                //         child: Text(
+                //           "BETA",
+                //           style: TextStyle(
+                //             // fontFamily: "Lastik-test",
+                //             fontSize: 10,
+                //             fontWeight: FontWeight.w400,
+                //             color: Color(0xFFF5F5F5),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                SizedBox(
+                  height: 10,
+                ),
+                HeaderBar(title: "Workhouse"),
+                SizedBox(
+                  height: 10,
+                ),
+                announcementProvider.announcements.isEmpty
+                    ? CommunityEmptyScreen()
+                    : Expanded(
+                        child: FlutterPullUpDownRefresh(
+                          scrollController: ScrollController(),
+                          showRefreshIndicator: true,
+                          refreshIndicatorColor: Color(0xFFDC6803),
+                          isLoading: false,
+                          loadingColor: Colors.red,
+                          loadingBgColor: Colors.grey.withAlpha(100),
+                          isBootomLoading: false,
+                          bottomLoadingColor: Colors.green,
+                          scaleBottomLoading: 0.6,
+                          onRefresh: () async {
+                            _showProgressModal(context);
+                            await getData();
+                            // End refresh
+                          },
+                          onAtBottom: (status) {},
+                          onAtTop: (status) {
+                            if (kDebugMode) {
+                              print("Scroll at Top");
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Text(
+                                  "Sponsored",
+                                  textAlign: TextAlign.left,
+                                  style: GoogleFonts.inter(
+                                    color: APP_BLACK_COLOR,
+                                    fontSize: 14,
+                                    height: 1.6,
+                                    fontWeight: FontWeight.w300,
                                   ),
                                 ),
-                                _isLoading
-                                    ? Skeletonizer(
-                                        child: ImageCarousel(),
-                                      )
-                                    : ImageCarousel(),
+                              ),
+                              _isLoading
+                                  ? Skeletonizer(
+                                      child: ImageCarousel(),
+                                    )
+                                  : ImageCarousel(),
 
-                                // ListView.builder(
-                                //   padding: EdgeInsets.zero,
-                                //   shrinkWrap: true,
-                                //   physics: NeverScrollableScrollPhysics(),
-                                //   itemCount:
-                                //       announcementProvider.announcements.length,
-                                //   itemBuilder: (context, index) {
-                                //     final announcement =
-                                //         announcementProvider.announcements[index];
+                              // ListView.builder(
+                              //   padding: EdgeInsets.zero,
+                              //   shrinkWrap: true,
+                              //   physics: NeverScrollableScrollPhysics(),
+                              //   itemCount:
+                              //       announcementProvider.announcements.length,
+                              //   itemBuilder: (context, index) {
+                              //     final announcement =
+                              //         announcementProvider.announcements[index];
 
-                                //     return _isLoading
-                                //         ? Skeletonizer(
-                                //             child: AnnouncementCardSkeleton(
-                                //               role: announcementProvider
-                                //                   .announcements[index]["role"],
-                                //             ),
-                                //           )
-                                //         : GestureDetector(
-                                //             onTap: () {
-                                //               // onSelectAnnouncement(
-                                //               //     announcement);
+                              //     return _isLoading
+                              //         ? Skeletonizer(
+                              //             child: AnnouncementCardSkeleton(
+                              //               role: announcementProvider
+                              //                   .announcements[index]["role"],
+                              //             ),
+                              //           )
+                              //         : GestureDetector(
+                              //             onTap: () {
+                              //               // onSelectAnnouncement(
+                              //               //     announcement);
 
-                                //               log("INDEX: $index");
-                                //               log("INDEX2: ${announcement["id"]}");
-                                //               log("INDEX2: ${announcement["id"].runtimeType}");
-                                //               log("INDEX:3 ${announcement}");
-                                //               Navigator.push(
-                                //                 context,
-                                //                 MaterialPageRoute(
-                                //                   builder: (context) =>
-                                //                       SelectedAnnouncementScreen(
-                                //                     data: announcement,
-                                //                     id: announcement["id"],
-                                //                     idx: index,
-                                //                   ),
-                                //                 ),
-                                //               );
-                                //             },
-                                //             child: AnnouncementCard(
-                                //               id: announcement["id"],
-                                //               idx: index,
-                                //             ),
-                                //           );
-                                //   },
-                                // ),
-                                Column(
-                                  children: [
-                                    _isLoading
-                                        ? Skeletonizer(
+                              //               log("INDEX: $index");
+                              //               log("INDEX2: ${announcement["id"]}");
+                              //               log("INDEX2: ${announcement["id"].runtimeType}");
+                              //               log("INDEX:3 ${announcement}");
+                              //               Navigator.push(
+                              //                 context,
+                              //                 MaterialPageRoute(
+                              //                   builder: (context) =>
+                              //                       SelectedAnnouncementScreen(
+                              //                     data: announcement,
+                              //                     id: announcement["id"],
+                              //                     idx: index,
+                              //                   ),
+                              //                 ),
+                              //               );
+                              //             },
+                              //             child: AnnouncementCard(
+                              //               id: announcement["id"],
+                              //               idx: index,
+                              //             ),
+                              //           );
+                              //   },
+                              // ),
+                              Column(
+                                children: [
+                                  _isLoading
+                                      ? Skeletonizer(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 1,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(0),
+                                              color: Color(0xFFEDFDF4),
+                                              // border: Border.all(
+                                              //   color: Color(0xFF014E53).withOpacity(0.1),
+                                              //   width: 1,
+                                              // ),
+                                            ),
+                                            width: 500,
+                                            height: 580,
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(0),
-                                                color: Color(0xFFEDFDF4),
-                                                // border: Border.all(
-                                                //   color: Color(0xFF014E53).withOpacity(0.1),
-                                                //   width: 1,
-                                                // ),
-                                              ),
-                                              width: 500,
-                                              height: 580,
-                                              child: Container(
-                                                child: ListView.builder(
-                                                  padding: EdgeInsets.zero,
-                                                  shrinkWrap: true,
-                                                  scrollDirection: Axis
-                                                      .horizontal, // Horizontal scroll
-                                                  itemCount:
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap: true,
+                                                scrollDirection: Axis
+                                                    .horizontal, // Horizontal scroll
+                                                itemCount: announcementProvider
+                                                    .announcements.length,
+                                                itemBuilder: (context, index) {
+                                                  final announcement =
                                                       announcementProvider
-                                                          .announcements.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final announcement =
-                                                        announcementProvider
-                                                                .announcements[
-                                                            index];
+                                                          .announcements[index];
 
-                                                    // Only show the AnnouncementCard if the role is 'manager'
-                                                    if (announcement["role"] !=
-                                                        "manager") {
-                                                      return SizedBox
-                                                          .shrink(); // Don't show the card for non-'manager' roles
-                                                    }
+                                                  // Only show the AnnouncementCard if the role is 'manager'
+                                                  if (announcement["role"] !=
+                                                      "manager") {
+                                                    return SizedBox
+                                                        .shrink(); // Don't show the card for non-'manager' roles
+                                                  }
 
-                                                    return
-                                                        // _isLoading
-                                                        //     ? Skeletonizer(
-                                                        //         child: AnnouncementCardSkeleton(
-                                                        //           role: announcement["role"],
-                                                        //         ),
-                                                        //       )
-                                                        //:
-                                                        GestureDetector(
-                                                      onTap: () {
-                                                        print("iaddasd");
-                                                        print(announcement);
-                                                        onSelectAnnouncement(
-                                                          announcement,
-                                                          //idx: index,
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        // height:
-                                                        //     250, // Adjust height if necessary
-                                                        width:
-                                                            400, // Width of each item
-                                                        // margin: EdgeInsets.only(
-                                                        //     left:
-                                                        //         3), // Optional: Add spacing between items
-                                                        child:
-                                                            AnnouncementCardDescription(
-                                                          id: announcement[
-                                                              "id"],
-                                                          idx: index,
-                                                        ),
+                                                  return
+                                                      // _isLoading
+                                                      //     ? Skeletonizer(
+                                                      //         child: AnnouncementCardSkeleton(
+                                                      //           role: announcement["role"],
+                                                      //         ),
+                                                      //       )
+                                                      //:
+                                                      GestureDetector(
+                                                    onTap: () {
+                                                      print("iaddasd");
+                                                      print(announcement);
+                                                      onSelectAnnouncement(
+                                                        announcement,
+                                                        //idx: index,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      // height:
+                                                      //     250, // Adjust height if necessary
+                                                      width:
+                                                          400, // Width of each item
+                                                      // margin: EdgeInsets.only(
+                                                      //     left:
+                                                      //         3), // Optional: Add spacing between items
+                                                      child:
+                                                          AnnouncementCardDescription(
+                                                        id: announcement["id"],
+                                                        idx: index,
                                                       ),
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
-                                          )
-                                        : SizedBox.shrink(),
-                                    // : Container(
-                                    //     padding: EdgeInsets.symmetric(
-                                    //         horizontal: 1),
-                                    //     // height: 105,
-                                    //     child: SingleChildScrollView(
-                                    //       physics:
-                                    //           NeverScrollableScrollPhysics(),
-                                    //       scrollDirection: Axis.horizontal,
-                                    //       child: Row(
-                                    //         children: announcementProvider
-                                    //             .announcements
-                                    //             .where((announcement) =>
-                                    //                 announcement["role"] ==
-                                    //                 "manager")
-                                    //             .map<Widget>(
-                                    //                 (announcement) {
-                                    //           return GestureDetector(
-                                    //             onTap: () {
-                                    //               log("INDEX2: ${announcement["id"]}");
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  // : Container(
+                                  //     padding: EdgeInsets.symmetric(
+                                  //         horizontal: 1),
+                                  //     // height: 105,
+                                  //     child: SingleChildScrollView(
+                                  //       physics:
+                                  //           NeverScrollableScrollPhysics(),
+                                  //       scrollDirection: Axis.horizontal,
+                                  //       child: Row(
+                                  //         children: announcementProvider
+                                  //             .announcements
+                                  //             .where((announcement) =>
+                                  //                 announcement["role"] ==
+                                  //                 "manager")
+                                  //             .map<Widget>(
+                                  //                 (announcement) {
+                                  //           return GestureDetector(
+                                  //             onTap: () {
+                                  //               log("INDEX2: ${announcement["id"]}");
 
-                                    //               log("INDEX2: ${announcement["id"]}");
-                                    //               log("INDEX2: ${announcement["id"].runtimeType}");
-                                    //               log("INDEX:3 ${announcement}");
-                                    //               Navigator.push(
-                                    //                 context,
-                                    //                 MaterialPageRoute(
-                                    //                   builder: (context) =>
-                                    //                       SelectedAnnouncementScreen(
-                                    //                     data: announcement,
-                                    //                     id: announcement[
-                                    //                         "id"],
-                                    //                     idx: announcementProvider
-                                    //                         .announcements
-                                    //                         .indexOf(
-                                    //                             announcement),
-                                    //                   ),
-                                    //                 ),
-                                    //               );
-                                    //             },
-                                    //             child: Container(
-                                    //               width: 400,
-                                    //               child:
-                                    //                   AnnouncementCardDescription(
-                                    //                 id: announcement["id"],
-                                    //                 idx: selectedId == -1
-                                    //                     ? 0
-                                    //                     : announcementProvider
-                                    //                         .announcements
-                                    //                         .indexWhere(
-                                    //                         (announcent) =>
-                                    //                             announcent[
-                                    //                                 "id"] ==
-                                    //                             selectedId,
-                                    //                       ),
-                                    //               ),
-                                    //             ),
-                                    //           );
-                                    //         }).toList(),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    !_isLoading &&
-                                            announcementProvider.announcements
-                                                .where(
-                                                  (announcement) =>
-                                                      announcement["role"] ==
-                                                      "manager",
-                                                )
-                                                .toList()
-                                                .isEmpty
-                                        ? SvgPicture.asset(
-                                            width: 500,
-                                            height: 500,
-                                            "assets/images/empty_announcements.svg")
-                                        : _isLoading
-                                            ? Skeletonizer(
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 1,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            0),
-                                                    color: Color(0xFFEDFDF4),
-                                                    // border: Border.all(
-                                                    //   color: Color(0xFF014E53).withOpacity(0.1),
-                                                    //   width: 1,
-                                                    // ),
-                                                  ),
-                                                  width: 500,
-                                                  height: 580,
-                                                  child: Container(
-                                                    child: ListView.builder(
-                                                      padding: EdgeInsets.zero,
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis
-                                                          .horizontal, // Horizontal scroll
-                                                      itemCount:
-                                                          announcementProvider
-                                                              .announcements
-                                                              .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        final announcement =
-                                                            announcementProvider
-                                                                    .announcements[
-                                                                index];
-
-                                                        // Only show the AnnouncementCard if the role is 'manager'
-                                                        if (announcement[
-                                                                "role"] !=
-                                                            "manager") {
-                                                          return SizedBox
-                                                              .shrink(); // Don't show the card for non-'manager' roles
-                                                        }
-
-                                                        return
-                                                            // _isLoading
-                                                            //     ? Skeletonizer(
-                                                            //         child: AnnouncementCardSkeleton(
-                                                            //           role: announcement["role"],
-                                                            //         ),
-                                                            //       )
-                                                            //:
-                                                            GestureDetector(
-                                                          onTap: () {
-                                                            onSelectAnnouncement(
-                                                              announcement,
-                                                              //idx: index,
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            // height:
-                                                            //     250, // Adjust height if necessary
-                                                            width:
-                                                                400, // Width of each item
-                                                            // margin: EdgeInsets.only(
-                                                            //     left:
-                                                            //         3), // Optional: Add spacing between items
-                                                            child:
-                                                                AnnouncementCardHorizontal(
-                                                              id: announcement[
-                                                                  "id"],
-                                                              idx: index,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
+                                  //               log("INDEX2: ${announcement["id"]}");
+                                  //               log("INDEX2: ${announcement["id"].runtimeType}");
+                                  //               log("INDEX:3 ${announcement}");
+                                  //               Navigator.push(
+                                  //                 context,
+                                  //                 MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       SelectedAnnouncementScreen(
+                                  //                     data: announcement,
+                                  //                     id: announcement[
+                                  //                         "id"],
+                                  //                     idx: announcementProvider
+                                  //                         .announcements
+                                  //                         .indexOf(
+                                  //                             announcement),
+                                  //                   ),
+                                  //                 ),
+                                  //               );
+                                  //             },
+                                  //             child: Container(
+                                  //               width: 400,
+                                  //               child:
+                                  //                   AnnouncementCardDescription(
+                                  //                 id: announcement["id"],
+                                  //                 idx: selectedId == -1
+                                  //                     ? 0
+                                  //                     : announcementProvider
+                                  //                         .announcements
+                                  //                         .indexWhere(
+                                  //                         (announcent) =>
+                                  //                             announcent[
+                                  //                                 "id"] ==
+                                  //                             selectedId,
+                                  //                       ),
+                                  //               ),
+                                  //             ),
+                                  //           );
+                                  //         }).toList(),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  !_isLoading &&
+                                          announcementProvider.announcements
+                                              .where(
+                                                (announcement) =>
+                                                    announcement["role"] ==
+                                                    "manager",
                                               )
-                                            : Container(
+                                              .toList()
+                                              .isEmpty
+                                      ? SvgPicture.asset(
+                                          width: 500,
+                                          height: 500,
+                                          "assets/images/empty_announcements.svg")
+                                      : _isLoading
+                                          ? Skeletonizer(
+                                              child: Container(
                                                 padding: EdgeInsets.symmetric(
                                                   horizontal: 1,
                                                 ),
-                                                // decoration: BoxDecoration(
-                                                //   borderRadius: BorderRadius.circular(18),
-                                                //   color: Color(0xFFEDFDF4),
-                                                //   border: Border.all(
-                                                //     color: Color(0xFF014E53)
-                                                //         .withOpacity(0.1),
-                                                //     width: 1,
-                                                //   ),
-                                                // ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(0),
+                                                  color: Color(0xFFEDFDF4),
+                                                  // border: Border.all(
+                                                  //   color: Color(0xFF014E53).withOpacity(0.1),
+                                                  //   width: 1,
+                                                  // ),
+                                                ),
                                                 width: 500,
-                                                height: 560,
+                                                height: 580,
                                                 child: Container(
-                                                  child: NotificationListener<
-                                                      ScrollNotification>(
-                                                    onNotification:
-                                                        (ScrollNotification
-                                                            notification) {
-                                                      if (notification
-                                                          is ScrollUpdateNotification) {
-                                                        // print(":fskdhfjks");
-                                                        final scrollPosition =
-                                                            notification
-                                                                .metrics.pixels;
-                                                        const itemWidth =
-                                                            400.0; // Item width
-                                                        const spacing =
-                                                            8.0; // Spacing between items
-
-                                                        // Calculate the index based on scroll position and item width
-                                                        final currentIndex =
-                                                            (scrollPosition /
-                                                                    (itemWidth +
-                                                                        spacing))
-                                                                .floor();
-
-                                                        // Ensure the index doesn't exceed the available number of items
-                                                        if (currentIndex >= 0 &&
-                                                            currentIndex <
-                                                                announcementProvider
-                                                                    .announcements
-                                                                    .length) {
-                                                          selectedAnnouncementId =
-                                                              announcementProvider
-                                                                      .announcements[
-                                                                  currentIndex]["id"];
-                                                          // log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
-
-                                                          setState(() {
-                                                            selectedId =
-                                                                selectedAnnouncementId ??
-                                                                    -1;
-                                                            // print("selectedId");
-                                                            // print(selectedId);
-                                                            // print(announcementProvider
-                                                            //         .announcements[
-                                                            //     currentIndex]);
-                                                          });
-                                                        }
-
-                                                        // Handle when the scroll is near the end, ensuring the last item is considered
-                                                        // if (scrollPosition ==
-                                                        //     notification.metrics
-                                                        //         .maxScrollExtent) {
-                                                        //   final lastIndex =
-                                                        //       announcementProvider
-                                                        //               .announcements
-                                                        //               .length -
-                                                        //           1;
-                                                        //   final lastAnnouncementId =
-                                                        //       announcementProvider
-                                                        //               .announcements[
-                                                        //           lastIndex]["id"];
-                                                        //   log("Last Announcement ID: $lastAnnouncementId");
-                                                        // }
-                                                      }
-                                                      return true; // Returning true to continue notification handling
-                                                    },
-                                                    child: ListView.builder(
-                                                      physics:
-                                                          BouncingScrollPhysics(),
-                                                      padding: EdgeInsets.zero,
-                                                      shrinkWrap: true,
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      itemCount:
+                                                  child: ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    shrinkWrap: true,
+                                                    scrollDirection: Axis
+                                                        .horizontal, // Horizontal scroll
+                                                    itemCount:
+                                                        announcementProvider
+                                                            .announcements
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final announcement =
                                                           announcementProvider
-                                                              .announcements
-                                                              .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        // log("Current Announcement index: $index");
-                                                        final announcement =
+                                                                  .announcements[
+                                                              index];
+
+                                                      // Only show the AnnouncementCard if the role is 'manager'
+                                                      if (announcement[
+                                                              "role"] !=
+                                                          "manager") {
+                                                        return SizedBox
+                                                            .shrink(); // Don't show the card for non-'manager' roles
+                                                      }
+
+                                                      return
+                                                          // _isLoading
+                                                          //     ? Skeletonizer(
+                                                          //         child: AnnouncementCardSkeleton(
+                                                          //           role: announcement["role"],
+                                                          //         ),
+                                                          //       )
+                                                          //:
+                                                          GestureDetector(
+                                                        onTap: () {
+                                                          onSelectAnnouncement(
+                                                            announcement,
+                                                            //idx: index,
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          // height:
+                                                          //     250, // Adjust height if necessary
+                                                          width:
+                                                              400, // Width of each item
+                                                          // margin: EdgeInsets.only(
+                                                          //     left:
+                                                          //         3), // Optional: Add spacing between items
+                                                          child:
+                                                              AnnouncementCardHorizontal(
+                                                            id: announcement[
+                                                                "id"],
+                                                            idx: index,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 1,
+                                              ),
+                                              // decoration: BoxDecoration(
+                                              //   borderRadius: BorderRadius.circular(18),
+                                              //   color: Color(0xFFEDFDF4),
+                                              //   border: Border.all(
+                                              //     color: Color(0xFF014E53)
+                                              //         .withOpacity(0.1),
+                                              //     width: 1,
+                                              //   ),
+                                              // ),
+                                              width: 500,
+                                              height: 560,
+                                              child: Container(
+                                                child: NotificationListener<
+                                                    ScrollNotification>(
+                                                  onNotification:
+                                                      (ScrollNotification
+                                                          notification) {
+                                                    if (notification
+                                                        is ScrollUpdateNotification) {
+                                                      // print(":fskdhfjks");
+                                                      final scrollPosition =
+                                                          notification
+                                                              .metrics.pixels;
+                                                      const itemWidth =
+                                                          400.0; // Item width
+                                                      const spacing =
+                                                          8.0; // Spacing between items
+
+                                                      // Calculate the index based on scroll position and item width
+                                                      final currentIndex =
+                                                          (scrollPosition /
+                                                                  (itemWidth +
+                                                                      spacing))
+                                                              .floor();
+
+                                                      // Ensure the index doesn't exceed the available number of items
+                                                      if (currentIndex >= 0 &&
+                                                          currentIndex <
+                                                              announcementProvider
+                                                                  .announcements
+                                                                  .length) {
+                                                        selectedAnnouncementId =
                                                             announcementProvider
                                                                     .announcements[
-                                                                index];
+                                                                currentIndex]["id"];
+                                                        // log("Current Announcement IDdddddddddd: $selectedAnnouncementId");
 
-                                                        // Only show the AnnouncementCard if the role is 'manager'
-                                                        if (announcement[
-                                                                "role"] !=
-                                                            "manager") {
-                                                          return SizedBox
-                                                              .shrink();
-                                                        }
+                                                        setState(() {
+                                                          selectedId =
+                                                              selectedAnnouncementId ??
+                                                                  -1;
+                                                          // print("selectedId");
+                                                          // print(selectedId);
+                                                          // print(announcementProvider
+                                                          //         .announcements[
+                                                          //     currentIndex]);
+                                                        });
+                                                      }
 
-                                                        return _isLoading
-                                                            ? Skeletonizer(
-                                                                child:
-                                                                    AnnouncementCardSkeleton(
-                                                                  role: announcement[
-                                                                      "role"],
-                                                                ),
-                                                              )
-                                                            : GestureDetector(
-                                                                onTap: () {
-                                                                  log("Selected Announcement ID: ${announcement["id"]}");
-                                                                  log(announcement
-                                                                      .toString());
-                                                                  // log(announcement);
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              SelectedAnnouncementScreen(
-                                                                        data:
-                                                                            announcement,
-                                                                        id: announcement[
-                                                                            "id"],
-                                                                        idx:
-                                                                            index,
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  width:
-                                                                      MediaQuery
-                                                                          .of(
-                                                                    context,
-                                                                  ).size.width, // Width of each item
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
-                                                                    child:
-                                                                        AnnouncementCardHorizontal(
+                                                      // Handle when the scroll is near the end, ensuring the last item is considered
+                                                      // if (scrollPosition ==
+                                                      //     notification.metrics
+                                                      //         .maxScrollExtent) {
+                                                      //   final lastIndex =
+                                                      //       announcementProvider
+                                                      //               .announcements
+                                                      //               .length -
+                                                      //           1;
+                                                      //   final lastAnnouncementId =
+                                                      //       announcementProvider
+                                                      //               .announcements[
+                                                      //           lastIndex]["id"];
+                                                      //   log("Last Announcement ID: $lastAnnouncementId");
+                                                      // }
+                                                    }
+                                                    return true; // Returning true to continue notification handling
+                                                  },
+                                                  child: ListView.builder(
+                                                    physics:
+                                                        BouncingScrollPhysics(),
+                                                    padding: EdgeInsets.zero,
+                                                    shrinkWrap: true,
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount:
+                                                        announcementProvider
+                                                            .announcements
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      // log("Current Announcement index: $index");
+                                                      final announcement =
+                                                          announcementProvider
+                                                                  .announcements[
+                                                              index];
+
+                                                      // Only show the AnnouncementCard if the role is 'manager'
+                                                      if (announcement[
+                                                              "role"] !=
+                                                          "manager") {
+                                                        return SizedBox
+                                                            .shrink();
+                                                      }
+
+                                                      return _isLoading
+                                                          ? Skeletonizer(
+                                                              child:
+                                                                  AnnouncementCardSkeleton(
+                                                                role:
+                                                                    announcement[
+                                                                        "role"],
+                                                              ),
+                                                            )
+                                                          : GestureDetector(
+                                                              onTap: () {
+                                                                log("Selected Announcement ID: ${announcement["id"]}");
+                                                                log(announcement
+                                                                    .toString());
+                                                                // log(announcement);
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            SelectedAnnouncementScreen(
+                                                                      data:
+                                                                          announcement,
                                                                       id: announcement[
                                                                           "id"],
                                                                       idx:
                                                                           index,
                                                                     ),
                                                                   ),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                width: MediaQuery
+                                                                        .of(
+                                                                  context,
+                                                                )
+                                                                    .size
+                                                                    .width, // Width of each item
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child:
+                                                                      AnnouncementCardHorizontal(
+                                                                    id: announcement[
+                                                                        "id"],
+                                                                    idx: index,
+                                                                  ),
                                                                 ),
-                                                              );
-                                                      },
-                                                    ),
+                                                              ),
+                                                            );
+                                                    },
                                                   ),
                                                 ),
                                               ),
-                                  ],
-                                ),
+                                            ),
+                                ],
+                              ),
 
-                                _isLoading
-                                    ? Skeletonizer(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 25, vertical: 3),
-                                          child: ListView.builder(
-                                            // itemExtent: 350,
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemCount: announcementProvider
-                                                .announcements.length,
-                                            itemBuilder: (context, index) {
-                                              final announcement =
-                                                  announcementProvider
-                                                      .announcements[index];
-
-                                              // Check your condition, for example, when role is 'manager'
-                                              if (announcement["role"] ==
-                                                  "manager") {
-                                                print("index  $index");
-                                                // If the condition matches, return an empty widget or skip the card
-                                                return SizedBox
-                                                    .shrink(); // This will render nothing
-                                              }
-
-                                              return
-                                                  //_isLoading
-                                                  // ? Skeletonizer(
-                                                  //     child: AnnouncementCardSkeleton(
-                                                  //       role: announcement["role"] !=
-                                                  //           "manager",
-                                                  //     ),
-                                                  //   )
-                                                  // :
-                                                  GestureDetector(
-                                                onTap: () {
-                                                  onSelectAnnouncement(
-                                                      announcement);
-                                                },
-                                                child: AnnouncementCard(
-                                                  id: announcement["id"],
-                                                  idx: index,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
+                              _isLoading
+                                  ? Skeletonizer(
+                                      child: Container(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 2, vertical: 3),
+                                            horizontal: 25, vertical: 3),
                                         child: ListView.builder(
                                           // itemExtent: 350,
                                           padding: EdgeInsets.zero,
@@ -852,6 +803,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                             // Check your condition, for example, when role is 'manager'
                                             if (announcement["role"] ==
                                                 "manager") {
+                                              print("index  $index");
                                               // If the condition matches, return an empty widget or skip the card
                                               return SizedBox
                                                   .shrink(); // This will render nothing
@@ -868,24 +820,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                 // :
                                                 GestureDetector(
                                               onTap: () {
-                                                // onSelectAnnouncement(
-                                                //     announcement);
-
-                                                log("INDEX: $index");
-                                                log("INDEX2: ${announcement["id"]}");
-                                                log("INDEX2: ${announcement["id"].runtimeType}");
-                                                log("INDEX:3 ${announcement}");
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SelectedAnnouncementScreen(
-                                                      data: announcement,
-                                                      id: announcement["id"],
-                                                      idx: index,
-                                                    ),
-                                                  ),
-                                                );
+                                                onSelectAnnouncement(
+                                                    announcement);
                                               },
                                               child: AnnouncementCard(
                                                 id: announcement["id"],
@@ -895,115 +831,176 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                           },
                                         ),
                                       ),
+                                    )
+                                  : Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 2, vertical: 3),
+                                      child: ListView.builder(
+                                        // itemExtent: 350,
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: announcementProvider
+                                            .announcements.length,
+                                        itemBuilder: (context, index) {
+                                          final announcement =
+                                              announcementProvider
+                                                  .announcements[index];
 
-                                // ListView.builder(
-                                //   padding: EdgeInsets.zero,
-                                //   shrinkWrap: true,
-                                //   physics: NeverScrollableScrollPhysics(),
-                                //   // Horizontal scroll
-                                //   itemCount:
-                                //       announcementProvider.announcements.length,
-                                //   itemBuilder: (context, index) {
-                                //     return _isLoading
-                                //         ? Skeletonizer(
-                                //             child: AnnouncementCardSkeleton(
-                                //               role: announcementProvider
-                                //                   .announcements[index]["role"],
-                                //             ),
-                                //           )
-                                //         : GestureDetector(
-                                //             onTap: () {
-                                //               onSelectAnnouncement(
-                                //                 announcementProvider
-                                //                     .announcements[index],
-                                //               );
-                                //             },
-                                //             child: Container(
-                                //               height: 900,
-                                //               width: 300, // Width of each item
-                                //               child: AnnouncementCard(
-                                //                 id: announcementProvider
-                                //                     .announcements[index]["id"],
-                                //                 idx: index,
-                                //               ),
-                                //             ),
-                                //           );
-                                //   },
-                                // )
+                                          // Check your condition, for example, when role is 'manager'
+                                          if (announcement["role"] ==
+                                              "manager") {
+                                            // If the condition matches, return an empty widget or skip the card
+                                            return SizedBox
+                                                .shrink(); // This will render nothing
+                                          }
 
-                                // SizedBox(
-                                //   child: ListView.builder(
-                                //     padding: EdgeInsets.zero,
-                                //     scrollDirection: Axis.horizontal,
-                                //     shrinkWrap: true,
-                                //     // physics: NeverScrollableScrollPhysics(),
-                                //     itemCount:
-                                //         announcementProvider.announcements.length,
-                                //     itemBuilder: (context, index) {
-                                //       return _isLoading
-                                //           ? Skeletonizer(
-                                //               child: AnnouncementCardSkeleton(
-                                //                 role: announcementProvider
-                                //                     .announcements[index]["role"],
-                                //               ),
-                                //             )
-                                //           : GestureDetector(
-                                //               onTap: () {
-                                //                 onSelectAnnouncement(
-                                //                   announcementProvider
-                                //                       .announcements[index],
-                                //                 );
-                                //               },
-                                //               child: AnnouncementCard(
-                                //                 id: announcementProvider
-                                //                     .announcements[index]["id"],
-                                //                 idx: index,
-                                //               ),
-                                //             );
-                                //     },
-                                //   ),
-                                // ),
-                              ],
-                            ),
+                                          return
+                                              //_isLoading
+                                              // ? Skeletonizer(
+                                              //     child: AnnouncementCardSkeleton(
+                                              //       role: announcement["role"] !=
+                                              //           "manager",
+                                              //     ),
+                                              //   )
+                                              // :
+                                              GestureDetector(
+                                            onTap: () {
+                                              // onSelectAnnouncement(
+                                              //     announcement);
+
+                                              log("INDEX: $index");
+                                              log("INDEX2: ${announcement["id"]}");
+                                              log("INDEX2: ${announcement["id"].runtimeType}");
+                                              log("INDEX:3 ${announcement}");
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectedAnnouncementScreen(
+                                                    data: announcement,
+                                                    id: announcement["id"],
+                                                    idx: index,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: AnnouncementCard(
+                                              id: announcement["id"],
+                                              idx: index,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+
+                              // ListView.builder(
+                              //   padding: EdgeInsets.zero,
+                              //   shrinkWrap: true,
+                              //   physics: NeverScrollableScrollPhysics(),
+                              //   // Horizontal scroll
+                              //   itemCount:
+                              //       announcementProvider.announcements.length,
+                              //   itemBuilder: (context, index) {
+                              //     return _isLoading
+                              //         ? Skeletonizer(
+                              //             child: AnnouncementCardSkeleton(
+                              //               role: announcementProvider
+                              //                   .announcements[index]["role"],
+                              //             ),
+                              //           )
+                              //         : GestureDetector(
+                              //             onTap: () {
+                              //               onSelectAnnouncement(
+                              //                 announcementProvider
+                              //                     .announcements[index],
+                              //               );
+                              //             },
+                              //             child: Container(
+                              //               height: 900,
+                              //               width: 300, // Width of each item
+                              //               child: AnnouncementCard(
+                              //                 id: announcementProvider
+                              //                     .announcements[index]["id"],
+                              //                 idx: index,
+                              //               ),
+                              //             ),
+                              //           );
+                              //   },
+                              // )
+
+                              // SizedBox(
+                              //   child: ListView.builder(
+                              //     padding: EdgeInsets.zero,
+                              //     scrollDirection: Axis.horizontal,
+                              //     shrinkWrap: true,
+                              //     // physics: NeverScrollableScrollPhysics(),
+                              //     itemCount:
+                              //         announcementProvider.announcements.length,
+                              //     itemBuilder: (context, index) {
+                              //       return _isLoading
+                              //           ? Skeletonizer(
+                              //               child: AnnouncementCardSkeleton(
+                              //                 role: announcementProvider
+                              //                     .announcements[index]["role"],
+                              //               ),
+                              //             )
+                              //           : GestureDetector(
+                              //               onTap: () {
+                              //                 onSelectAnnouncement(
+                              //                   announcementProvider
+                              //                       .announcements[index],
+                              //                 );
+                              //               },
+                              //               child: AnnouncementCard(
+                              //                 id: announcementProvider
+                              //                     .announcements[index]["id"],
+                              //                 idx: index,
+                              //               ),
+                              //             );
+                              //     },
+                              //   ),
+                              // ),
+                            ],
                           ),
                         ),
-                ],
-              ),
-            );
-          },
-        ),
-        bottomNavigationBar: AppBottomNavbar(
-          index: 0,
-        ),
-        floatingActionButton: Consumer<AnnouncementProvider>(
-          builder: (context, announcementProvider, child) {
-            return announcementProvider.announcements.isEmpty
-                ? Container()
-                : Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Color(0xFFAAD130),
-                    ),
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        _showAnnouncementInfoModal(context);
-                      },
-                      backgroundColor: Color(0xFFAAD130),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      child: Icon(
-                        Ionicons.add_outline,
-                        size: 24,
-                      ),
-                    ),
-                  );
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              ],
+            ),
+          );
+        },
       ),
+      bottomNavigationBar: AppBottomNavbar(
+        index: 0,
+      ),
+      floatingActionButton: Consumer<AnnouncementProvider>(
+        builder: (context, announcementProvider, child) {
+          return announcementProvider.announcements.isEmpty
+              ? Container()
+              : Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Color(0xFFAAD130),
+                  ),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      _showAnnouncementInfoModal(context);
+                    },
+                    backgroundColor: Color(0xFFAAD130),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Icon(
+                      Ionicons.add_outline,
+                      size: 24,
+                    ),
+                  ),
+                );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

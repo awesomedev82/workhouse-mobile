@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:workhouse/utils/constant.dart';
 
 class HeaderBar extends StatefulWidget {
@@ -30,15 +31,20 @@ class _HeaderBarState extends State<HeaderBar> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontFamily: "Lastik-test",
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: APP_BLACK_COLOR,
-            ),
-          ),
+          widget.title == "Workhouse"
+              ? SvgPicture.asset(
+                  "assets/images/logos.svg",
+                  height: 35,
+                )
+              : Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontFamily: "Lastik-test",
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: APP_BLACK_COLOR,
+                  ),
+                ),
           SizedBox(
             width: 8,
           ),
