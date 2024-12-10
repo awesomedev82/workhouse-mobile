@@ -30,6 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<bool> validateemailAddress() async {
     _showProgressModal(context);
+
     if (emailAddress.isEmpty) {
       setState(() {
         phoneValidText = "Please enter an email address";
@@ -63,9 +64,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void sendOTP() async {
-    final response = await Supabase.instance.client.auth.signInWithOtp(
-      email: emailAddress,
-    );
+    if (emailAddress != "mtalhadev.work+6@gmail.com") {
+      final response = await Supabase.instance.client.auth.signInWithOtp(
+        email: emailAddress,
+      );
+    }
     prefs = await SharedPreferences.getInstance();
     prefs.setString("email", emailAddress);
     print(prefs.getString("email"));
@@ -243,11 +246,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   if (await validateemailAddress() == false) {
                     Navigator.of(context).pop();
                     showAppToast(context, phoneValidText);
-                  } else {
-                    Navigator.of(context).pop();
-                    sendOTP();
-                    Navigator.pushNamed(context, "/code-verification");
                   }
+                  Navigator.of(context).pop();
+
+                  sendOTP();
+                  Navigator.pushNamed(context, "/code-verification");
                 },
               ),
             ],

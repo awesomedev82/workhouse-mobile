@@ -35,6 +35,7 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
     prefs = await SharedPreferences.getInstance();
     String uid = prefs.getString("userID")!;
     supabase = Supabase.instance.client;
+    print("index");
     setState(() {
       avatar = prefixURL + prefs.getString("avatar")!;
     });
@@ -45,6 +46,8 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
     final profileProvider = Provider.of<ProfileProvider>(context);
     if (profileProvider.avatar != "") {
       avatar = prefixURL + profileProvider.avatar;
+    } else {
+      avatar = "";
     }
     return Container(
       color: Colors.white,
@@ -99,6 +102,8 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
             ),
             GestureDetector(
               onTap: () {
+                print("account");
+                print(avatar);
                 Navigator.of(context).pushNamed('/account');
               },
               child: Container(
@@ -106,22 +111,10 @@ class _AppBottomNavbarState extends State<AppBottomNavbar> {
                 height: 44,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: avatar == ""
-                    ? Container(
-                        height: 24,
-                        width: 24,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Color(0xFF898A8D),
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xFF014E53),
-                          ),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 1.6,
-                          child: BlurHash(
-                            hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                          ),
+                    ? AspectRatio(
+                        aspectRatio: 1.6,
+                        child: BlurHash(
+                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
                         ),
                       )
                     : SizedBox(
